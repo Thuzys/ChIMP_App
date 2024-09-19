@@ -1,4 +1,4 @@
-package com.example.chimp.about.view
+package com.example.chimp.view.about.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
