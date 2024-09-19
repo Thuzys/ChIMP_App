@@ -2,7 +2,9 @@ package com.example.chimp.view.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+import com.example.chimp.view.MakeImage
 
 @Composable
 fun DeveloperContent(
@@ -41,16 +44,23 @@ fun DeveloperContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         //TODO: Put the image and text in a Column to increase the onClick area
-        Image(
-            painter = painterResource(id = devId),
-            contentDescription = "Developer Profile Picture",
+        Column(
             modifier =
+                modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onClick),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = painterResource(id = devId),
+                contentDescription = "Developer Profile Picture",
+                modifier =
                 modifier
                     .size(200.dp)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.extraLarge)
-                    .clickable(onClick = onClick)
-        )
+            )
+        }
         Text(
             text = devName,
             modifier =
@@ -61,26 +71,39 @@ fun DeveloperContent(
             textAlign = TextAlign.Center,
         )
         HorizontalDivider()
-        //TODO: Increase the clickable area
-        Image(
-            painter = painterResource(R.drawable.github_mark),
-            contentDescription = "GitHub Logo",
-            modifier = Modifier
-                .size(40.dp)
-                .padding(4.dp)
-                /*TODO: How to open the chrome */
-                .clickable(onClick = { gitOnClick(devGitHub) })
-        )
+        Row(
+            modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = { gitOnClick(devGitHub) }),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            MakeImage(
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(4.dp),
+                lightMode = R.drawable.github_mark,
+                darkMode = R.drawable.github_mark_white,
+                contendDescription = "GitHub Logo"
+            )
+        }
         HorizontalDivider()
-        Image(
-            painter = painterResource(R.drawable.email_light_mode),
-            contentDescription = "Email Logo",
-            modifier = Modifier
-                .size(40.dp)
-                .padding(4.dp)
-                /*TODO: How to send an email */
-                .clickable(onClick = { emailOnClick(devEmail) })
-        )
+        Row(
+            modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = { emailOnClick(devEmail) }),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            MakeImage(
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(4.dp),
+                lightMode = R.drawable.mail_dark,
+                darkMode = R.drawable.mail_light,
+                contendDescription = "Email Logo"
+            )
+        }
     }
 }
 
@@ -104,7 +127,9 @@ private class DeveloperContentPreviewClass : PreviewParameterProvider<DevInfo> {
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+)
 private fun DeveloperContendPreview(
     @PreviewParameter(DeveloperContentPreviewClass::class) devInfo: DevInfo
 ) {

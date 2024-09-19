@@ -29,7 +29,7 @@ fun AboutDeveloper(
             modifier
                 .fillMaxWidth()
         ) {
-            //TODO: Change parameter input to be dynamic (remove this value)
+            //TODO: Change parameter input to be dynamic (remove those values)
             val context = LocalContext.current
             val gitSiteFunc: (String) -> Unit = {
                 val intent = Intent(Intent.ACTION_VIEW)
