@@ -1,4 +1,4 @@
-package com.example.chimp.ui.theme
+package com.example.chimp.view.ui.theme
 
 import android.app.Activity
 import android.os.Build
