@@ -13,12 +13,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.chimp.R
+import com.example.chimp.model.about.About
+import com.example.chimp.model.about.Email
+import com.example.chimp.model.about.SocialMedia
+import java.net.URL
 
 /*TODO: Pass the remaining parameter to the function*/
 @Composable
 fun AboutDeveloper(
     modifier: Modifier = Modifier,
     isExpanded: Boolean,
+    dev: About,
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -68,15 +73,26 @@ fun AboutDeveloper(
     }
 }
 
-private class AboutDeveloperPreviewClass : PreviewParameterProvider<Boolean> {
-    override val values: Sequence<Boolean> = sequenceOf(false, true)
+private class AboutDeveloperPreviewClass : PreviewParameterProvider<Pair<About, Boolean>> {
+    val email = Email("test@mail.com")
+    val dev = About(
+        name = "Arthur Oliveira",
+        email = email,
+        socialMedia = SocialMedia(
+            email = email,
+            gitHub = URL(""),
+            linkedIn = URL("")
+        )
+    )
+    override val values: Sequence<Pair<About, Boolean>> =
+        sequenceOf(Pair(dev, false), Pair(dev, true))
 }
 
 
 @Composable
 @Preview(showBackground = true)
 private fun AboutDeveloperPreview(
-    @PreviewParameter(AboutDeveloperPreviewClass::class) isExpanded: Boolean
+    @PreviewParameter(AboutDeveloperPreviewClass::class) value: Pair<About, Boolean>
 ) {
-    AboutDeveloper(isExpanded = isExpanded)
+    AboutDeveloper(isExpanded = value.second, dev = value.first)
 }

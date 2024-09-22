@@ -8,6 +8,7 @@ package com.example.chimp.model.about
  * @param socialMedia The social media information of the user.
  * @param bio The biography of the user.
  */
+//TODO: Add the profile picture
 data class About(
     val name: String,
     val email: Email,

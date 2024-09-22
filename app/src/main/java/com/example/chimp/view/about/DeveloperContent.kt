@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.view.MakeImage
+import com.example.chimp.view.MakeMark
 
 @Composable
 fun DeveloperContent(
@@ -78,7 +78,7 @@ fun DeveloperContent(
                 .clickable(onClick = { gitOnClick(devGitHub) }),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            MakeImage(
+            MakeMark(
                 modifier = Modifier
                     .size(40.dp)
                     .padding(4.dp),
@@ -95,7 +95,7 @@ fun DeveloperContent(
                 .clickable(onClick = { emailOnClick(devEmail) }),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            MakeImage(
+            MakeMark(
                 modifier = Modifier
                     .size(40.dp)
                     .padding(4.dp),

@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun MakeImage(
+fun MakeMark(
     modifier: Modifier = Modifier,
     lightMode: Int,
     darkMode: Int,
