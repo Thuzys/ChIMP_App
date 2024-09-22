@@ -1,31 +1,41 @@
 package com.example.chimp.view.about
 
-import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import java.net.URL
 
-/*TODO: Pass the remaining parameter to the function*/
+
+/**
+ * The composable function that displays the developer's information.
+ * @param modifier [Modifier] The modifier to be applied to the layout.
+ * @param dev [About] The developer's information.
+ * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub icon.
+ * @param emailOnClick (String) -> Unit The function to be called when the user clicks on the email icon.
+ */
 @Composable
 fun AboutDeveloper(
     modifier: Modifier = Modifier,
-    isExpanded: Boolean,
     dev: About,
-    onClick: () -> Unit = {},
+    uriOnClick: (Uri) -> Unit = {},
+    emailOnClick: (String) -> Unit = {}
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
     Card(
         shape = MaterialTheme.shapes.extraLarge,
     ) {
@@ -34,65 +44,46 @@ fun AboutDeveloper(
             modifier
                 .fillMaxWidth()
         ) {
-            //TODO: Change parameter input to be dynamic (remove those values)
-            val context = LocalContext.current
-            val gitSiteFunc: (String) -> Unit = {
-                val intent = Intent(Intent.ACTION_VIEW)
-                    .apply {
-                        data = android.net.Uri.parse(it)
-                    }
-                context.startActivity(intent)
-            }
-            val emailSiteFunc: (String) -> Unit = {
-                val intent = Intent(Intent.ACTION_SEND)
-                    .apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_EMAIL, arrayOf(it))
-                    }
-                context.startActivity(intent)
-            }
             if (!isExpanded) {
-                //TODO: Change parameter input to be dynamic
-                DeveloperHeader(modifier, R.drawable.thuzy_profile_pic, "Thuzy", onClick)
+                DeveloperHeader(modifier, dev.imageId, dev.name) {
+                    isExpanded = !isExpanded
+                }
             }
             AnimatedVisibility(
                 visible = isExpanded
             ) {
                 DeveloperContent(
                     modifier,
-                    R.drawable.thuzy_profile_pic,
-                    "Thuzy"
-                    , "https://github.com/Thuzys",
-                    "arthurcnoliveira@gmail.com",
-                    gitOnClick = gitSiteFunc,
-                    emailOnClick = emailSiteFunc,
-                    onClick = onClick
-                )
+                    dev,
+                    uriOnClick = uriOnClick,
+                    emailOnClick = emailOnClick,
+                ) {
+                    isExpanded = !isExpanded
+                }
             }
         }
     }
 }
 
-private class AboutDeveloperPreviewClass : PreviewParameterProvider<Pair<About, Boolean>> {
+private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
     val email = Email("test@mail.com")
     val dev = About(
         name = "Arthur Oliveira",
         email = email,
         socialMedia = SocialMedia(
-            email = email,
-            gitHub = URL(""),
-            linkedIn = URL("")
+            gitHub = URL("https://test.com"),
+            linkedIn = URL("https://test.com")
         )
     )
-    override val values: Sequence<Pair<About, Boolean>> =
-        sequenceOf(Pair(dev, false), Pair(dev, true))
+    override val values: Sequence<About> =
+        sequenceOf(dev)
 }
 
 
 @Composable
 @Preview(showBackground = true)
 private fun AboutDeveloperPreview(
-    @PreviewParameter(AboutDeveloperPreviewClass::class) value: Pair<About, Boolean>
+    @PreviewParameter(AboutDeveloperPreviewClass::class) value: About
 ) {
-    AboutDeveloper(isExpanded = value.second, dev = value.first)
+    AboutDeveloper(dev = value)
 }

@@ -9,13 +9,12 @@ package com.example.chimp.model.about
  * @param bio The biography of the user.
  * @param imageId Resources object to query the image file from.
  */
-//TODO: Add the profile picture
 data class About(
     val name: String,
     val email: Email,
     val socialMedia: SocialMedia? = null,
     val bio: String? = null,
-    val imageId: String? = null
+    val imageId: Int? = null
 ) {
     init {
         require(name.isNotBlank()) { "Name must not be blank." }

@@ -20,11 +20,27 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 
-/*TODO: put magic numbers on constants*/
+/**
+ * The size used for the developer's profile picture.
+ */
+private const val IMAGE_SIZE = 80
+
+/**
+ * The padding used for the developer's profile text.
+ */
+private const val PADDING = 16
+
+/**
+ * The composable function that displays the developer's profile picture and name.
+ * @param modifier [Modifier] The modifier to be applied to the layout.
+ * @param profileId [Int] The developer's profile picture id.
+ * @param profileName [String] The developer's name.
+ * @param onClick () -> Unit The function to be called when the user clicks on the developer's profile.
+ */
 @Composable
 fun DeveloperHeader(
     modifier: Modifier = Modifier,
-    profileId: Int,
+    profileId: Int?,
     profileName: String,
     onClick: () -> Unit = {},
 ) {
@@ -36,11 +52,11 @@ fun DeveloperHeader(
         horizontalArrangement = Arrangement.End
     ) {
         Image(
-            painter = painterResource(profileId),
+            painter = painterResource(profileId ?: R.drawable.user_mark),
             contentDescription = "Developer Profile Picture",
             modifier =
                 modifier
-                    .size(80.dp)
+                    .size(IMAGE_SIZE.dp)
                     .clip(MaterialTheme.shapes.extraLarge)
         )
         Text(
@@ -48,7 +64,7 @@ fun DeveloperHeader(
             modifier =
             modifier
                 .weight(1f)
-                .padding(16.dp),
+                .padding(PADDING.dp),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
         )

@@ -9,7 +9,6 @@ import java.net.URL
  * @param linkedIn The LinkedIn URL of the user.
 
  */
-//TODO: Remove the email from the social media data class
 data class SocialMedia(
     val gitHub: URL? = null,
     val linkedIn: URL? = null,
