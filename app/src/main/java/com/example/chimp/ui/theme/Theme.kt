@@ -1,4 +1,4 @@
-package com.example.chimp.view.ui.theme
+package com.example.chimp.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

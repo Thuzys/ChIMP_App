@@ -11,8 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.chimp.view.about.AboutDevScreen
-import com.example.chimp.view.ui.theme.ChIMPTheme
+import com.example.chimp.ui.view.AboutDevScreen
+import com.example.chimp.ui.theme.ChIMPTheme
 
 
 

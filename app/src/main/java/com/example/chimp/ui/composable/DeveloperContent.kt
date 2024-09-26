@@ -1,4 +1,4 @@
-package com.example.chimp.view.about
+
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -32,7 +32,7 @@ import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
-import com.example.chimp.view.MakeSocialMediaMark
+import com.example.chimp.ui.composable.MakeSocialMediaMark
 import com.example.chimp.view.ShowDialog
 import java.net.URL
 

@@ -1,5 +1,6 @@
-package com.example.chimp.view.about
+package com.example.chimp.ui.composable
 
+import DeveloperContent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
