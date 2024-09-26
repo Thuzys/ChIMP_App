@@ -14,7 +14,7 @@ data class About(
     val email: Email,
     val socialMedia: SocialMedia? = null,
     val bio: String? = null,
-    val imageId: String? = null
+    val imageId: Int? = null
 ) {
     init {
         require(name.isNotBlank()) { "Name must not be blank." }
