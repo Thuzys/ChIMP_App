@@ -1,4 +1,4 @@
-package com.example.chimp.view.about
+package com.example.chimp.ui.view
 
 import android.content.Context
 import android.content.Intent
@@ -15,6 +15,7 @@ import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.ui.composable.AboutDeveloper
 import java.net.URL
 
 
