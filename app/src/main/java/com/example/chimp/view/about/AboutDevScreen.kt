@@ -17,6 +17,7 @@ import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import java.net.URL
 
+// TODO: Make one screen with state for the application.
 
  //TODO: The developers will be hardcoded for now, but in production code,
  // will encapsulate on viewmodel class

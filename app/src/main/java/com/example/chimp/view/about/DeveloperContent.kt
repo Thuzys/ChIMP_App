@@ -2,7 +2,6 @@ package com.example.chimp.view.about
 
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,12 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import com.example.chimp.view.MakeSocialMediaMark
+import com.example.chimp.view.ShowDialog
 import java.net.URL
 
 /**
@@ -47,19 +46,10 @@ private const val IMAGE_SIZE = 200
 private const val PADDING = 16
 
 /**
- * The padding used for the dialog.
- */
-private const val DIALOG_PADDING = 16
-
-/**
  * The maximum number of lines for the biography.
  */
 private const val MAX_LINES = 2
 
-/**
- * The alpha value used for the dialog.
- */
-private const val ALPHA_VALUE = 0.5f
 
 /**
  * The composable function that displays the developer's information.
@@ -134,27 +124,15 @@ fun DeveloperContent(
             contend = dev.email.email,
             onClick = emailOnClick
         )
-        if (showDialog) {
-            Dialog(onDismissRequest = { showDialog = false }) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = Color.Black.copy(alpha = ALPHA_VALUE),
-                            shape = MaterialTheme.shapes.extraLarge
-                        )
-                        .padding(DIALOG_PADDING.dp)
-                        .clickable { showDialog = !showDialog },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column {
-                        Text(
-                            text = dev.bio ?: "No biography available.",
-                            textAlign = TextAlign.Center,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
+        ShowDialog(
+            showDialog = showDialog,
+            onDismissRequest = { showDialog = false }
+        ) {
+            Text(
+                text = dev.bio ?: "No biography available.",
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
         }
     }
 }
