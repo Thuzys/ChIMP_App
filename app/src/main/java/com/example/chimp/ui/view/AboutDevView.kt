@@ -1,92 +1,69 @@
 package com.example.chimp.ui.view
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.chimp.R
 import com.example.chimp.model.about.About
-import com.example.chimp.model.about.Email
-import com.example.chimp.model.about.SocialMedia
 import com.example.chimp.ui.composable.AboutDeveloper
+import com.example.chimp.viewModel.state.ChimpState
 import java.net.URL
 
-// TODO: Make one screen with state for the application.
-
- //TODO: The developers will be hardcoded for now, but in production code,
- // will encapsulate on viewmodel class
-private fun getDevelopers(): List<About> {
-    val email = Email("A50543@alunos.isel.pt")
-    return listOf(
-        About(
-            name = "Arthur Oliveira",
-            email = email,
-            socialMedia = SocialMedia(
-                gitHub = URL("https://github.com/Thuzys"),
-                linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
-            ),
-            bio = "I'm a student at ISEL, studying computer engineering. I'm passionate about " +
-                    "technology and software development. I'm always looking for new challenges " +
-                    "and opportunities to learn and grow.",
-            imageId = R.drawable.thuzy_profile_pic
-        )
-    )
-}
-
-
- // TODO: The gitFunc and emailFunc are private global functions for now,
- //  but in production code, will encapsulate on viewmodel class
-private fun uriFunc(uri: Uri, context: Context) {
-    val intent = Intent(Intent.ACTION_VIEW)
-        .apply {
-            data = uri
-        }
-    context.startActivity(intent)
-}
-
-private fun emailFunc(email: String, context: Context) {
-    val intent = Intent(Intent.ACTION_SEND)
-        .apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        }
-    context.startActivity(intent)
-}
-
 /**
- * The composable function that displays the developer's information.
+ * The composable function that displays the developer's information view.
  * @param modifier [Modifier] The modifier to be applied to the layout.
+ * @param state [ChimpState.AboutDevState] The state of the developers.
+ * @param onShowDialogChange
+ * ([About]) -> Unit The function to be called when the user clicks on the email icon.
+ * @param onIsExpandedChange
+ * ([About]) -> Unit The function to be called when the user clicks on the GitHub icon.
  */
 @Composable
-fun AboutDevScreen(modifier: Modifier = Modifier) {
+fun AboutDevView(
+    modifier: Modifier = Modifier,
+    state: ChimpState.AboutDevState,
+    onShowDialogChange: (About) -> Unit,
+    onIsExpandedChange: (About) -> Unit
+) {
     Column(
-        modifier =
-        modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+        modifier = modifier
     ) {
-        val context = LocalContext.current
-        val developers = getDevelopers()
-        for (dev in developers) {
-            AboutDeveloper(
-                dev = dev,
-                uriOnClick = { uriFunc(it, context) },
-                emailOnClick = { emailFunc(it, context) }
-            )
+        state
+            .aboutSelectorsList
+            .forEach { (dev, devState) ->
+                val (isExpanded, showDialog) = devState
+                val git = dev.socialMedia?.gitHub
+                val linkedIn = dev.socialMedia?.linkedIn
+                val gitOnClick: () -> Unit = makeLink(git, state::linkMaker)
+                val linkedInOnClick: () -> Unit = makeLink(linkedIn, state::linkMaker)
+                val emailOnClick = { state.sendMaker(dev.email.email) }
+                AboutDeveloper(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    dev = dev,
+                    isExpanded = isExpanded,
+                    showDialog = showDialog,
+                    gitOnClick = gitOnClick,
+                    linkedInOnClick = linkedInOnClick,
+                    emailOnClick = emailOnClick,
+                    onShowDialogChange = { onShowDialogChange(dev) },
+                    onIsExpandedChange = { onIsExpandedChange(dev) }
+                )
         }
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-private fun AboutScreenPreview() {
-    AboutDevScreen()
+/**
+ * Creates a function that opens a link when clicked.
+ * @param uri [URL] The URL to be opened.
+ * @param func ([Uri]) -> Unit The function to be called when the link is clicked.
+ * @return () -> Unit The function that opens the link.
+ */
+private fun makeLink(uri: URL?, func: (Uri) -> Unit): () -> Unit {
+    return if (uri != null) {
+        { func(Uri.parse(uri.toString())) }
+    } else {
+        { }
+    }
 }

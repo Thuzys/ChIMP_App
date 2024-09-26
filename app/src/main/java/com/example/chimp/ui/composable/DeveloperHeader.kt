@@ -1,7 +1,6 @@
 package com.example.chimp.ui.composable
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -35,19 +34,15 @@ private const val PADDING = 16
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param profileId [Int] The developer's profile picture id.
  * @param profileName [String] The developer's name.
- * @param onClick () -> Unit The function to be called when the user clicks on the developer's profile.
  */
 @Composable
 fun DeveloperHeader(
     modifier: Modifier = Modifier,
     profileId: Int?,
     profileName: String,
-    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier =
-        modifier
-            .clickable(onClick = onClick),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
@@ -55,14 +50,14 @@ fun DeveloperHeader(
             painter = painterResource(profileId ?: R.drawable.user_mark),
             contentDescription = "Developer Profile Picture",
             modifier =
-                modifier
+                Modifier
                     .size(IMAGE_SIZE.dp)
                     .clip(MaterialTheme.shapes.extraLarge)
         )
         Text(
             text = profileName,
             modifier =
-            modifier
+            Modifier
                 .weight(1f)
                 .padding(PADDING.dp),
             style = MaterialTheme.typography.headlineLarge,

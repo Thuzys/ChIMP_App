@@ -1,22 +1,15 @@
+package com.example.chimp.ui.composable
 
-
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +25,6 @@ import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
-import com.example.chimp.ui.composable.MakeSocialMediaMark
 import com.example.chimp.view.ShowDialog
 import java.net.URL
 
@@ -55,122 +47,88 @@ private const val MAX_LINES = 2
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param dev [About] The developer's information.
- * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
+ * @param gitOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
  * @param emailOnClick (String) -> Unit The function to be called when the user clicks on the email icon.
- * @param onClick () -> Unit The function to be called when the user clicks on the developer's profile.
+ * @param onShowDialog () -> Unit The function to be called when the user clicks on the developer's profile.
  */
 @Composable
 fun DeveloperContent(
     modifier: Modifier = Modifier,
     dev: About,
-    uriOnClick: (Uri) -> Unit = {},
-    emailOnClick: (String) -> Unit = {},
-    onClick: () -> Unit = {}
+    showDialog: Boolean = false,
+    gitOnClick: () -> Unit = {},
+    linkedInOnClick: () -> Unit = {},
+    emailOnClick: () -> Unit = {},
+    onShowDialog: () -> Unit = {},
+    onIsExpanded: () -> Unit = {},
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     Column(
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .wrapContentSize(Alignment.Center),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             modifier =
-            modifier
+            Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick),
+                .clickable(onClick = onIsExpanded),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = dev.imageId ?: R.drawable.user_mark),
                 contentDescription = "Developer Profile Picture",
                 modifier =
-                modifier
+                Modifier
                     .size(IMAGE_SIZE.dp)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.extraLarge)
             )
+            Text(
+                text = dev.name,
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(PADDING.dp),
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center,
+            )
         }
         Text(
-            text = dev.name,
-            modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(PADDING.dp),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center,
-        )
-        Box(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(PADDING.dp)
-                .clickable { showDialog = !showDialog },
-        ) {
-            Text(
-                text = dev.bio ?: "No biography available.",
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = MAX_LINES
+                .clickable(onClick = onShowDialog),
+            text = dev.bio ?: "No biography available.",
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = MAX_LINES
+        )
+        HorizontalDivider()
+        dev.socialMedia?.let { social ->
+            SocialMediaLayout(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                social = social,
+                gitOnClick = gitOnClick,
+                linkedInOnClick = linkedInOnClick,
             )
         }
-        HorizontalDivider()
-        SocialMediaLayout(dev.socialMedia, modifier, uriOnClick)
         MakeSocialMediaMark(
-            modifier = modifier,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = emailOnClick),
             lightMode = R.drawable.mail_dark,
             darkMode = R.drawable.mail_light,
             contendDescription = "Email Logo",
-            contend = dev.email.email,
-            onClick = emailOnClick
         )
         ShowDialog(
             showDialog = showDialog,
-            onDismissRequest = { showDialog = false }
+            onDismissRequest = onShowDialog
         ) {
             Text(
                 text = dev.bio ?: "No biography available.",
                 textAlign = TextAlign.Center,
                 color = Color.White
             )
-        }
-    }
-}
-
-/**
- * The composable function that displays the developer's social media icons.
- * @param social [About] The developer's information.
- * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
- */
-@Composable
-private fun SocialMediaLayout(
-    social: SocialMedia?,
-    modifier: Modifier,
-    uriOnClick: (Uri) -> Unit
-) {
-    social?.let { socialMedia ->
-        socialMedia.gitHub?.let { gitHub ->
-            MakeSocialMediaMark(
-                modifier = modifier,
-                lightMode = R.drawable.github_mark,
-                darkMode = R.drawable.github_mark_white,
-                contendDescription = "GitHub Logo",
-                contend = Uri.parse(gitHub.toString()),
-                onClick = uriOnClick
-            )
-            HorizontalDivider()
-        }
-        socialMedia.linkedIn?.let { linkedIn ->
-            MakeSocialMediaMark(
-                modifier = modifier,
-                lightMode = R.drawable.linkdin_mark,
-                darkMode = R.drawable.linkdin_mark,
-                contendDescription = "LinkedIn Logo",
-                contend = Uri.parse(linkedIn.toString()),
-                onClick = uriOnClick
-            )
-            HorizontalDivider()
         }
     }
 }

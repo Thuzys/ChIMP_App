@@ -1,4 +1,4 @@
-package com.example.chimp.view
+package com.example.chimp.ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
