@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.testTag
 import com.example.chimp.model.about.About
 import com.example.chimp.ui.composable.AboutDeveloper
 import com.example.chimp.viewModel.state.AboutDevState
-import com.example.chimp.viewModel.state.ChimpState
 import java.net.URL
 
 const val ABOUT_DEV_VIEW = "AboutDevView"
@@ -54,7 +53,7 @@ fun AboutDevView(
                     onShowDialogChange = { onShowDialogChange(dev) },
                     onIsExpandedChange = { onIsExpandedChange(dev) }
                 )
-            }
+        }
     }
 }
 

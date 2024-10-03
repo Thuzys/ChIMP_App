@@ -1,27 +1,20 @@
 package com.example.chimp.ui.composable
 
-import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,169 +22,129 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import java.net.URL
 
+const val DEVELOPER_CONTENT_TAG = "DeveloperContent"
+const val DEVELOPER_CONTENT_CONTAINER_TAG = "DeveloperContentContainer"
+const val DEVELOPER_CONTENT_IMAGE_TAG = "DeveloperContentImage"
+const val DEVELOPER_CONTENT_NAME_TAG = "DeveloperContentName"
+const val DEVELOPER_CONTENT_BIO_TAG = "DeveloperContentBio"
+const val DEVELOPER_CONTENT_SOCIAL_MEDIA_TAG = "DeveloperContentSocialMedia"
+const val DEVELOPER_CONTENT_EMAIL_TAG = "DeveloperContentEmail"
+const val DEVELOPER_CONTENT_COMPLETE_BIO_TAG = "DeveloperContentCompleteBio"
+
 /**
  * The size used for the developer's profile picture.
  */
 private const val IMAGE_SIZE = 200
+
 /**
  * The padding used for the developer's profile text.
  */
 private const val PADDING = 16
 
 /**
- * The padding used for the dialog.
- */
-private const val DIALOG_PADDING = 16
-
-/**
  * The maximum number of lines for the biography.
  */
 private const val MAX_LINES = 2
 
-/**
- * The alpha value used for the dialog.
- */
-private const val ALPHA_VALUE = 0.5f
 
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param dev [About] The developer's information.
- * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
+ * @param gitOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
  * @param emailOnClick (String) -> Unit The function to be called when the user clicks on the email icon.
- * @param onClick () -> Unit The function to be called when the user clicks on the developer's profile.
+ * @param onShowDialog () -> Unit The function to be called when the user clicks on the developer's profile.
  */
 @Composable
 fun DeveloperContent(
     modifier: Modifier = Modifier,
     dev: About,
-    uriOnClick: (Uri) -> Unit = {},
-    emailOnClick: (String) -> Unit = {},
-    onClick: () -> Unit = {}
+    showDialog: Boolean = false,
+    gitOnClick: () -> Unit = {},
+    linkedInOnClick: () -> Unit = {},
+    emailOnClick: () -> Unit = {},
+    onShowDialog: () -> Unit = {},
+    onIsExpanded: () -> Unit = {},
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     Column(
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .wrapContentSize(Alignment.Center),
+        modifier = modifier.testTag(DEVELOPER_CONTENT_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             modifier =
-            modifier
+            Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onClick),
+                .testTag(DEVELOPER_CONTENT_CONTAINER_TAG)
+                .clickable(onClick = onIsExpanded),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = dev.imageId ?: R.drawable.user_mark),
                 contentDescription = "Developer Profile Picture",
-                modifier =
-                modifier
+                modifier = Modifier
                     .size(IMAGE_SIZE.dp)
+                    .testTag(DEVELOPER_CONTENT_IMAGE_TAG)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.extraLarge)
             )
+            Text(
+                text = dev.name,
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .testTag(DEVELOPER_CONTENT_NAME_TAG)
+                    .padding(PADDING.dp),
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center,
+            )
         }
         Text(
-            text = dev.name,
-            modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(PADDING.dp),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center,
-        )
-        Box(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(PADDING.dp)
-                .clickable { showDialog = !showDialog },
-        ) {
-            Text(
-                text = dev.bio ?: "No biography available.",
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = MAX_LINES
+                .testTag(DEVELOPER_CONTENT_BIO_TAG)
+                .clickable(onClick = onShowDialog),
+            text = dev.bio ?: "No biography available.",
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = MAX_LINES
+        )
+        HorizontalDivider()
+        dev.socialMedia?.let { social ->
+            SocialMediaLayout(
+                modifier = Modifier
+                    .testTag(DEVELOPER_CONTENT_SOCIAL_MEDIA_TAG)
+                    .fillMaxWidth(),
+                social = social,
+                gitOnClick = gitOnClick,
+                linkedInOnClick = linkedInOnClick,
             )
         }
-        HorizontalDivider()
-        SocialMediaLayout(dev.socialMedia, modifier, uriOnClick)
         MakeSocialMediaMark(
-            modifier = modifier,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(DEVELOPER_CONTENT_EMAIL_TAG)
+                .clickable(onClick = emailOnClick),
             lightMode = R.drawable.mail_dark,
             darkMode = R.drawable.mail_light,
-            contendDescription = "Email Logo",
-            contend = dev.email.email,
-            onClick = emailOnClick
+            contentDescription = "Email Logo",
         )
-        if (showDialog) {
-            Dialog(onDismissRequest = { showDialog = false }) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = Color.Black.copy(alpha = ALPHA_VALUE),
-                            shape = MaterialTheme.shapes.extraLarge
-                        )
-                        .padding(DIALOG_PADDING.dp)
-                        .clickable { showDialog = !showDialog },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column {
-                        Text(
-                            text = dev.bio ?: "No biography available.",
-                            textAlign = TextAlign.Center,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-/**
- * The composable function that displays the developer's social media icons.
- * @param social [About] The developer's information.
- * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
- */
-@Composable
-private fun SocialMediaLayout(
-    social: SocialMedia?,
-    modifier: Modifier,
-    uriOnClick: (Uri) -> Unit
-) {
-    social?.let { socialMedia ->
-        socialMedia.gitHub?.let { gitHub ->
-            MakeSocialMediaMark(
-                modifier = modifier,
-                lightMode = R.drawable.github_mark,
-                darkMode = R.drawable.github_mark_white,
-                contendDescription = "GitHub Logo",
-                contend = Uri.parse(gitHub.toString()),
-                onClick = uriOnClick
+        ShowDialog(
+            showDialog = showDialog,
+            onDismissRequest = onShowDialog
+        ) {
+            Text(
+                modifier = Modifier.testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG),
+                text = dev.bio ?: "No biography available.",
+                textAlign = TextAlign.Center,
+                color = Color.White
             )
-            HorizontalDivider()
-        }
-        socialMedia.linkedIn?.let { linkedIn ->
-            MakeSocialMediaMark(
-                modifier = modifier,
-                lightMode = R.drawable.linkdin_mark,
-                darkMode = R.drawable.linkdin_mark,
-                contendDescription = "LinkedIn Logo",
-                contend = Uri.parse(linkedIn.toString()),
-                onClick = uriOnClick
-            )
-            HorizontalDivider()
         }
     }
 }
