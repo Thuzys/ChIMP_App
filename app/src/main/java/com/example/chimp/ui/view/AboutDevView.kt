@@ -20,13 +20,14 @@ import java.net.URL
 
 
  //TODO: The developers will be hardcoded for now, but in production code,
- // will encapsulate on viewmodel class
+ // they will be encapsulated on viewmodel class
 private fun getDevelopers(): List<About> {
-    val email = Email("A50543@alunos.isel.pt")
+    val email1 = Email("A50543@alunos.isel.pt")
+    val email2 = Email("A50471@alunos.isel.pt")
     return listOf(
         About(
             name = "Arthur Oliveira",
-            email = email,
+            email = email1,
             socialMedia = SocialMedia(
                 gitHub = URL("https://github.com/Thuzys"),
                 linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
@@ -35,6 +36,16 @@ private fun getDevelopers(): List<About> {
                     "technology and software development. I'm always looking for new challenges " +
                     "and opportunities to learn and grow.",
             imageId = R.drawable.thuzy_profile_pic
+        ),
+        About(
+            name = "Brian Melhorado",
+            email2,
+            socialMedia = SocialMedia(
+                gitHub = URL("https://github.com/Brgm37"),
+                linkedIn = URL("https://www.linkedin.com/in/brian-melhorado-449794307")
+            ),
+            bio = "I´m Groot",
+            imageId = R.drawable.brian_profile_pic
         )
     )
 }
