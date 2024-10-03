@@ -1,17 +1,15 @@
 package com.example.chimp.ui.composable
 
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -20,46 +18,59 @@ import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import java.net.URL
 
+const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
 
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param dev [About] The developer's information.
- * @param uriOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub icon.
- * @param emailOnClick (String) -> Unit The function to be called when the user clicks on the email icon.
+ * @param isExpanded Boolean The state of the developer's profile.
+ * @param gitOnClick () -> Unit The function to be called when the user clicks on the GitHub icon.
+ * @param linkedInOnClick () -> Unit The function to be called when the user clicks on the LinkedIn icon.
+ * @param emailOnClick () -> Unit The function to be called when the user clicks on the email icon.
+ * @param onShowDialogChange () -> Unit The function to be called when the user clicks on the dev's bio.
+ * @param onIsExpandedChange () -> Unit The function to be called when the user clicks on the dev's profile.
  */
 @Composable
 fun AboutDeveloper(
     modifier: Modifier = Modifier,
     dev: About,
-    uriOnClick: (Uri) -> Unit = {},
-    emailOnClick: (String) -> Unit = {}
+    isExpanded: Boolean = false,
+    showDialog: Boolean = false,
+    gitOnClick: () -> Unit = {},
+    linkedInOnClick: () -> Unit = {},
+    emailOnClick: () -> Unit = {},
+    onShowDialogChange: () -> Unit = {},
+    onIsExpandedChange: () -> Unit = {},
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
     Card(
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Column(
-            modifier =
-            modifier
-                .fillMaxWidth()
+            modifier = modifier.testTag(ABOUT_DEVELOPER_TAG),
         ) {
             if (!isExpanded) {
-                DeveloperHeader(modifier, dev.imageId, dev.name) {
-                    isExpanded = !isExpanded
-                }
+                Header(
+                    modifier = Modifier
+                        .clickable(onClick = onIsExpandedChange),
+                    profileId = dev.imageId,
+                    profileName = dev.name,
+                )
             }
             AnimatedVisibility(
                 visible = isExpanded
             ) {
                 DeveloperContent(
-                    modifier,
-                    dev,
-                    uriOnClick = uriOnClick,
+                    modifier = Modifier
+                        .wrapContentSize(Alignment.Center),
+                    dev = dev,
+                    showDialog = showDialog,
+                    gitOnClick = gitOnClick,
+                    linkedInOnClick = linkedInOnClick,
                     emailOnClick = emailOnClick,
-                ) {
-                    isExpanded = !isExpanded
-                }
+                    onShowDialog = onShowDialogChange,
+                    onIsExpanded = onIsExpandedChange,
+                )
             }
         }
     }
@@ -85,5 +96,5 @@ private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
 private fun AboutDeveloperPreview(
     @PreviewParameter(AboutDeveloperPreviewClass::class) value: About
 ) {
-    AboutDeveloper(dev = value)
+    AboutDeveloper(dev = value, linkedInOnClick = {})
 }

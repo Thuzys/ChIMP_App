@@ -1,43 +1,37 @@
 package com.example.chimp.ui.composable
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 
+const val SOCIAL_MEDIA_MARK_TAG = "SocialMediaMark"
+
 /**
  * The composable function that displays the social media mark.
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param lightMode [Int] The light mode image resource id.
  * @param darkMode [Int] The dark mode image resource id.
- * @param contendDescription [String] The content description of the image.
- * @param contend [T] The type of contend to be handle on onClick function.
- * @param onClick (T) -> Unit The function to be called when the user clicks on the image.
+ * @param contentDescription [String] The content description of the image.
  */
 @Composable
-fun <T>MakeSocialMediaMark(
+fun MakeSocialMediaMark(
     modifier: Modifier = Modifier,
     lightMode: Int,
     darkMode: Int,
-    contendDescription: String,
-    contend: T,
-    onClick: (T) -> Unit = {}
+    contentDescription: String,
 ) {
     Row(
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .clickable(onClick = { onClick(contend) }),
+        modifier = modifier.testTag(SOCIAL_MEDIA_MARK_TAG),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         MakeMark(
@@ -46,7 +40,7 @@ fun <T>MakeSocialMediaMark(
                 .padding(4.dp),
             lightMode = lightMode,
             darkMode = darkMode,
-            contendDescription = contendDescription
+            contentDescription = contentDescription
         )
     }
 }
@@ -67,9 +61,7 @@ private fun MakeSocialMediaMarkPreview(
     MakeSocialMediaMark(
         lightMode = image.first,
         darkMode = image.second,
-        contendDescription = "Email Logo",
-        contend = "dummy",
-        onClick = { }
+        contentDescription = "Email Logo",
     )
 }
 
@@ -84,8 +76,6 @@ private fun MakeSocialMediaMarkPreview2(
     MakeSocialMediaMark(
         lightMode = image.first,
         darkMode = image.second,
-        contendDescription = "GitHub Logo",
-        contend = "dummy",
-        onClick = { }
+        contentDescription = "GitHub Logo",
     )
 }
