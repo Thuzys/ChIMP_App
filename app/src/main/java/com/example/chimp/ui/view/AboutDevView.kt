@@ -5,15 +5,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.chimp.model.about.About
 import com.example.chimp.ui.composable.AboutDeveloper
-import com.example.chimp.viewModel.state.ChimpState
+import com.example.chimp.viewModel.state.AboutDevState
 import java.net.URL
+
+const val ABOUT_DEV_VIEW = "AboutDevView"
 
 /**
  * The composable function that displays the developer's information view.
  * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param state [ChimpState.AboutDevState] The state of the developers.
+ * @param state [AboutDevState] The state of the developers.
  * @param onShowDialogChange
  * ([About]) -> Unit The function to be called when the user clicks on the email icon.
  * @param onIsExpandedChange
@@ -22,12 +25,12 @@ import java.net.URL
 @Composable
 fun AboutDevView(
     modifier: Modifier = Modifier,
-    state: ChimpState.AboutDevState,
+    state: AboutDevState,
     onShowDialogChange: (About) -> Unit,
     onIsExpandedChange: (About) -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.testTag(ABOUT_DEV_VIEW)
     ) {
         state
             .aboutSelectorsList

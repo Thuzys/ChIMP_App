@@ -3,9 +3,12 @@ package com.example.chimp.ui.composable
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.SocialMedia
+
+const val SOCIAL_MEDIA_LAYOUT_TAG = "SocialMediaLayout"
 
 /**
  * The composable function that displays the developer's social media icons.
@@ -16,26 +19,30 @@ import com.example.chimp.model.about.SocialMedia
  */
 @Composable
 fun SocialMediaLayout(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     social: SocialMedia,
     gitOnClick: () -> Unit,
     linkedInOnClick: () -> Unit,
 ) {
     social.gitHub?.let {
         MakeSocialMediaMark(
-            modifier = modifier.clickable(onClick = gitOnClick),
+            modifier = modifier
+                .clickable(onClick = gitOnClick)
+                .testTag(SOCIAL_MEDIA_LAYOUT_TAG),
             lightMode = R.drawable.github_mark,
             darkMode = R.drawable.github_mark_white,
-            contendDescription = "GitHub Logo",
+            contentDescription = "GitHub Logo",
         )
         HorizontalDivider()
     }
     social.linkedIn?.let {
         MakeSocialMediaMark(
-            modifier = modifier.clickable(onClick = linkedInOnClick),
+            modifier = modifier
+                .clickable(onClick = linkedInOnClick)
+                .testTag(SOCIAL_MEDIA_LAYOUT_TAG),
             lightMode = R.drawable.linkdin_mark,
             darkMode = R.drawable.linkdin_mark,
-            contendDescription = "LinkedIn Logo",
+            contentDescription = "LinkedIn Logo",
         )
         HorizontalDivider()
     }

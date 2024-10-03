@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,13 +26,22 @@ import com.example.chimp.R
 import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
-import com.example.chimp.view.ShowDialog
 import java.net.URL
+
+const val DEVELOPER_CONTENT_TAG = "DeveloperContent"
+const val DEVELOPER_CONTENT_CONTAINER_TAG = "DeveloperContentContainer"
+const val DEVELOPER_CONTENT_IMAGE_TAG = "DeveloperContentImage"
+const val DEVELOPER_CONTENT_NAME_TAG = "DeveloperContentName"
+const val DEVELOPER_CONTENT_BIO_TAG = "DeveloperContentBio"
+const val DEVELOPER_CONTENT_SOCIAL_MEDIA_TAG = "DeveloperContentSocialMedia"
+const val DEVELOPER_CONTENT_EMAIL_TAG = "DeveloperContentEmail"
+const val DEVELOPER_CONTENT_COMPLETE_BIO_TAG = "DeveloperContentCompleteBio"
 
 /**
  * The size used for the developer's profile picture.
  */
 private const val IMAGE_SIZE = 200
+
 /**
  * The padding used for the developer's profile text.
  */
@@ -63,22 +73,23 @@ fun DeveloperContent(
     onIsExpanded: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag(DEVELOPER_CONTENT_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             modifier =
             Modifier
                 .fillMaxWidth()
+                .testTag(DEVELOPER_CONTENT_CONTAINER_TAG)
                 .clickable(onClick = onIsExpanded),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(id = dev.imageId ?: R.drawable.user_mark),
                 contentDescription = "Developer Profile Picture",
-                modifier =
-                Modifier
+                modifier = Modifier
                     .size(IMAGE_SIZE.dp)
+                    .testTag(DEVELOPER_CONTENT_IMAGE_TAG)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.extraLarge)
             )
@@ -87,6 +98,7 @@ fun DeveloperContent(
                 modifier =
                 Modifier
                     .fillMaxWidth()
+                    .testTag(DEVELOPER_CONTENT_NAME_TAG)
                     .padding(PADDING.dp),
                 style = MaterialTheme.typography.headlineLarge,
                 textAlign = TextAlign.Center,
@@ -96,6 +108,7 @@ fun DeveloperContent(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(PADDING.dp)
+                .testTag(DEVELOPER_CONTENT_BIO_TAG)
                 .clickable(onClick = onShowDialog),
             text = dev.bio ?: "No biography available.",
             textAlign = TextAlign.Center,
@@ -106,6 +119,7 @@ fun DeveloperContent(
         dev.socialMedia?.let { social ->
             SocialMediaLayout(
                 modifier = Modifier
+                    .testTag(DEVELOPER_CONTENT_SOCIAL_MEDIA_TAG)
                     .fillMaxWidth(),
                 social = social,
                 gitOnClick = gitOnClick,
@@ -115,16 +129,18 @@ fun DeveloperContent(
         MakeSocialMediaMark(
             modifier = Modifier
                 .fillMaxWidth()
+                .testTag(DEVELOPER_CONTENT_EMAIL_TAG)
                 .clickable(onClick = emailOnClick),
             lightMode = R.drawable.mail_dark,
             darkMode = R.drawable.mail_light,
-            contendDescription = "Email Logo",
+            contentDescription = "Email Logo",
         )
         ShowDialog(
             showDialog = showDialog,
             onDismissRequest = onShowDialog
         ) {
             Text(
+                modifier = Modifier.testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG),
                 text = dev.bio ?: "No biography available.",
                 textAlign = TextAlign.Center,
                 color = Color.White

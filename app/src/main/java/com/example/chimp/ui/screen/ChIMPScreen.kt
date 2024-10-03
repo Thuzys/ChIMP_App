@@ -17,6 +17,7 @@ import com.example.chimp.model.about.About
 import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import com.example.chimp.ui.view.AboutDevView
+import com.example.chimp.viewModel.state.AboutDevState
 import com.example.chimp.viewModel.state.ChimpState
 import java.net.URL
 
@@ -25,7 +26,7 @@ private fun getDevelopers(): List<About> {
     val email = Email("A50543@alunos.isel.pt")
     return listOf(
         About(
-            name = "Arthur Oliveira",
+            name = "Arthur Oliveira - 50543",
             email = email,
             socialMedia = SocialMedia(
                 gitHub = URL("https://github.com/Thuzys"),
@@ -39,18 +40,14 @@ private fun getDevelopers(): List<About> {
     )
 }
 
-//TODO: Add tag to composable functions
-//TODO: add a aux repository to the project. See if is possible.
-//TODO: Make tests for the functions
 @Composable
 fun ChIMPScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var state: ChimpState by
-        remember { mutableStateOf(ChimpState.AboutDevState(getDevelopers(), context)) }
+    var state: ChimpState by remember { mutableStateOf(AboutDevState(getDevelopers(), context)) }
     when(val currentState = state) {
-        is ChimpState.AboutDevState -> {
+        is AboutDevState -> {
             AboutDevView(
                 modifier = modifier
                     .fillMaxSize()

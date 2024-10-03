@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -17,6 +18,7 @@ import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import java.net.URL
 
+const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
 
 /**
  * The composable function that displays the developer's information.
@@ -45,10 +47,10 @@ fun AboutDeveloper(
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Column(
-            modifier = modifier
+            modifier = modifier.testTag(ABOUT_DEVELOPER_TAG),
         ) {
             if (!isExpanded) {
-                DeveloperHeader(
+                Header(
                     modifier = Modifier
                         .clickable(onClick = onIsExpandedChange),
                     profileId = dev.imageId,
