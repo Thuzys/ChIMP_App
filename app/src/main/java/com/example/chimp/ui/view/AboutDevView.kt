@@ -1,17 +1,20 @@
 package com.example.chimp.ui.view
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
 import com.example.chimp.model.about.About
 import com.example.chimp.ui.composable.AboutDeveloper
 import com.example.chimp.viewModel.state.AboutDevState
 import java.net.URL
 
 const val ABOUT_DEV_VIEW = "AboutDevView"
+private const val SPACE_BETWEEN_DEVS = 4
 
 /**
  * The composable function that displays the developer's information view.
@@ -30,7 +33,8 @@ fun AboutDevView(
     onIsExpandedChange: (About) -> Unit
 ) {
     Column(
-        modifier = modifier.testTag(ABOUT_DEV_VIEW)
+        modifier = modifier.testTag(ABOUT_DEV_VIEW),
+        verticalArrangement = spacedBy(SPACE_BETWEEN_DEVS.dp)
     ) {
         state
             .aboutSelectorsList
