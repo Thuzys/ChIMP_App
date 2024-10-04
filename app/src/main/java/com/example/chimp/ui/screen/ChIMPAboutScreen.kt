@@ -18,7 +18,6 @@ import com.example.chimp.model.about.Email
 import com.example.chimp.model.about.SocialMedia
 import com.example.chimp.ui.view.AboutDevView
 import com.example.chimp.viewModel.state.AboutDevState
-import com.example.chimp.viewModel.state.ChimpState
 import java.net.URL
 
 //TODO: see a more fitting file for this function
@@ -26,7 +25,34 @@ private fun getDevelopers(): List<About> {
     val email = Email("A50543@alunos.isel.pt")
     return listOf(
         About(
-            name = "Arthur Oliveira - 50543",
+            name = "Arthur Oliveira",
+            number = "50543",
+            email = email,
+            socialMedia = SocialMedia(
+                gitHub = URL("https://github.com/Thuzys"),
+                linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
+            ),
+            bio = "I'm a student at ISEL, studying computer engineering. I'm passionate about " +
+                    "technology and software development. I'm always looking for new challenges " +
+                    "and opportunities to learn and grow.",
+            imageId = R.drawable.thuzy_profile_pic
+        ),
+        About(
+            name = "Arthur Oliveira 1",
+            number = "50543",
+            email = email,
+            socialMedia = SocialMedia(
+                gitHub = URL("https://github.com/Thuzys"),
+                linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
+            ),
+            bio = "I'm a student at ISEL, studying computer engineering. I'm passionate about " +
+                    "technology and software development. I'm always looking for new challenges " +
+                    "and opportunities to learn and grow.",
+            imageId = R.drawable.thuzy_profile_pic
+        ),
+        About(
+            name = "Arthur Oliveira 2",
+            number = "50543",
             email = email,
             socialMedia = SocialMedia(
                 gitHub = URL("https://github.com/Thuzys"),
@@ -41,22 +67,18 @@ private fun getDevelopers(): List<About> {
 }
 
 @Composable
-fun ChIMPScreen(
+fun ChIMPAboutScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    var state: ChimpState by remember { mutableStateOf(AboutDevState(getDevelopers(), context)) }
-    when(val currentState = state) {
-        is AboutDevState -> {
-            AboutDevView(
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-                    .verticalScroll(rememberScrollState()),
-                state = currentState,
-                onShowDialogChange = { state = currentState.toggleDialog(it) },
-                onIsExpandedChange = { state = currentState.toggleExpanded(it) }
-            )
-        }
-    }
+    var state: AboutDevState by remember { mutableStateOf(AboutDevState(getDevelopers(), context)) }
+    AboutDevView(
+        modifier = modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+            .verticalScroll(rememberScrollState()),
+        state = state,
+        onShowDialogChange = { state = state.toggleDialog(it) },
+        onIsExpandedChange = { state = state.toggleExpanded(it) }
+    )
 }

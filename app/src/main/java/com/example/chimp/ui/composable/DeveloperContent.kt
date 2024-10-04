@@ -94,7 +94,7 @@ fun DeveloperContent(
                     .clip(MaterialTheme.shapes.extraLarge)
             )
             Text(
-                text = dev.name,
+                text = "${dev.name} - ${dev.number}",
                 modifier =
                 Modifier
                     .fillMaxWidth()
@@ -153,6 +153,7 @@ private class DeveloperContentPreviewClass : PreviewParameterProvider<About> {
     override val values: Sequence<About> = sequenceOf(
         About(
             name = "Arthur Oliveira",
+            number = "50543",
             email = Email("A50543@alunos.isel.pt"),
             socialMedia = SocialMedia(
                 gitHub = URL("https://github.com/Thuzys"),
