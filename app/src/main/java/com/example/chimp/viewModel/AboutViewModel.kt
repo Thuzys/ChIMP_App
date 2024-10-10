@@ -3,7 +3,6 @@ package com.example.chimp.viewModel
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.chimp.R
 import com.example.chimp.model.dev.Dev
@@ -75,6 +74,10 @@ class AboutViewModel : ViewModel() {
 
     fun showDialog(dev: Dev) {
         state = AboutScreenState.ShowDialog(dev)
+    }
+
+    fun idle() {
+        state = AboutScreenState.Idle
     }
 
     fun linkActivity(uri: Uri, context: Context) {
