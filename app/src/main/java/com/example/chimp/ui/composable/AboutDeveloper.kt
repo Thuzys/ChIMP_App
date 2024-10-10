@@ -80,6 +80,7 @@ private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
     val email = Email("test@mail.com")
     val dev = About(
         name = "Arthur Oliveira",
+        number = "50543",
         email = email,
         socialMedia = SocialMedia(
             gitHub = URL("https://test.com"),

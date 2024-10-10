@@ -10,11 +10,12 @@ data class AboutDevState(
     private val aboutList: List<About>,
     private val context: Context,
     val aboutSelectorsList: Map<About, AboutSelector> = aboutList.associateWith { AboutSelector() }
-) : ChimpState {
+) {
     data class AboutSelector(
         val isExpanded: Boolean = false,
         val showDialog: Boolean = false,
     )
+
     fun linkMaker(uri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW)
             .apply {
@@ -22,6 +23,7 @@ data class AboutDevState(
             }
         context.startActivity(intent)
     }
+
     fun sendMaker(address: String) {
         val intent = Intent(Intent.ACTION_SEND)
             .apply {
@@ -30,6 +32,7 @@ data class AboutDevState(
             }
         context.startActivity(intent)
     }
+
     fun toggleExpanded(index: About): AboutDevState {
         val newAboutSelectorsList = aboutSelectorsList.mapValues { (dev, selector) ->
             if (dev == index) {
@@ -40,6 +43,7 @@ data class AboutDevState(
         }
         return copy(aboutSelectorsList = newAboutSelectorsList)
     }
+
     fun toggleDialog(index: About): AboutDevState {
         val newAboutSelectorsList = aboutSelectorsList.mapValues { (dev, selector) ->
             if (dev == index) {

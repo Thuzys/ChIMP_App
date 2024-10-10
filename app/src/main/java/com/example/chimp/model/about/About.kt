@@ -11,6 +11,7 @@ package com.example.chimp.model.about
  */
 data class About(
     val name: String,
+    val number: String,
     val email: Email,
     val socialMedia: SocialMedia? = null,
     val bio: String? = null,
@@ -18,6 +19,6 @@ data class About(
 ) {
     init {
         require(name.isNotBlank()) { "Name must not be blank." }
+        require(number.isNotBlank()) { "Number must not be blank." }
     }
-
 }
