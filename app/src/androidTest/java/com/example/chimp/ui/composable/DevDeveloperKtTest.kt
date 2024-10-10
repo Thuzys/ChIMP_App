@@ -1,23 +1,22 @@
 package com.example.chimp.ui.composable
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.example.chimp.model.about.About
-import com.example.chimp.model.about.Email
+import com.example.chimp.model.dev.Dev
+import com.example.chimp.model.dev.Email
 import org.junit.Rule
 import org.junit.Test
 
-class AboutDeveloperKtTest {
+class DevDeveloperKtTest {
     @get:Rule
     val rule = createComposeRule()
 
     private val name = "Chimp"
-    private val dev = About(name, Email("mail@test.com"))
+    private val dev = Dev(name, Email("mail@test.com"))
 
     @Test
     fun `show developer header`() {

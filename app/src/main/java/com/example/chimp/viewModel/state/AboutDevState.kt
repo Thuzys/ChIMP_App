@@ -3,13 +3,13 @@ package com.example.chimp.viewModel.state
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.example.chimp.model.about.About
+import com.example.chimp.model.dev.Dev
 
 //TODO: Add Saver annotation to AboutDevState
 data class AboutDevState(
-    private val aboutList: List<About>,
+    private val devList: List<Dev>,
     private val context: Context,
-    val aboutSelectorsList: Map<About, AboutSelector> = aboutList.associateWith { AboutSelector() }
+    val devSelectorsList: Map<Dev, AboutSelector> = devList.associateWith { AboutSelector() }
 ) {
     data class AboutSelector(
         val isExpanded: Boolean = false,
@@ -33,25 +33,25 @@ data class AboutDevState(
         context.startActivity(intent)
     }
 
-    fun toggleExpanded(index: About): AboutDevState {
-        val newAboutSelectorsList = aboutSelectorsList.mapValues { (dev, selector) ->
+    fun toggleExpanded(index: Dev): AboutDevState {
+        val newAboutSelectorsList = devSelectorsList.mapValues { (dev, selector) ->
             if (dev == index) {
                 selector.copy(isExpanded = !selector.isExpanded)
             } else {
                 selector.copy(isExpanded = false)
             }
         }
-        return copy(aboutSelectorsList = newAboutSelectorsList)
+        return copy(devSelectorsList = newAboutSelectorsList)
     }
 
-    fun toggleDialog(index: About): AboutDevState {
-        val newAboutSelectorsList = aboutSelectorsList.mapValues { (dev, selector) ->
+    fun toggleDialog(index: Dev): AboutDevState {
+        val newAboutSelectorsList = devSelectorsList.mapValues { (dev, selector) ->
             if (dev == index) {
                 selector.copy(showDialog = !selector.showDialog)
             } else {
                 selector.copy(showDialog = false)
             }
         }
-        return copy(aboutSelectorsList = newAboutSelectorsList)
+        return copy(devSelectorsList = newAboutSelectorsList)
     }
 }

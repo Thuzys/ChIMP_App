@@ -1,4 +1,4 @@
-package com.example.chimp.model.about
+package com.example.chimp.model.dev
 
 import org.junit.Test
 import java.net.URL

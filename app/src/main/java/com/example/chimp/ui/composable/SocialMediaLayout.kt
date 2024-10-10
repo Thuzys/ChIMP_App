@@ -5,15 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.chimp.R
-import com.example.chimp.model.about.About
-import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.model.dev.Dev
+import com.example.chimp.model.dev.SocialMedia
 
 const val SOCIAL_MEDIA_LAYOUT_TAG = "SocialMediaLayout"
 
 /**
  * The composable function that displays the developer's social media icons.
  * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param social [About] The developer's information.
+ * @param social [Dev] The developer's information.
  * @param gitOnClick () -> Unit The function to be called when the user clicks on the GitHub icon.
  * @param linkedInOnClick () -> Unit The function to be called when the user clicks on the LinkedIn icon.
  */

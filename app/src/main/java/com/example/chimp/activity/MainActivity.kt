@@ -1,4 +1,4 @@
-package com.example.chimp
+package com.example.chimp.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

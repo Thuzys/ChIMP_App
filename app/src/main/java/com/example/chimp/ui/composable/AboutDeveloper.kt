@@ -13,9 +13,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.example.chimp.model.about.About
-import com.example.chimp.model.about.Email
-import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.model.dev.Dev
+import com.example.chimp.model.dev.Email
+import com.example.chimp.model.dev.SocialMedia
 import java.net.URL
 
 const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
@@ -23,7 +23,7 @@ const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param dev [About] The developer's information.
+ * @param dev [Dev] The developer's information.
  * @param isExpanded Boolean The state of the developer's profile.
  * @param gitOnClick () -> Unit The function to be called when the user clicks on the GitHub icon.
  * @param linkedInOnClick () -> Unit The function to be called when the user clicks on the LinkedIn icon.
@@ -34,7 +34,7 @@ const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
 @Composable
 fun AboutDeveloper(
     modifier: Modifier = Modifier,
-    dev: About,
+    dev: Dev,
     isExpanded: Boolean = false,
     showDialog: Boolean = false,
     gitOnClick: () -> Unit = {},
@@ -76,9 +76,9 @@ fun AboutDeveloper(
     }
 }
 
-private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
+private class AboutDeveloperPreviewClass : PreviewParameterProvider<Dev> {
     val email = Email("test@mail.com")
-    val dev = About(
+    val dev = Dev(
         name = "Arthur Oliveira",
         number = "50543",
         email = email,
@@ -87,7 +87,7 @@ private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
             linkedIn = URL("https://test.com")
         )
     )
-    override val values: Sequence<About> =
+    override val values: Sequence<Dev> =
         sequenceOf(dev)
 }
 
@@ -95,7 +95,7 @@ private class AboutDeveloperPreviewClass : PreviewParameterProvider<About> {
 @Composable
 @Preview(showBackground = true)
 private fun AboutDeveloperPreview(
-    @PreviewParameter(AboutDeveloperPreviewClass::class) value: About
+    @PreviewParameter(AboutDeveloperPreviewClass::class) value: Dev
 ) {
     AboutDeveloper(dev = value, linkedInOnClick = {})
 }

@@ -1,9 +1,9 @@
-package com.example.chimp.model.about
+package com.example.chimp.model.dev
 
 import org.junit.Test
 import java.net.URL
 
-class AboutTest {
+class DevTest {
 
     @Test
     fun `successful About instantiation`() {
@@ -14,7 +14,7 @@ class AboutTest {
         val linkedInUrl = "https://linkedin.com/in/username"
         val socialMedia = SocialMedia(URL(gitHubUrl), URL(linkedInUrl))
         val bio = "Test bio"
-        About(name, number, Email(email), socialMedia, bio)
+        Dev(name, number, Email(email), socialMedia, bio)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -22,7 +22,7 @@ class AboutTest {
         val name = ""
         val number = "12345"
         val email = "test@gmail.com"
-        About(name, number, Email(email))
+        Dev(name, number, Email(email))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -30,6 +30,6 @@ class AboutTest {
         val name = "Test Test"
         val number = ""
         val email = "test@gmail.com"
-        About(name, number, Email(email))
+        Dev(name, number, Email(email))
     }
 }
