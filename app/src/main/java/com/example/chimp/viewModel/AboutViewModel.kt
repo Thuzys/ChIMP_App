@@ -1,20 +1,19 @@
-package com.example.chimp.ui.screen
+package com.example.chimp.viewModel
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModel
 import com.example.chimp.R
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.model.dev.Email
 import com.example.chimp.model.dev.SocialMedia
-import com.example.chimp.viewModel.AboutScreenState
-import com.example.chimp.viewModel.AboutViewModel
 import java.net.URL
 
-//TODO: see a more fitting file for this function
-private fun getDevelopers(): List<Dev> {
+private fun getDevelopers(): Set<Dev> {
     val email = Email("A50543@alunos.isel.pt")
-    return listOf(
+    return setOf(
         Dev(
             name = "Arthur Oliveira",
             number = "50543",
@@ -57,31 +56,41 @@ private fun getDevelopers(): List<Dev> {
     )
 }
 
-@Composable
-fun ChIMPAboutScreen(
-    modifier: Modifier = Modifier,
-    viewModel: AboutViewModel
-) {
-    val context = LocalContext.current
-    val state = viewModel.state
-    when (state) {
-        is AboutScreenState.Idle -> {
-            IdleAboutDevView()
-        }
-        is AboutScreenState.Showing -> {
-            ShowingAboutDevView()
-        }
-        is AboutScreenState.ShowDialog -> {
-            ShowDialogAboutDevView()
-        }
+sealed class AboutScreenState {
+    companion object {
+        val devs: Set<Dev> = getDevelopers()
     }
-//    AboutDevView(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .wrapContentSize(Alignment.Center)
-//            .verticalScroll(rememberScrollState()),
-//        state = state,
-//        onShowDialogChange = { state = state.toggleDialog(it) },
-//        onIsExpandedChange = { state = state.toggleExpanded(it) }
-//    )
+    data object Idle : AboutScreenState()
+    data class Showing(val dev: Dev) : AboutScreenState()
+    data class ShowDialog(val dev: Dev) : AboutScreenState()
+}
+
+class AboutViewModel : ViewModel() {
+    var state: AboutScreenState = AboutScreenState.Idle
+        private set
+
+    fun showDev(dev: Dev) {
+        state = AboutScreenState.Showing(dev)
+    }
+
+    fun showDialog(dev: Dev) {
+        state = AboutScreenState.ShowDialog(dev)
+    }
+
+    fun linkActivity(uri: Uri, context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW)
+            .apply {
+                data = uri
+            }
+        context.startActivity(intent)
+    }
+
+    fun sendActivity(address: String, context: Context) {
+        val intent = Intent(Intent.ACTION_SEND)
+            .apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(address))
+            }
+        context.startActivity(intent)
+    }
 }

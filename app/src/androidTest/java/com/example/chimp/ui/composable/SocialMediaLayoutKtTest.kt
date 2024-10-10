@@ -3,7 +3,7 @@ package com.example.chimp.ui.composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.model.dev.SocialMedia
 import org.junit.Rule
 import org.junit.Test
 import java.net.URL

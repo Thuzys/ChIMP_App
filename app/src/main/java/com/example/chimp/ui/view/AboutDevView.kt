@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.chimp.model.about.About
+import com.example.chimp.model.dev.Dev
 import com.example.chimp.ui.composable.AboutDeveloper
 import com.example.chimp.viewModel.state.AboutDevState
 import java.net.URL
@@ -21,23 +21,23 @@ private const val SPACE_BETWEEN_DEVS = 4
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param state [AboutDevState] The state of the developers.
  * @param onShowDialogChange
- * ([About]) -> Unit The function to be called when the user clicks on the email icon.
+ * ([Dev]) -> Unit The function to be called when the user clicks on the email icon.
  * @param onIsExpandedChange
- * ([About]) -> Unit The function to be called when the user clicks on the GitHub icon.
+ * ([Dev]) -> Unit The function to be called when the user clicks on the GitHub icon.
  */
 @Composable
 fun AboutDevView(
     modifier: Modifier = Modifier,
     state: AboutDevState,
-    onShowDialogChange: (About) -> Unit,
-    onIsExpandedChange: (About) -> Unit
+    onShowDialogChange: (Dev) -> Unit,
+    onIsExpandedChange: (Dev) -> Unit
 ) {
     Column(
         modifier = modifier.testTag(ABOUT_DEV_VIEW),
         verticalArrangement = spacedBy(SPACE_BETWEEN_DEVS.dp)
     ) {
         state
-            .aboutSelectorsList
+            .devSelectorsList
             .forEach { (dev, devState) ->
                 val (isExpanded, showDialog) = devState
                 val git = dev.socialMedia?.gitHub

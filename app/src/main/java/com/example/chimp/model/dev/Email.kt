@@ -1,4 +1,4 @@
-package com.example.chimp.model.about
+package com.example.chimp.model.dev
 
 /**
  * Represents an Email.

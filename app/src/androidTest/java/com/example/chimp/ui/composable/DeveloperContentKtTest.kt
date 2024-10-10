@@ -6,9 +6,9 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import com.example.chimp.R
-import com.example.chimp.model.about.About
-import com.example.chimp.model.about.Email
-import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.model.dev.Dev
+import com.example.chimp.model.dev.Email
+import com.example.chimp.model.dev.SocialMedia
 import org.junit.Rule
 import org.junit.Test
 import java.net.URL
@@ -17,7 +17,7 @@ class DeveloperContentKtTest {
     @get:Rule
     val rule = createComposeRule()
 
-    private val dev = About(
+    private val dev = Dev(
         name = "Arthur Oliveira",
         email = Email("A50543@alunos.isel.pt"),
         socialMedia = SocialMedia(

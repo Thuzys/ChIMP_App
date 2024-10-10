@@ -23,9 +23,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.model.about.About
-import com.example.chimp.model.about.Email
-import com.example.chimp.model.about.SocialMedia
+import com.example.chimp.model.dev.Dev
+import com.example.chimp.model.dev.Email
+import com.example.chimp.model.dev.SocialMedia
 import java.net.URL
 
 const val DEVELOPER_CONTENT_TAG = "DeveloperContent"
@@ -56,7 +56,7 @@ private const val MAX_LINES = 2
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param dev [About] The developer's information.
+ * @param dev [Dev] The developer's information.
  * @param gitOnClick (Uri) -> Unit The function to be called when the user clicks on the GitHub/LinkedIn icon.
  * @param emailOnClick (String) -> Unit The function to be called when the user clicks on the email icon.
  * @param onShowDialog () -> Unit The function to be called when the user clicks on the developer's profile.
@@ -64,7 +64,7 @@ private const val MAX_LINES = 2
 @Composable
 fun DeveloperContent(
     modifier: Modifier = Modifier,
-    dev: About,
+    dev: Dev,
     showDialog: Boolean = false,
     gitOnClick: () -> Unit = {},
     linkedInOnClick: () -> Unit = {},
@@ -149,9 +149,9 @@ fun DeveloperContent(
     }
 }
 
-private class DeveloperContentPreviewClass : PreviewParameterProvider<About> {
-    override val values: Sequence<About> = sequenceOf(
-        About(
+private class DeveloperContentPreviewClass : PreviewParameterProvider<Dev> {
+    override val values: Sequence<Dev> = sequenceOf(
+        Dev(
             name = "Arthur Oliveira",
             number = "50543",
             email = Email("A50543@alunos.isel.pt"),
@@ -170,7 +170,7 @@ private class DeveloperContentPreviewClass : PreviewParameterProvider<About> {
     showBackground = true,
 )
 private fun DeveloperContendPreview(
-    @PreviewParameter(DeveloperContentPreviewClass::class) devInfo: About
+    @PreviewParameter(DeveloperContentPreviewClass::class) devInfo: Dev
 ) {
     DeveloperContent(
         dev = devInfo
@@ -184,7 +184,7 @@ private fun DeveloperContendPreview(
 )
 @Composable
 private fun DeveloperContendPreviewDark(
-    @PreviewParameter(DeveloperContentPreviewClass::class) devInfo: About
+    @PreviewParameter(DeveloperContentPreviewClass::class) devInfo: Dev
 ) {
     DeveloperContent(
         dev = devInfo
