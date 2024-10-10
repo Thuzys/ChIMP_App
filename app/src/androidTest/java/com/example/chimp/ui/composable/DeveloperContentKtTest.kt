@@ -24,6 +24,7 @@ class DeveloperContentKtTest {
             gitHub = URL("https://github.com/Thuzys"),
             linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
         ),
+        number = "50543",
         imageId = R.drawable.thuzy_profile_pic
     )
 

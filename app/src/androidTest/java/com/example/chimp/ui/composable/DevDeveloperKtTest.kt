@@ -16,7 +16,7 @@ class DevDeveloperKtTest {
     val rule = createComposeRule()
 
     private val name = "Chimp"
-    private val dev = Dev(name, Email("mail@test.com"))
+    private val dev = Dev(name, number = "12345", Email("mail@test.com"))
 
     @Test
     fun `show developer header`() {
