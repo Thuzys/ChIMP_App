@@ -159,6 +159,15 @@ private class DeveloperContentPreviewClass : PreviewParameterProvider<About> {
                 linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
             ),
             imageId = R.drawable.thuzy_profile_pic
+        ),
+        About(
+            name = "Brian Melhorado",
+            email = Email("A50471@alunos.isel.pt"),
+            socialMedia = SocialMedia(
+                gitHub = URL("https://github.com/Brgm37"),
+                linkedIn = URL("www.linkedin.com/in/brian-melhorado-449794307/")
+            ),
+            imageId = R.drawable.brgm_profile_pic
         )
     )
 }

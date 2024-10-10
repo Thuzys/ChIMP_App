@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.chimp.model.about.About
@@ -30,7 +31,8 @@ fun AboutDevView(
     onIsExpandedChange: (About) -> Unit
 ) {
     Column(
-        modifier = modifier.testTag(ABOUT_DEV_VIEW)
+        modifier = modifier
+            .testTag(ABOUT_DEV_VIEW)
     ) {
         state
             .aboutSelectorsList
