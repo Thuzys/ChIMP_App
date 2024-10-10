@@ -1,76 +1,64 @@
-package com.example.chimp.ui.view
-
-import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement.spacedBy
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.unit.dp
-import com.example.chimp.model.dev.Dev
-import com.example.chimp.ui.composable.AboutDeveloper
-import com.example.chimp.viewModel.state.AboutDevState
-import java.net.URL
-
-const val ABOUT_DEV_VIEW = "AboutDevView"
-private const val SPACE_BETWEEN_DEVS = 4
-
-/**
- * The composable function that displays the developer's information view.
- * @param modifier [Modifier] The modifier to be applied to the layout.
- * @param state [AboutDevState] The state of the developers.
- * @param onShowDialogChange
- * ([Dev]) -> Unit The function to be called when the user clicks on the email icon.
- * @param onIsExpandedChange
- * ([Dev]) -> Unit The function to be called when the user clicks on the GitHub icon.
- */
-@Composable
-fun AboutDevView(
-    modifier: Modifier = Modifier,
-    state: AboutDevState,
-    onShowDialogChange: (Dev) -> Unit,
-    onIsExpandedChange: (Dev) -> Unit
-) {
-    Column(
-        modifier = modifier.testTag(ABOUT_DEV_VIEW),
-        verticalArrangement = spacedBy(SPACE_BETWEEN_DEVS.dp)
-    ) {
-        state
-            .devSelectorsList
-            .forEach { (dev, devState) ->
-                val (isExpanded, showDialog) = devState
-                val git = dev.socialMedia?.gitHub
-                val linkedIn = dev.socialMedia?.linkedIn
-                val gitOnClick: () -> Unit = makeLink(git, state::linkMaker)
-                val linkedInOnClick: () -> Unit = makeLink(linkedIn, state::linkMaker)
-                val emailOnClick = { state.sendMaker(dev.email.email) }
-                AboutDeveloper(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    dev = dev,
-                    isExpanded = isExpanded,
-                    showDialog = showDialog,
-                    gitOnClick = gitOnClick,
-                    linkedInOnClick = linkedInOnClick,
-                    emailOnClick = emailOnClick,
-                    onShowDialogChange = { onShowDialogChange(dev) },
-                    onIsExpandedChange = { onIsExpandedChange(dev) }
-                )
-        }
-    }
-}
-
-/**
- * Creates a function that opens a link when clicked.
- * @param uri [URL] The URL to be opened.
- * @param func ([Uri]) -> Unit The function to be called when the link is clicked.
- * @return () -> Unit The function that opens the link.
- */
-private fun makeLink(uri: URL?, func: (Uri) -> Unit): () -> Unit {
-    return if (uri != null) {
-        { func(Uri.parse(uri.toString())) }
-    } else {
-        { }
-    }
-}
+//package com.example.chimp.ui.view
+//
+//import android.net.Uri
+//import androidx.compose.foundation.layout.Arrangement.spacedBy
+//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.runtime.Composable
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.platform.testTag
+//import androidx.compose.ui.unit.dp
+//import com.example.chimp.model.dev.Dev
+//import com.example.chimp.ui.composable.AboutDeveloper
+//import com.example.chimp.viewModel.state.AboutDevState
+//import java.net.URL
+//
+//const val ABOUT_DEV_VIEW = "AboutDevView"
+//private const val SPACE_BETWEEN_DEVS = 4
+//
+///**
+// * The composable function that displays the developer's information view.
+// * @param modifier [Modifier] The modifier to be applied to the layout.
+// * @param state [AboutDevState] The state of the developers.
+// * @param onShowDialogChange
+// * ([Dev]) -> Unit The function to be called when the user clicks on the email icon.
+// * @param onIsExpandedChange
+// * ([Dev]) -> Unit The function to be called when the user clicks on the GitHub icon.
+// */
+//@Composable
+//fun AboutDevView(
+//    modifier: Modifier = Modifier,
+//    state: AboutDevState,
+//    onShowDialogChange: (Dev) -> Unit,
+//    onIsExpandedChange: (Dev) -> Unit
+//) {
+//    Column(
+//        modifier = modifier.testTag(ABOUT_DEV_VIEW),
+//        verticalArrangement = spacedBy(SPACE_BETWEEN_DEVS.dp)
+//    ) {
+//        state
+//            .devSelectorsList
+//            .forEach { (dev, devState) ->
+//                val (isExpanded, showDialog) = devState
+//                val git = dev.socialMedia?.gitHub
+//                val linkedIn = dev.socialMedia?.linkedIn
+//                val gitOnClick: () -> Unit = makeLink(git, state::linkMaker)
+//                val linkedInOnClick: () -> Unit = makeLink(linkedIn, state::linkMaker)
+//                val emailOnClick = { state.sendMaker(dev.email.email) }
+//                AboutDeveloper(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    dev = dev,
+//                    isExpanded = isExpanded,
+//                    showDialog = showDialog,
+//                    gitOnClick = gitOnClick,
+//                    linkedInOnClick = linkedInOnClick,
+//                    emailOnClick = emailOnClick,
+//                    onShowDialogChange = { onShowDialogChange(dev) },
+//                    onIsExpandedChange = { onIsExpandedChange(dev) }
+//                )
+//        }
+//    }
+//}
+//
+//

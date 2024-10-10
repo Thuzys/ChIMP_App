@@ -23,8 +23,8 @@ class AboutActivity: ComponentActivity() {
             ChIMPTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ChIMPAboutScreen(
-                        modifier = Modifier.padding(innerPadding)
-                        viewModel = viewModel
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel,
                     )
                 }
             }

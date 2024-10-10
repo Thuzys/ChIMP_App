@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ChIMPTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ChIMPAboutScreen(Modifier.padding(innerPadding))
+//                    ChIMPAboutScreen(Modifier.padding(innerPadding))
                 }
             }
         }

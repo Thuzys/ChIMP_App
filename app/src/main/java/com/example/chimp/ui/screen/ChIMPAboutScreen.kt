@@ -1,12 +1,18 @@
 package com.example.chimp.ui.screen
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.chimp.R
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.model.dev.Email
 import com.example.chimp.model.dev.SocialMedia
+import com.example.chimp.ui.view.ShowingAboutDevView
 import com.example.chimp.viewModel.AboutScreenState
 import com.example.chimp.viewModel.AboutViewModel
 import java.net.URL
@@ -62,26 +68,36 @@ fun ChIMPAboutScreen(
     modifier: Modifier = Modifier,
     viewModel: AboutViewModel
 ) {
-    val context = LocalContext.current
-    val state = viewModel.state
-    when (state) {
+    when (val state = viewModel.state) {
         is AboutScreenState.Idle -> {
             IdleAboutDevView()
         }
         is AboutScreenState.Showing -> {
-            ShowingAboutDevView()
+            ShowingAboutDevView(
+                modifier = modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+                    .verticalScroll(rememberScrollState()),
+                state = state,
+                onLinkActivity = viewModel::linkActivity,
+                onSendActivity = viewModel::sendActivity,
+                onIdleChange = viewModel::idle,
+                onShowDialogChange = viewModel::showDialog,
+                onIsExpandedChange = viewModel::showDev
+            )
         }
         is AboutScreenState.ShowDialog -> {
             ShowDialogAboutDevView()
         }
     }
-//    AboutDevView(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .wrapContentSize(Alignment.Center)
-//            .verticalScroll(rememberScrollState()),
-//        state = state,
-//        onShowDialogChange = { state = state.toggleDialog(it) },
-//        onIsExpandedChange = { state = state.toggleExpanded(it) }
-//    )
+}
+
+@Composable
+fun ShowDialogAboutDevView() {
+    TODO("Not yet implemented")
+}
+
+@Composable
+fun IdleAboutDevView() {
+    TODO("Not yet implemented")
 }

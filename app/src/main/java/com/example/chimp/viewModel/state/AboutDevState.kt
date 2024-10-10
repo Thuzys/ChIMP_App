@@ -7,7 +7,7 @@ import com.example.chimp.model.dev.Dev
 
 //TODO: Add Saver annotation to AboutDevState
 data class AboutDevState(
-    private val devList: List<Dev>,
+    private val devList: Set<Dev>,
     private val context: Context,
     val devSelectorsList: Map<Dev, AboutSelector> = devList.associateWith { AboutSelector() }
 ) {
