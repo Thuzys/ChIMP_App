@@ -27,31 +27,15 @@ private fun getDevelopers(): Set<Dev> {
             imageId = R.drawable.thuzy_profile_pic
         ),
         Dev(
-            name = "Arthur Oliveira 1",
-            number = "50543",
-            email = email,
+            name = "Brian Melhorado",
+            number = "50471",
+            email = Email("A50471@alunos.isel.pt"),
             socialMedia = SocialMedia(
-                gitHub = URL("https://github.com/Thuzys"),
-                linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
+                gitHub = URL("https://github.com/Brgm37"),
+                linkedIn = URL("https://www.linkedin.com/in/brian-melhorado-449794307/")
             ),
-            bio = "I'm a student at ISEL, studying computer engineering. I'm passionate about " +
-                    "technology and software development. I'm always looking for new challenges " +
-                    "and opportunities to learn and grow.",
-            imageId = R.drawable.thuzy_profile_pic
+            imageId = R.drawable.brgm_profile_pic
         ),
-        Dev(
-            name = "Arthur Oliveira 2",
-            number = "50543",
-            email = email,
-            socialMedia = SocialMedia(
-                gitHub = URL("https://github.com/Thuzys"),
-                linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
-            ),
-            bio = "I'm a student at ISEL, studying computer engineering. I'm passionate about " +
-                    "technology and software development. I'm always looking for new challenges " +
-                    "and opportunities to learn and grow.",
-            imageId = R.drawable.thuzy_profile_pic
-        )
     )
 }
 

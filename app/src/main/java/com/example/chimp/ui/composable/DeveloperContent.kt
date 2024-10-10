@@ -160,7 +160,7 @@ private class DeveloperContentPreviewClass : PreviewParameterProvider<Dev> {
                 linkedIn = URL("https://www.linkedin.com/in/arthur-cesar-oliveira-681643184/")
             ),
             imageId = R.drawable.thuzy_profile_pic
-        )
+        ),
     )
 }
 

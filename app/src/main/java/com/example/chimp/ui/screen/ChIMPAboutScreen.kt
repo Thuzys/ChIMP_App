@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.chimp.ui.view.IdleAboutDevView
 import com.example.chimp.ui.view.ShowDialogAboutDevView
+import com.example.chimp.ui.view.ShowingAboutDevView
 import com.example.chimp.viewModel.AboutScreenState
 import com.example.chimp.viewModel.AboutViewModel
 
@@ -28,7 +29,18 @@ fun ChIMPAboutScreen(
             )
         }
         is AboutScreenState.Showing -> {
-            ShowingAboutDevView()
+            ShowingAboutDevView(
+                modifier = modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center)
+                    .verticalScroll(rememberScrollState()),
+                state = state,
+                onLinkActivity = viewModel::linkActivity,
+                onSendActivity = viewModel::sendActivity,
+                onIdleChange = viewModel::idle,
+                onShowDialogChange = viewModel::showDialog,
+                onIsExpandedChange = viewModel::showDev
+            )
         }
         is AboutScreenState.ShowDialog -> {
             ShowDialogAboutDevView(
@@ -41,9 +53,4 @@ fun ChIMPAboutScreen(
             )
         }
     }
-}
-
-@Composable
-fun ShowingAboutDevView() {
-    TODO("Not yet implemented")
 }
