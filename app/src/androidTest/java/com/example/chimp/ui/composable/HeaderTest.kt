@@ -12,20 +12,20 @@ class HeaderTest {
     val rule = createComposeRule()
 
     @Test
-    fun `image is correctly displayed on header test`() {
+    fun imageIsCorrectlyDisplayedOnHeaderTest() {
         rule.setContent { Header(profileName = "test") }
         rule.onNodeWithTag(IMAGE_HEADER_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `text is correctly displayed on header test`() {
+    fun textIsCorrectlyDisplayedOnHeaderTest() {
         val profileName = "test"
         rule.setContent { Header(profileName = profileName) }
         rule.onNodeWithTag(TEXT_HEADER_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `text contend is correctly displayed on header test`() {
+    fun textContendIsCorrectlyDisplayedOnHeaderTest() {
         val profileName = "test"
         rule.setContent { Header(profileName = profileName) }
         rule.onNodeWithTag(TEXT_HEADER_TAG).assertTextContains(profileName)

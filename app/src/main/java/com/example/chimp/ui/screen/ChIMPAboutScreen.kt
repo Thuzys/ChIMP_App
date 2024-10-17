@@ -7,10 +7,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.chimp.ui.view.IdleAboutDevView
-import com.example.chimp.ui.view.ShowDialogAboutDevView
-import com.example.chimp.ui.view.ShowingAboutDevView
-import com.example.chimp.viewModel.AboutScreenState
+import com.example.chimp.ui.view.about.IdleAboutDevView
+import com.example.chimp.ui.view.about.ShowDialogAboutDevView
+import com.example.chimp.ui.view.about.ShowingAboutDevView
+import com.example.chimp.viewModel.state.AboutScreenState
 import com.example.chimp.viewModel.AboutViewModel
 
 @Composable
@@ -35,8 +35,6 @@ fun ChIMPAboutScreen(
                     .wrapContentSize(Alignment.Center)
                     .verticalScroll(rememberScrollState()),
                 state = state,
-                onLinkActivity = viewModel::linkActivity,
-                onSendActivity = viewModel::sendActivity,
                 onIdleChange = viewModel::idle,
                 onShowDialogChange = viewModel::showDialog,
                 onIsExpandedChange = viewModel::showDev

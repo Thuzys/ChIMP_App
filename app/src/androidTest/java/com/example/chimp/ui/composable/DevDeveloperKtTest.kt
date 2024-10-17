@@ -19,25 +19,25 @@ class DevDeveloperKtTest {
     private val dev = Dev(name, number = "12345", Email("mail@test.com"))
 
     @Test
-    fun `show developer header`() {
+    fun showDeveloperHeader() {
         rule.setContent { AboutDeveloper(dev = dev) }
         rule.onNodeWithTag(HEADER_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `the initial state of about developer do not have the contented displayed`() {
+    fun testInitState() {
         rule.setContent { AboutDeveloper(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_TAG).isNotDisplayed()
     }
 
     @Test
-    fun `show developer contend`() {
+    fun showDeveloperContent() {
         rule.setContent { AboutDeveloper(dev = dev, isExpanded = true) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `onIsExpandedChange is called`() {
+    fun onIsExpandedIsCalled() {
         var wasCalled = false
         rule.setContent { AboutDeveloper(dev = dev, onIsExpandedChange = { wasCalled = true }) }
         rule.onNodeWithTag(HEADER_TAG).performClick()
@@ -45,7 +45,7 @@ class DevDeveloperKtTest {
     }
 
     @Test
-    fun `onShowDialogChange is called`() {
+    fun onShowDialogChangeIsCalled() {
         var wasCalled = false
         val bioTest = "bio test"
         rule.setContent {

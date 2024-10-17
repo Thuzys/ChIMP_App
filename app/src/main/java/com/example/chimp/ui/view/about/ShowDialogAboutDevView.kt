@@ -1,4 +1,4 @@
-package com.example.chimp.ui.view
+package com.example.chimp.ui.view.about
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.ui.composable.AboutDeveloper
-import com.example.chimp.viewModel.AboutScreenState
+import com.example.chimp.viewModel.state.AboutScreenState
 
 const val SHOW_DIALOG_ABOUT_DEV_VIEW_TAG = "ShowDialogAboutDevView"
 private const val SPACE_BETWEEN_DEVS = 4

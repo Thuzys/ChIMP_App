@@ -29,31 +29,31 @@ class DeveloperContentKtTest {
     )
 
     @Test
-    fun `developer content shows developer content`() {
+    fun developerContentShowsDeveloperContent() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_CONTAINER_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `developer content shows developer image`() {
+    fun developerContentShowsDeveloperImage() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_IMAGE_TAG, useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
-    fun `developer content shows developer name`() {
+    fun developerContentShowsDeveloperName() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_NAME_TAG, useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
-    fun `developer content shows developer bio`() {
+    fun developerContentShowsDeveloperBio() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_BIO_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `developer content shows developer social media`() {
+    fun developerContentShowsDeveloperSocialMedia() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule
             .onAllNodesWithTag(DEVELOPER_CONTENT_SOCIAL_MEDIA_TAG, useUnmergedTree = true)
@@ -62,13 +62,13 @@ class DeveloperContentKtTest {
     }
 
     @Test
-    fun `developer content shows developer email`() {
+    fun developerContentShowsDeveloperEmail() {
         rule.setContent { DeveloperContent(dev = dev) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_EMAIL_TAG).assertIsDisplayed()
     }
 
     @Test
-    fun `developer content shows developer complete bio`() {
+    fun developerContentShowsDeveloperCompleteBio() {
         rule.setContent { DeveloperContent(dev = dev, showDialog = true) }
         rule.onNodeWithTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG, useUnmergedTree = true)
             .assertIsDisplayed()

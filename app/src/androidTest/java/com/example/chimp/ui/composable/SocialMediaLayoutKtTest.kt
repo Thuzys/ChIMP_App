@@ -13,7 +13,7 @@ class SocialMediaLayoutKtTest {
     val rule = createComposeRule()
 
     @Test
-    fun `test social media layout`() {
+    fun testSocialMediaLayout() {
         var onClickFlag = false
         val gitOnClick = {
             onClickFlag = true

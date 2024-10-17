@@ -1,25 +1,33 @@
 package com.example.chimp.ui.composable
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.model.dev.Email
 import com.example.chimp.model.dev.SocialMedia
 import java.net.URL
 
 const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
-
+private const val IS_EXPANDED_PADDING = 16
+private const val NOT_EXPANDED_PADDING = 8
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
@@ -43,8 +51,14 @@ fun AboutDeveloper(
     onShowDialogChange: () -> Unit = {},
     onIsExpandedChange: () -> Unit = {},
 ) {
+    val padding by animateDpAsState(
+        targetValue = if (isExpanded) IS_EXPANDED_PADDING.dp else NOT_EXPANDED_PADDING.dp,
+        label = "Card padding",
+    )
     Card(
         shape = MaterialTheme.shapes.extraLarge,
+        modifier = modifier
+            .padding(padding)
     ) {
         Column(
             modifier = modifier.testTag(ABOUT_DEVELOPER_TAG),
@@ -58,7 +72,9 @@ fun AboutDeveloper(
                 )
             }
             AnimatedVisibility(
-                visible = isExpanded
+                visible = isExpanded,
+                enter = slideInVertically(tween(150, 150)),
+                exit = slideOutVertically(tween(150, 150)),
             ) {
                 DeveloperContent(
                     modifier = Modifier

@@ -1,6 +1,5 @@
-package com.example.chimp.ui.view
+package com.example.chimp.ui.view.about
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.ui.composable.AboutDeveloper
-import com.example.chimp.viewModel.AboutScreenState
+import com.example.chimp.viewModel.state.AboutScreenState
 import java.net.URL
 
 const val SHOWING_ABOUT_DEV_VIEW_TAG = "ShowingAboutDevView"
@@ -25,8 +24,6 @@ fun ShowingAboutDevView(
     state: AboutScreenState.Showing,
     onShowDialogChange: (Dev) -> Unit = { },
     onIsExpandedChange: (Dev) -> Unit = { },
-    onLinkActivity: (Uri, Context) -> Unit = { _, _ -> },
-    onSendActivity: (String, Context) -> Unit = { _, _ -> },
     onIdleChange: () -> Unit = { },
     ) {
     Column(
@@ -44,12 +41,12 @@ fun ShowingAboutDevView(
                     isExpanded = true,
                     showDialog = false,
                     gitOnClick = makeLink(dev.socialMedia?.gitHub) { uri ->
-                        onLinkActivity(uri, context)
+                        state.linkActivity(uri, context)
                     },
                     linkedInOnClick = makeLink(dev.socialMedia?.linkedIn) { uri ->
-                        onLinkActivity(uri, context)
+                        state.linkActivity(uri, context)
                     },
-                    emailOnClick = { onSendActivity(dev.email.email, context) },
+                    emailOnClick = { state.sendActivity(dev.email.email, context) },
                     onShowDialogChange = { onShowDialogChange(dev) },
                     onIsExpandedChange = onIdleChange
                 )
