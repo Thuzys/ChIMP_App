@@ -7,6 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.viewModel.state.AboutScreenState
 
+/**
+ * ViewModel for the About screen.
+ *
+ * @property state the state of the screen
+ */
 class AboutViewModel : ViewModel() {
     var state: AboutScreenState by mutableStateOf(AboutScreenState.Idle)
         private set
@@ -27,3 +32,11 @@ class AboutViewModel : ViewModel() {
     }
 
 }
+
+////TODO: See video about ViewModelProvider.Factory
+//@Suppress("UNCHECKED_CAST")
+//class AboutViewModelFactory : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return AboutViewModel() as T
+//    }
+//}

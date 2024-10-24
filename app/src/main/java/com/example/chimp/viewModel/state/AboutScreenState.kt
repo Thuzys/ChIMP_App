@@ -7,6 +7,7 @@ import com.example.chimp.R
 import com.example.chimp.model.dev.Dev
 import com.example.chimp.model.dev.Email
 import com.example.chimp.model.dev.SocialMedia
+import com.example.chimp.viewModel.AboutViewModel
 import java.net.URL
 
 private fun getDevelopers(): Set<Dev> {
@@ -38,13 +39,18 @@ private fun getDevelopers(): Set<Dev> {
     )
 }
 
-sealed class AboutScreenState {
+/**
+ * Represents the state of the About screen.
+ *
+ * @see AboutViewModel
+ */
+sealed interface AboutScreenState {
 
     companion object { val devs: Set<Dev> = getDevelopers() }
 
-    data object Idle : AboutScreenState()
+    data object Idle : AboutScreenState
 
-    data class Showing(val dev: Dev) : AboutScreenState() {
+    data class Showing(val dev: Dev) : AboutScreenState {
         fun linkActivity(uri: Uri, context: Context) {
             val intent = Intent(Intent.ACTION_VIEW)
                 .apply {
@@ -63,5 +69,5 @@ sealed class AboutScreenState {
         }
     }
 
-    data class ShowDialog(val dev: Dev) : AboutScreenState()
+    data class ShowDialog(val dev: Dev) : AboutScreenState
 }

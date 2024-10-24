@@ -5,24 +5,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.ui.composable.MenuBottomBar
-import com.example.chimp.ui.screen.ChIMPAboutScreen
+import com.example.chimp.ui.screen.ChIMPChatsScreen
 import com.example.chimp.ui.theme.ChIMPTheme
-import com.example.chimp.viewModel.AboutViewModel
 
-class AboutActivity: ComponentActivity() {
-    private val viewModel by viewModels<AboutViewModel>()
+class ChatsActivity : ComponentActivity() {
 
-    private val navigateToChatsIntent by lazy {
-        Intent(this, ChatsActivity::class.java)
+    private val navigateToAboutIntent: Intent by lazy {
+        Intent(this, AboutActivity::class.java)
     }
 
-    private val navigateToFindChannelIntent by lazy {
+    private val navigateToFindChannelIntent: Intent by lazy {
         Intent(this, FindChannelActivity::class.java)
     }
 
@@ -32,21 +28,22 @@ class AboutActivity: ComponentActivity() {
         setContent {
             ChIMPTheme {
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         MenuBottomBar(
-                            aboutIsEnable = false,
+                            menuIsEnable = false,
                             addChannelClick = { startActivity(navigateToFindChannelIntent) },
-                            onMenuClick = { startActivity(navigateToChatsIntent) }
+                            aboutClick = { startActivity(navigateToAboutIntent) }
                         )
                     }
                 ) { innerPadding ->
-                    ChIMPAboutScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel
+                    ChIMPChatsScreen(
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
     }
 }
+
+//TODO: Change email icon on aboutScreen.
+
