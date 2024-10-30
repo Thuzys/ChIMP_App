@@ -1,14 +1,16 @@
-package com.example.chimp.viewModel
+package com.example.chimp.about.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.chimp.about.model.Dev
-import com.example.chimp.viewModel.state.AboutScreenState
+import com.example.chimp.about.viewModel.state.AboutScreenState
 
 /**
  * ViewModel for the About screen.
+ *
+ * This ViewModel is responsible for managing the state of the About screen.
  *
  * @property state the state of the screen
  */
@@ -17,7 +19,8 @@ class AboutViewModel : ViewModel() {
         private set
 
     fun showDev(dev: Dev) {
-        if (state !is AboutScreenState.Showing || (state as AboutScreenState.Showing).dev != dev)
+        val currState = state
+        if (currState !is AboutScreenState.Showing || currState.dev != dev)
             state = AboutScreenState.Showing(dev)
     }
 
@@ -32,11 +35,3 @@ class AboutViewModel : ViewModel() {
     }
 
 }
-
-////TODO: See video about ViewModelProvider.Factory
-//@Suppress("UNCHECKED_CAST")
-//class AboutViewModelFactory : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        return AboutViewModel() as T
-//    }
-//}

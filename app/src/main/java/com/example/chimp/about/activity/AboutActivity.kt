@@ -1,4 +1,4 @@
-package com.example.chimp.activity
+package com.example.chimp.about.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.chimp.chats.activity.ChatsActivity
+import com.example.chimp.findChannel.activity.FindChannelActivity
 import com.example.chimp.ui.composable.MenuBottomBar
-import com.example.chimp.ui.screen.ChIMPAboutScreen
+import com.example.chimp.about.screen.ChIMPAboutScreen
 import com.example.chimp.ui.theme.ChIMPTheme
-import com.example.chimp.viewModel.AboutViewModel
+import com.example.chimp.about.viewModel.AboutViewModel
 
+/**
+ * AboutActivity is the activity that displays the about screen.
+ *
+ * This activity is responsible for setting up the about screen and handling navigation to other
+ * activities.
+ */
 class AboutActivity: ComponentActivity() {
     private val viewModel by viewModels<AboutViewModel>()
 

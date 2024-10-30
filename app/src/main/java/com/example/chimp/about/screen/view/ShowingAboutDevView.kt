@@ -1,4 +1,4 @@
-package com.example.chimp.about.view
+package com.example.chimp.about.screen.view
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.about.model.Dev
-import com.example.chimp.ui.composable.AboutDeveloper
+import com.example.chimp.about.screen.composable.AboutDeveloper
 import com.example.chimp.about.viewModel.state.AboutScreenState
 import java.net.URL
 
@@ -85,7 +85,7 @@ private fun makeLink(uri: URL?, func: (Uri) -> Unit): () -> Unit {
 
 @Preview(showBackground = true)
 @Composable
-fun ShowingAboutDevViewPreview() {
+private fun ShowingAboutDevViewPreview() {
     ShowingAboutDevView(
         state = AboutScreenState.Showing(AboutScreenState.devs.first())
     )

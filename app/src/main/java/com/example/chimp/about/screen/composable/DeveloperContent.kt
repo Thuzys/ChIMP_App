@@ -1,4 +1,4 @@
-package com.example.chimp.ui.composable
+package com.example.chimp.about.screen.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,6 +26,10 @@ import com.example.chimp.R
 import com.example.chimp.about.model.Dev
 import com.example.chimp.about.model.Email
 import com.example.chimp.about.model.SocialMedia
+import com.example.chimp.ui.composable.MyHorizontalDivider
+import com.example.chimp.ui.composable.MakeSocialMediaMark
+import com.example.chimp.ui.composable.ShowDialog
+import com.example.chimp.ui.composable.SocialMediaLayout
 import java.net.URL
 
 const val DEVELOPER_CONTENT_TAG = "DeveloperContent"
@@ -115,7 +119,7 @@ fun DeveloperContent(
             overflow = TextOverflow.Ellipsis,
             maxLines = MAX_LINES
         )
-        HorizontalDivider()
+        MyHorizontalDivider()
         dev.socialMedia?.let { social ->
             SocialMediaLayout(
                 modifier = Modifier
@@ -140,7 +144,10 @@ fun DeveloperContent(
             onDismissRequest = onShowDialog
         ) {
             Text(
-                modifier = Modifier.testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG),
+                modifier =
+                Modifier
+                    .testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG)
+                    .clickable(onClick = onShowDialog),
                 text = dev.bio ?: "No biography available.",
                 textAlign = TextAlign.Center,
                 color = Color.White

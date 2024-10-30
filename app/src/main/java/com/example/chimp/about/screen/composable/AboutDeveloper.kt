@@ -1,4 +1,4 @@
-package com.example.chimp.ui.composable
+package com.example.chimp.about.screen.composable
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -23,9 +23,11 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.about.model.Dev
 import com.example.chimp.about.model.Email
 import com.example.chimp.about.model.SocialMedia
+import com.example.chimp.ui.composable.Header
 import java.net.URL
 
 const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
+const val ABOUT_DEVELOPER_IS_EXPANDED_ACTION_TAG = "AboutDeveloperIsExpanded"
 private const val IS_EXPANDED_PADDING = 16
 private const val NOT_EXPANDED_PADDING = 8
 /**
@@ -33,11 +35,16 @@ private const val NOT_EXPANDED_PADDING = 8
  * @param modifier [Modifier] The modifier to be applied to the layout.
  * @param dev [Dev] The developer's information.
  * @param isExpanded Boolean The state of the developer's profile.
- * @param gitOnClick () -> Unit The function to be called when the user clicks on the GitHub icon.
- * @param linkedInOnClick () -> Unit The function to be called when the user clicks on the LinkedIn icon.
- * @param emailOnClick () -> Unit The function to be called when the user clicks on the email icon.
- * @param onShowDialogChange () -> Unit The function to be called when the user clicks on the dev's bio.
- * @param onIsExpandedChange () -> Unit The function to be called when the user clicks on the dev's profile.
+ * @param gitOnClick
+ * () -> Unit The function to be called when the user clicks on the GitHub icon.
+ * @param linkedInOnClick
+ * () -> Unit The function to be called when the user clicks on the LinkedIn icon.
+ * @param emailOnClick
+ * () -> Unit The function to be called when the user clicks on the email icon.
+ * @param onShowDialogChange
+ * () -> Unit The function to be called when the user clicks on the dev's bio.
+ * @param onIsExpandedChange
+ * () -> Unit The function to be called when the user clicks on the dev's profile.
  */
 @Composable
 fun AboutDeveloper(
@@ -66,6 +73,7 @@ fun AboutDeveloper(
             if (!isExpanded) {
                 Header(
                     modifier = Modifier
+                        .testTag(ABOUT_DEVELOPER_IS_EXPANDED_ACTION_TAG)
                         .clickable(onClick = onIsExpandedChange),
                     profileId = dev.imageId,
                     profileName = dev.name,

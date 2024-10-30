@@ -1,4 +1,4 @@
-package com.example.chimp.about.view
+package com.example.chimp.about.screen.view
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.about.model.Dev
-import com.example.chimp.ui.composable.AboutDeveloper
+import com.example.chimp.about.screen.composable.AboutDeveloper
 import com.example.chimp.about.viewModel.state.AboutScreenState
 
 const val SHOW_DIALOG_ABOUT_DEV_VIEW_TAG = "ShowDialogAboutDevView"
