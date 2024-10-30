@@ -1,13 +1,13 @@
-package com.example.chimp.viewModel
+package com.example.chimp.chats.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.model.chats.ChatsServices
-import com.example.chimp.model.users.User
-import com.example.chimp.viewModel.state.ChatsScreenState
+import com.example.chimp.chats.model.channel.ChatsServices
+import com.example.chimp.chats.model.users.User
+import com.example.chimp.chats.viewModel.state.ChatsScreenState
 import kotlinx.coroutines.launch
 
 class ChatsViewModel(

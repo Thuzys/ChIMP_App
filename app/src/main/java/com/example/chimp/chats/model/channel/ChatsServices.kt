@@ -1,6 +1,6 @@
-package com.example.chimp.model.chats
+package com.example.chimp.chats.model.channel
 
-import com.example.chimp.model.users.User
+import com.example.chimp.chats.model.users.User
 
 interface ChatsServices {
     //TODO: add user in mem

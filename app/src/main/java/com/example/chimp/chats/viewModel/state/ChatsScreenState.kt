@@ -1,6 +1,6 @@
-package com.example.chimp.viewModel.state
+package com.example.chimp.chats.viewModel.state
 
-import com.example.chimp.model.chats.Channel
+import com.example.chimp.chats.model.channel.Channel
 
 sealed interface ChatsScreenState {
     data object Idle: ChatsScreenState

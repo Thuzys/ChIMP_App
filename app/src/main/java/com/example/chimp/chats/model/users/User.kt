@@ -1,4 +1,4 @@
-package com.example.chimp.model.users
+package com.example.chimp.chats.model.users
 
 data class User(
     val uId: UInt,

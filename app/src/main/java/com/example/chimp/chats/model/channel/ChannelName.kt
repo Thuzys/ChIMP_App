@@ -1,4 +1,4 @@
-package com.example.chimp.model.chats
+package com.example.chimp.chats.model.channel
 
 data class ChannelName(
     val name: String,
