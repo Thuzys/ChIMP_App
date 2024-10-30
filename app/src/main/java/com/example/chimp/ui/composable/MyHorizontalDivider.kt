@@ -8,7 +8,7 @@ private val darkThemeColor = androidx.compose.ui.graphics.Color.White.copy(alpha
 private val lightThemeColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.12f)
 
 @Composable
-fun HorizontalDivider(
+fun MyHorizontalDivider(
     modifier: Modifier = Modifier,
 ) {
     if (isSystemInDarkTheme()) {
