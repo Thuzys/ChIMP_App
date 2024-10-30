@@ -13,7 +13,14 @@
         android:theme="@style/Theme.ChIMP"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ChatsActivity"
+            android:name=".login.activity.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.ChIMP"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".chats.activity.ChatsActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP">
@@ -24,13 +31,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".about.activity.AboutActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP">
         </activity>
         <activity
-            android:name=".activity.FindChannelActivity"
+            android:name=".findChannel.activity.FindChannelActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP">

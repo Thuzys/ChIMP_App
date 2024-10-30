@@ -1,4 +1,5 @@
 package com.example.chimp.login.model
 
-interface LoginErrors {
+sealed interface LoginErrors {
+    data class InvalidCredentials(val message: String) : LoginErrors
 }

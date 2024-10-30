@@ -1,4 +1,7 @@
 package com.example.chimp.login.activity
 
-class LoginActivity {
+import androidx.activity.ComponentActivity
+
+class LoginActivity: ComponentActivity() {
+
 }
