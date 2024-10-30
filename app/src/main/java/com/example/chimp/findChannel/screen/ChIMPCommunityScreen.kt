@@ -1,4 +1,4 @@
-package com.example.chimp.ui.screen
+package com.example.chimp.findChannel.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package com.example.chimp.activity
+package com.example.chimp.findChannel.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.about.activity.AboutActivity
+import com.example.chimp.chats.activity.ChatsActivity
 import com.example.chimp.ui.composable.MenuBottomBar
-import com.example.chimp.ui.screen.ChIMPCommunityScreen
+import com.example.chimp.findChannel.screen.ChIMPCommunityScreen
 import com.example.chimp.ui.theme.ChIMPTheme
 
 class FindChannelActivity: ComponentActivity() {
