@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ChIMP</string>
+
+    <string name="activity_info_no_suitable_app">Could not find a suitable application</string>
+    <string name="welcome_message">Welcome to ChIMP!</string>
+    <string name="login">Login</string>
+    <string name="login_message">Already have an account? Login here!</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="register_message">Don\'t have an account? Register here!</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

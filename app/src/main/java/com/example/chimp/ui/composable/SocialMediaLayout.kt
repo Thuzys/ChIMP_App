@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.chimp.R
-import com.example.chimp.model.dev.Dev
-import com.example.chimp.model.dev.SocialMedia
+import com.example.chimp.about.model.Dev
+import com.example.chimp.about.model.SocialMedia
 
 const val SOCIAL_MEDIA_LAYOUT_TAG = "SocialMediaLayout"
 
@@ -33,7 +33,7 @@ fun SocialMediaLayout(
             darkMode = R.drawable.github_mark_white,
             contentDescription = "GitHub Logo",
         )
-        HorizontalDivider()
+        MyHorizontalDivider()
     }
     social.linkedIn?.let {
         MakeSocialMediaMark(
@@ -44,6 +44,6 @@ fun SocialMediaLayout(
             darkMode = R.drawable.linkdin_mark,
             contentDescription = "LinkedIn Logo",
         )
-        HorizontalDivider()
+        MyHorizontalDivider()
     }
 }
