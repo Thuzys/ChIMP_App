@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.chats.model.channel.ChannelName
 import com.example.chimp.findChannel.model.FindChannelItem
+import com.example.chimp.ui.composable.MakeButton
 import com.example.chimp.ui.composable.Marquee
 
 /**
@@ -82,7 +83,10 @@ fun ChatItemRow(chatItem: FindChannelItem) {
                     }
                 }
             }
-            MakeJoinButton { /* Handle join button click */ }
+            MakeButton(
+                text = "Join",
+                onClick = { /* Handle join button click */ }
+            )
         }
     }
 }
