@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +17,10 @@ private val lightBlue = Color(0xFFBBDEFB)
 
 @Composable
 fun GradientBox(
-    colors: List<Color> = listOf(blue, lightBlue),
+    colors: List<Color> = listOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.secondary
+    ),
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit
 ){

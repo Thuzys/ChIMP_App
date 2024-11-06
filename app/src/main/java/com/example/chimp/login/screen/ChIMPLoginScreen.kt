@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.chimp.login.screen.view.ErrorView
+import com.example.chimp.login.screen.view.LoadingView
 import com.example.chimp.login.screen.view.LoginView
 import com.example.chimp.login.screen.view.RegisterView
 import com.example.chimp.login.viewModel.LoginViewModel
@@ -16,6 +18,7 @@ import com.example.chimp.login.viewModel.state.Register
 fun ChIMPLoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel,
+    onLogin: () -> Unit,
 ) {
     when(val curr = viewModel.state) {
         is Login -> {
@@ -40,19 +43,30 @@ fun ChIMPLoginScreen(
                 onUsernameChange = viewModel::updateUsername,
                 onPasswordChange = viewModel::updatePassword,
                 onConfirmPasswordChange = viewModel::updateConfirmPassword,
+                onInvitationCodeChange = viewModel::updateInvitationCode,
                 onRegisterChange = viewModel::register,
                 onLoginChange = viewModel::toLogin,
                 isToShowChange = viewModel::registerIsToShow,
             )
         }
         is LoginScreenState.Error -> {
-            TODO()
+            ErrorView(
+                modifier = modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+                error = curr.error,
+                tryAgain = viewModel::toLogin,
+            )
         }
         is LoginScreenState.Loading -> {
-            TODO()
+            LoadingView(
+                modifier = modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+            )
         }
         is LoginScreenState.Success -> {
-            TODO()
+            onLogin()
         }
     }
 }
