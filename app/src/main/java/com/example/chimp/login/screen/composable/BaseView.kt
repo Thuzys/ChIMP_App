@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +24,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+import com.example.chimp.login.viewModel.state.Register
 import com.example.chimp.login.viewModel.state.Visibility
 import com.example.chimp.ui.composable.GradientBox
 import com.example.chimp.ui.utils.rememberImeState
@@ -52,13 +57,14 @@ private const val ROUND_CORNER_RADIUS = 40
 fun BaseView(
     modifier: Modifier = Modifier,
     visibility: Visibility,
-    content: @Composable (ColumnScope.(Boolean) -> Unit),
+    content: @Composable (ColumnScope.(Boolean, Boolean) -> Unit),
 ) {
     GradientBox(
         modifier = modifier.testTag(BASE_VIEW_TAG),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val isImeVisible by rememberImeState()
@@ -96,12 +102,23 @@ fun BaseView(
                             topEnd = ROUND_CORNER_RADIUS.dp
                         )
                     )
-                    .background(Color.White),
+                    .background(Color.White)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                content(isToShow)
+                content(isToShow, isImeVisible)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun BaseViewPreview() {
+    BaseView(
+        visibility = Register.RegisterShow("", "")
+    ) { _, _ ->
+        Text("Hello, World!")
     }
 }

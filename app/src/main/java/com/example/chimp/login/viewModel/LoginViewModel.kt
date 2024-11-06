@@ -4,13 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.login.model.LoginService
 import com.example.chimp.login.viewModel.state.Login
 import com.example.chimp.login.viewModel.state.LoginScreenState
 import com.example.chimp.login.viewModel.state.Register
-import com.example.chimp.model.utils.Failure
-import com.example.chimp.model.utils.Success
+import com.example.chimp.either.Failure
+import com.example.chimp.either.Success
 import kotlinx.coroutines.launch
 
 /**
@@ -62,6 +63,13 @@ class LoginViewModel(
         val curr = state
         if (curr is Register) {
             state = curr.updateConfirmPassword(confirmPassword)
+        }
+    }
+
+    fun updateInvitationCode(invitationCode: String) {
+        val curr = state
+        if (curr is Register) {
+            state = curr.updateInvitationCode(invitationCode)
         }
     }
 

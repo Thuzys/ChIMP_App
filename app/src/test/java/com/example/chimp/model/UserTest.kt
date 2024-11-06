@@ -1,5 +1,6 @@
 package com.example.chimp.model
 
+import com.example.chimp.model.users.User
 import org.junit.Test
 
 class UserTest {

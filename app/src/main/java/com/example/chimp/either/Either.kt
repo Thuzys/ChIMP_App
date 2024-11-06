@@ -1,4 +1,4 @@
-package com.example.chimp.model.utils
+package com.example.chimp.either
 
 /**
  * Represents the result of an operation.

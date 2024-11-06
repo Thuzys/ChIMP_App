@@ -1,7 +1,8 @@
 package com.example.chimp.login.model
 
-import com.example.chimp.model.User
-import com.example.chimp.model.utils.Either
+import com.example.chimp.model.users.User
+import com.example.chimp.either.Either
+import com.example.chimp.model.errors.ResponseErrors
 
 /**
  * LoginService is the interface that defines the service used in LoginViewModel.
@@ -18,5 +19,5 @@ fun interface LoginService {
     suspend fun login(
         username: String,
         password: String
-    ): Either<LoginErrors, User>
+    ): Either<ResponseErrors, User>
 }

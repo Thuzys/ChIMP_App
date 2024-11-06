@@ -1,7 +1,7 @@
 package com.example.chimp.login.viewModel.state
 
-import com.example.chimp.login.model.LoginErrors
-import com.example.chimp.model.User
+import com.example.chimp.model.errors.ResponseErrors
+import com.example.chimp.model.users.User
 
 /**
  * The state of the Login screen.
@@ -17,7 +17,7 @@ sealed interface LoginScreenState {
      *
      * @property error the error that occurred
      */
-    data class Error(val error: LoginErrors) : LoginScreenState
+    data class Error(val error: ResponseErrors) : LoginScreenState
 
     /**
      * The screen is successful.
