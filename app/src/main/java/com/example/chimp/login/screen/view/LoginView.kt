@@ -1,5 +1,12 @@
 package com.example.chimp.login.screen.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -8,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -58,7 +66,7 @@ fun LoginView(
     BaseView(
         modifier = modifier.testTag(LOGIN_VIEW_TEST_TAG),
         visibility = vm as Visibility
-    ) { isToShow ->
+    ) { isToShow, imeVisible ->
         MySpacer()
         Text(
             text = stringResource(R.string.login_message),
@@ -79,18 +87,35 @@ fun LoginView(
             isToShow = isToShow,
             isToShowChange = isToShowChange
         )
-        MakeButton(
-            modifier = Modifier.padding(HORIZONTAL_PADDING.dp),
-            text = stringResource(R.string.login),
-            enable = vm.isValid,
-            onClick = onLoginChange
+        val animatedButtonsVisibility by animateFloatAsState(
+            targetValue = if (imeVisible) 0f else 1f,
+            label = "Buttons Visibility"
         )
-        MySpacer()
-        MakeButton(
-            modifier = Modifier.padding(HORIZONTAL_PADDING.dp),
-            text = stringResource(R.string.register),
-            onClick = onRegisterChange
-        )
+        AnimatedVisibility(
+            visible = !imeVisible
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(animatedButtonsVisibility),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MakeButton(
+                    modifier = Modifier
+                        .padding(HORIZONTAL_PADDING.dp)
+                        .fillMaxWidth(0.5f),
+                    text = stringResource(R.string.login),
+                    enable = vm.isValid,
+                    onClick = onLoginChange
+                )
+                MakeButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = stringResource(R.string.register),
+                    onClick = onRegisterChange
+                )
+            }
+        }
     }
 }
 
@@ -101,7 +126,9 @@ fun LoginView(
 )
 @Composable
 private fun PreviewLoginView() {
-    var vm: Login by remember { mutableStateOf(Login.LoginHide("", "")) }
+    var vm: Login by remember {
+        mutableStateOf(Login.LoginHide("dummy", "dummy"))
+    }
     LoginView(
         vm = vm,
         onUsernameChange = { vm = vm.updateUsername(it) },

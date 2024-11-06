@@ -2,6 +2,9 @@ package com.example.chimp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val LightGreen = Color(0xFF1E8E3E)
+val GreenDark = Color(0xFF135017)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

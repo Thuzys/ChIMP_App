@@ -10,10 +10,12 @@ sealed class Register(
     open val username: String,
     open val password: String,
     open val confirmPassword: String,
+    open val invitationCode: String,
 ) : LoginScreenState {
     abstract fun updateUsername(username: String): Register
     abstract fun updatePassword(password: String): Register
     abstract fun updateConfirmPassword(confirmPassword: String): Register
+    abstract fun updateInvitationCode(invitationCode: String): Register
     val isValid: Boolean
         get() = username.isNotBlank() && password.isNotBlank() && password == confirmPassword
 
@@ -27,11 +29,14 @@ sealed class Register(
         override val username: String,
         override val password: String,
         override val confirmPassword: String = "",
-    ) : Register(username, password, confirmPassword), Visibility.Show {
+        override val invitationCode: String = "",
+    ) : Register(username, password, confirmPassword, invitationCode), Visibility.Show {
         override fun updateUsername(username: String): Register = copy(username = username)
         override fun updatePassword(password: String): Register = copy(password = password)
         override fun updateConfirmPassword(confirmPassword: String): Register =
             copy(confirmPassword = confirmPassword)
+        override fun updateInvitationCode(invitationCode: String): Register =
+            copy(invitationCode = invitationCode)
 
         fun hidePassword(): RegisterHide = RegisterHide(username, password)
     }
@@ -46,11 +51,14 @@ sealed class Register(
         override val username: String,
         override val password: String,
         override val confirmPassword: String = "",
-    ) : Register(username, password, confirmPassword), Visibility.Hide {
+        override val invitationCode: String = "",
+    ) : Register(username, password, confirmPassword, invitationCode), Visibility.Hide {
         override fun updateUsername(username: String): Register = copy(username = username)
         override fun updatePassword(password: String): Register = copy(password = password)
         override fun updateConfirmPassword(confirmPassword: String): Register =
             copy(confirmPassword = confirmPassword)
+        override fun updateInvitationCode(invitationCode: String): Register =
+            copy(invitationCode = invitationCode)
 
         fun showPassword(): RegisterShow = RegisterShow(username, password)
     }

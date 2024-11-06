@@ -8,6 +8,8 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
+    <string name="invite_code">Invitation Code</string>
+    <string name="try_again">Try Again</string>
     <string name="register_message">Don\'t have an account? Register here!</string>
     <string name="confirm_password">Confirm Password</string>
 </resources>

@@ -11,7 +11,7 @@ import com.example.chimp.about.screen.composable.ABOUT_DEVELOPER_IS_EXPANDED_ACT
 import org.junit.Rule
 import org.junit.Test
 
-class LoginAboutDevViewKtTest {
+class IdleAboutDevViewKtTest {
     @get:Rule
     val rule = createComposeRule()
 
