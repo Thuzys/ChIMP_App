@@ -38,7 +38,7 @@ private const val TEXT_LENGTH_THRESHOLD = 15
  * @param chatItem the chat item to display.
  */
 @Composable
-fun ChatItemRow(
+internal fun ChatItemRow(
     chatItem: FindChannelItem,
     onJoin: () -> Unit,
 ) {

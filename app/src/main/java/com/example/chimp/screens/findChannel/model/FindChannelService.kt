@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Interface that defines the service used in FindChannelViewModel.
  */
-interface FindChannelService {
+sealed interface FindChannelService {
     /**
      * Join a channel.
      * @param channelId the id of the channel to join

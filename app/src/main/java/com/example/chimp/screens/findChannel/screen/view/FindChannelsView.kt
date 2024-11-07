@@ -16,7 +16,7 @@ import com.example.chimp.R
 import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.screen.composable.ChatItemRow
-import com.example.chimp.findChannel.screen.composable.SearchBar
+import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 
 @Composable

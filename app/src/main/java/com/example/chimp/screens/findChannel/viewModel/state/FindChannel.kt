@@ -32,4 +32,5 @@ sealed class FindChannel(
             return copy(publicChannels = publicChannels)
         }
     }
+
 }
