@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.chimp.screens.login.screen.view.ErrorView
-import com.example.chimp.screens.login.screen.view.LoadingView
+import com.example.chimp.screens.ui.views.ErrorView
+import com.example.chimp.screens.ui.views.LoadingView
 import com.example.chimp.screens.login.screen.view.LoginView
 import com.example.chimp.screens.login.screen.view.RegisterView
 import com.example.chimp.screens.login.viewModel.LoginViewModel

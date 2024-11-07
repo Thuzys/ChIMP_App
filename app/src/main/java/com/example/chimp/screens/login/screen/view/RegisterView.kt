@@ -27,8 +27,8 @@ import com.example.chimp.screens.login.screen.composable.MakeInvitationCodeField
 import com.example.chimp.screens.login.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.login.screen.composable.MakeUsernameTextField
 import com.example.chimp.screens.login.viewModel.state.Visibility
-import com.example.chimp.ui.composable.MakeButton
-import com.example.chimp.ui.composable.MySpacer
+import com.example.chimp.screens.ui.composable.MakeButton
+import com.example.chimp.screens.ui.composable.MySpacer
 
 /**
  * The tag used to identify the register view in automated tests.

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.screens.about.model.Dev
 import com.example.chimp.screens.about.model.Email
 import com.example.chimp.screens.about.model.SocialMedia
-import com.example.chimp.ui.composable.Header
+import com.example.chimp.screens.ui.composable.Header
 import java.net.URL
 
 const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"

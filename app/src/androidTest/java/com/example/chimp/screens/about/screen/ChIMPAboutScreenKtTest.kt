@@ -6,15 +6,15 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.example.chimp.about.screen.composable.ABOUT_DEVELOPER_IS_EXPANDED_ACTION_TAG
-import com.example.chimp.about.screen.composable.DEVELOPER_CONTENT_BIO_TAG
-import com.example.chimp.about.screen.composable.DEVELOPER_CONTENT_COMPLETE_BIO_TAG
-import com.example.chimp.about.screen.composable.DEVELOPER_CONTENT_CONTAINER_TAG
-import com.example.chimp.about.screen.view.IDLE_ABOUT_DEV_VIEW_TAG
-import com.example.chimp.about.screen.view.SHOWING_ABOUT_DEV_VIEW_TAG
-import com.example.chimp.about.screen.view.SHOW_DIALOG_ABOUT_DEV_VIEW_TAG
-import com.example.chimp.about.viewModel.AboutViewModel
-import com.example.chimp.about.viewModel.state.AboutScreenState
+import com.example.chimp.screens.about.screen.composable.ABOUT_DEVELOPER_IS_EXPANDED_ACTION_TAG
+import com.example.chimp.screens.about.screen.composable.DEVELOPER_CONTENT_BIO_TAG
+import com.example.chimp.screens.about.screen.composable.DEVELOPER_CONTENT_COMPLETE_BIO_TAG
+import com.example.chimp.screens.about.screen.composable.DEVELOPER_CONTENT_CONTAINER_TAG
+import com.example.chimp.screens.about.screen.view.IDLE_ABOUT_DEV_VIEW_TAG
+import com.example.chimp.screens.about.screen.view.SHOWING_ABOUT_DEV_VIEW_TAG
+import com.example.chimp.screens.about.screen.view.SHOW_DIALOG_ABOUT_DEV_VIEW_TAG
+import com.example.chimp.screens.about.viewModel.AboutViewModel
+import com.example.chimp.screens.about.viewModel.state.AboutScreenState
 import org.junit.Rule
 import org.junit.Test
 

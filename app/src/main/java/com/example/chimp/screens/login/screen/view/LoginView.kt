@@ -27,8 +27,8 @@ import com.example.chimp.screens.login.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.login.screen.composable.MakeUsernameTextField
 import com.example.chimp.screens.login.viewModel.state.Login
 import com.example.chimp.screens.login.viewModel.state.Visibility
-import com.example.chimp.ui.composable.MySpacer
-import com.example.chimp.ui.composable.MakeButton
+import com.example.chimp.screens.ui.composable.MySpacer
+import com.example.chimp.screens.ui.composable.MakeButton
 
 /**
  * The tag used to identify the login view in automated tests.

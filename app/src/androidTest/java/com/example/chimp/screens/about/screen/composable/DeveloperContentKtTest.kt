@@ -7,9 +7,9 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.example.chimp.about.model.Dev
-import com.example.chimp.about.model.Email
-import com.example.chimp.about.model.SocialMedia
+import com.example.chimp.screens.about.model.Dev
+import com.example.chimp.screens.about.model.Email
+import com.example.chimp.screens.about.model.SocialMedia
 import org.junit.Rule
 import org.junit.Test
 import java.net.URL

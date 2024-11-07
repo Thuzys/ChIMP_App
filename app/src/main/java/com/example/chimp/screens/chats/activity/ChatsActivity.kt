@@ -10,9 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.screens.about.activity.AboutActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
-import com.example.chimp.ui.composable.MenuBottomBar
+import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.chats.screen.ChIMPChatsScreen
-import com.example.chimp.ui.theme.ChIMPTheme
+import com.example.chimp.screens.ui.theme.ChIMPTheme
 
 const val TAG = "CHIMP"
 /**

@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.ui.composable.MyTextField
+import com.example.chimp.screens.ui.composable.MyTextField
 
 /**
  * The horizontal padding of the username input.

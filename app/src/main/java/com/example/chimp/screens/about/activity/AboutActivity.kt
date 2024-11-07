@@ -12,9 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.screens.chats.activity.ChatsActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
-import com.example.chimp.ui.composable.MenuBottomBar
+import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.about.screen.ChIMPAboutScreen
-import com.example.chimp.ui.theme.ChIMPTheme
+import com.example.chimp.screens.ui.theme.ChIMPTheme
 import com.example.chimp.screens.about.viewModel.AboutViewModel
 
 /**

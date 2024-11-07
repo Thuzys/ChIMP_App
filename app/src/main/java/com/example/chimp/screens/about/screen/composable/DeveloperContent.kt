@@ -26,10 +26,10 @@ import com.example.chimp.R
 import com.example.chimp.screens.about.model.Dev
 import com.example.chimp.screens.about.model.Email
 import com.example.chimp.screens.about.model.SocialMedia
-import com.example.chimp.ui.composable.MyHorizontalDivider
-import com.example.chimp.ui.composable.MakeSocialMediaMark
-import com.example.chimp.ui.composable.ShowDialog
-import com.example.chimp.ui.composable.SocialMediaLayout
+import com.example.chimp.screens.ui.composable.MyHorizontalDivider
+import com.example.chimp.screens.ui.composable.MakeSocialMediaMark
+import com.example.chimp.screens.ui.composable.ShowDialog
+import com.example.chimp.screens.ui.composable.SocialMediaLayout
 import java.net.URL
 
 const val DEVELOPER_CONTENT_TAG = "DeveloperContent"

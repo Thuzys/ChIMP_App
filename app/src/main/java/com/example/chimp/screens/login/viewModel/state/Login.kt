@@ -16,7 +16,7 @@ sealed class Login(
         get() = username.isNotBlank() && password.isNotBlank()
 
     /**
-     * The state representing a idle Login screen with the password shown.
+     * The state representing an idle Login screen with the password shown.
      *
      * @property username the username
      * @property password the password
@@ -31,7 +31,7 @@ sealed class Login(
     }
 
     /**
-     * The state representing a idle Login screen with the password hidden.
+     * The state representing an idle Login screen with the password hidden.
      *
      * @property username the username
      * @property password the password

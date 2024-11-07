@@ -14,7 +14,7 @@ import com.example.chimp.screens.chats.activity.ChatsActivity
 import com.example.chimp.screens.login.screen.ChIMPLoginScreen
 import com.example.chimp.screens.login.viewModel.LoginViewModel
 import com.example.chimp.screens.login.viewModel.LoginViewModelFactory
-import com.example.chimp.ui.theme.ChIMPTheme
+import com.example.chimp.screens.ui.theme.ChIMPTheme
 
 class LoginActivity: ComponentActivity() {
     private val viewModel by viewModels<LoginViewModel>(

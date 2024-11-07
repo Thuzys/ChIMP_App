@@ -12,7 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.chimp.ui.composable.MyTextField
+import com.example.chimp.screens.ui.composable.MyTextField
 
 /**
  * The horizontal padding of the password input.

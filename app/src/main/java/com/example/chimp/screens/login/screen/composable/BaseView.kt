@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.screens.login.viewModel.state.Visibility
-import com.example.chimp.ui.composable.GradientBox
-import com.example.chimp.ui.utils.rememberImeState
+import com.example.chimp.screens.ui.composable.GradientBox
+import com.example.chimp.screens.ui.utils.rememberImeState
 
 const val BASE_VIEW_TAG = "BaseView"
 
