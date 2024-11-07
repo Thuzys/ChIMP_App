@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.chats.model.channel.ChannelName
 import com.example.chimp.findChannel.model.FindChannelItem
-import com.example.chimp.ui.composable.MakeButton
 import com.example.chimp.ui.composable.Marquee
 
 /**
@@ -38,7 +37,10 @@ private const val TEXT_LENGTH_THRESHOLD = 15
  * @param chatItem the chat item to display.
  */
 @Composable
-fun ChatItemRow(chatItem: FindChannelItem) {
+fun ChatItemRow(
+    chatItem: FindChannelItem,
+    onJoin: () -> Unit,
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier
@@ -83,10 +85,7 @@ fun ChatItemRow(chatItem: FindChannelItem) {
                     }
                 }
             }
-            MakeButton(
-                text = "Join",
-                onClick = { /* Handle join button click */ }
-            )
+            MakeJoinButton { onJoin() }
         }
     }
 }
@@ -98,5 +97,5 @@ fun ChatItemRow(chatItem: FindChannelItem) {
 @Composable
 private fun ChatItemRowPreview() {
     val item = FindChannelItem(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
-    ChatItemRow(item)
+    ChatItemRow(item) { }
 }
