@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.chimp.R
-import com.example.chimp.about.model.Dev
-import com.example.chimp.about.model.SocialMedia
+import com.example.chimp.screens.about.model.Dev
+import com.example.chimp.screens.about.model.SocialMedia
 
 const val SOCIAL_MEDIA_LAYOUT_TAG = "SocialMediaLayout"
 

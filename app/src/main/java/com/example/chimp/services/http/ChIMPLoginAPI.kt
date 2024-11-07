@@ -1,11 +1,11 @@
 package com.example.chimp.services.http
 
-import com.example.chimp.login.model.LoginService
-import com.example.chimp.model.users.User
+import com.example.chimp.screens.login.model.LoginService
+import com.example.chimp.models.users.User
 import com.example.chimp.either.Either
 import com.example.chimp.either.failure
 import com.example.chimp.either.success
-import com.example.chimp.model.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseErrors
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -42,6 +42,14 @@ class ChIMPLoginAPI(
                 failure(response.body<ErrorDto>().toResponseErrors())
             }
         }
+
+    override suspend fun register(
+        username: String,
+        password: String,
+        invitationCode: String
+    ): Either<ResponseErrors, User> {
+        TODO("Not yet implemented")
+    }
 
     @Serializable
     private data class ErrorDto(
