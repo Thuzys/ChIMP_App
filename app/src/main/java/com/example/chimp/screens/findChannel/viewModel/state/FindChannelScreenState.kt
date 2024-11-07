@@ -13,13 +13,6 @@ sealed interface FindChannelScreenState {
     data object Loading : FindChannelScreenState
 
     /**
-     * The screen is successful.
-     *
-     * @property channels the channels found
-     */
-    data class Success(val channels: List<FindChannelItem>) : FindChannelScreenState
-
-    /**
      * The screen has an error.
      *
      * @property error the error that occurred
