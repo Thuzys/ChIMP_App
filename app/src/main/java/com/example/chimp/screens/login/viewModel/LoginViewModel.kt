@@ -2,8 +2,8 @@ package com.example.chimp.screens.login.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.either.Failure
-import com.example.chimp.either.Success
+import com.example.chimp.models.either.Failure
+import com.example.chimp.models.either.Success
 import com.example.chimp.screens.login.model.LoginService
 import com.example.chimp.screens.login.viewModel.state.Register
 import com.example.chimp.screens.login.viewModel.state.Login
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  *
  * @property service the service used in the ViewModel context.
  */
-class LoginViewModel(
+internal class LoginViewModel(
     private val service: LoginService,
 ) : ViewModel() {
     private val _state =

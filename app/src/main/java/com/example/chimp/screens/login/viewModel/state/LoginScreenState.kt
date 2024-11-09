@@ -6,7 +6,7 @@ import com.example.chimp.models.users.User
 /**
  * The state of the Login screen.
  */
-sealed interface LoginScreenState {
+internal sealed interface LoginScreenState {
     /**
      * The screen is loading.
      */

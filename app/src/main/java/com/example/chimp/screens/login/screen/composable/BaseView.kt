@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+import com.example.chimp.screens.login.viewModel.state.Register
 import com.example.chimp.screens.login.viewModel.state.Visibility
 import com.example.chimp.screens.ui.composable.GradientBox
 import com.example.chimp.screens.ui.utils.rememberImeState
@@ -42,7 +43,7 @@ private const val HEIGHT_PERCENTAGE = 0.35f
  */
 private const val ROUND_CORNER_RADIUS = 40
 
-//TODO: Define color gradient
+const val BASE_VIEW_CONTENT_TAG = "BaseViewContent"
 
 /**
  * Base view for the login screen.
@@ -52,7 +53,7 @@ private const val ROUND_CORNER_RADIUS = 40
  * @param content Content to be displayed in the view.
  */
 @Composable
-fun BaseView(
+internal fun BaseView(
     modifier: Modifier = Modifier,
     visibility: Visibility,
     content: @Composable (ColumnScope.(Boolean, Boolean) -> Unit),
@@ -93,6 +94,7 @@ fun BaseView(
             }
             Column(
                 modifier = Modifier
+                    .testTag(BASE_VIEW_CONTENT_TAG)
                     .fillMaxSize()
                     .clip(
                         RoundedCornerShape(
@@ -115,7 +117,7 @@ fun BaseView(
 @Composable
 private fun BaseViewPreview() {
     BaseView(
-        visibility = com.example.chimp.screens.login.viewModel.state.Register.RegisterShow("", "")
+        visibility = Register.RegisterShow("", "")
     ) { _, _ ->
         Text("Hello, World!")
     }

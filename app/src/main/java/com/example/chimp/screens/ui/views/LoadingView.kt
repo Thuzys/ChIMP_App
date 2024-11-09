@@ -6,7 +6,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+
+const val LOADING_VIEW_TEST_TAG = "loading_view"
 
 @Composable
 fun LoadingView(
@@ -14,7 +17,9 @@ fun LoadingView(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(LOADING_VIEW_TEST_TAG)
     ) {
         CircularProgressIndicator()
     }

@@ -26,6 +26,7 @@ import com.example.chimp.screens.login.screen.composable.BaseView
 import com.example.chimp.screens.login.screen.composable.MakeInvitationCodeField
 import com.example.chimp.screens.login.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.login.screen.composable.MakeUsernameTextField
+import com.example.chimp.screens.login.viewModel.state.Register
 import com.example.chimp.screens.login.viewModel.state.Visibility
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.MySpacer
@@ -56,9 +57,9 @@ private const val TOP_TEXT_PADDING = 60
  * @param isToShowChange the callback to be invoked when the user wants to show/hide the password
  */
 @Composable
-fun RegisterView(
+internal fun RegisterView(
     modifier: Modifier = Modifier,
-    vm: com.example.chimp.screens.login.viewModel.state.Register,
+    vm: Register,
     onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onConfirmPasswordChange: (String) -> Unit = {},
@@ -87,17 +88,15 @@ fun RegisterView(
         MySpacer()
         MakePasswordTextField(
             value = vm.password,
-            label = stringResource(R.string.password),
-            onPasswordChange = onPasswordChange,
             isToShow = isToShow,
+            onPasswordChange = onPasswordChange,
             isToShowChange = isToShowChange
         )
         MySpacer()
         MakePasswordTextField(
             value = vm.confirmPassword,
-            label = stringResource(R.string.confirm_password),
-            onPasswordChange = onConfirmPasswordChange,
             isToShow = isToShow,
+            onPasswordChange = onConfirmPasswordChange,
             isToShowChange = isToShowChange
         )
         MySpacer()
@@ -140,7 +139,7 @@ fun RegisterView(
 @Preview
 @Composable
 private fun PreviewRegisterView() {
-    var vm: com.example.chimp.screens.login.viewModel.state.Register by remember { mutableStateOf(com.example.chimp.screens.login.viewModel.state.Register.RegisterHide("", "")) }
+    var vm: Register by remember { mutableStateOf(Register.RegisterHide("", "")) }
     RegisterView(
         vm = vm,
         onUsernameChange = { vm = vm.updateUsername(it) },
@@ -149,8 +148,8 @@ private fun PreviewRegisterView() {
         onLoginChange = { },
         isToShowChange = {
             vm = when (val curr = vm) {
-                is com.example.chimp.screens.login.viewModel.state.Register.RegisterShow -> curr.hidePassword()
-                is com.example.chimp.screens.login.viewModel.state.Register.RegisterHide -> curr.showPassword()
+                is Register.RegisterShow -> curr.hidePassword()
+                is Register.RegisterHide -> curr.showPassword()
             }
         },
     )

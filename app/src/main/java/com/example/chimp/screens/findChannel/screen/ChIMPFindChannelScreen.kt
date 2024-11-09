@@ -11,7 +11,7 @@ import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 import com.example.chimp.screens.ui.views.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
-//TODO: Change ErrorView and LoadingView to public package
+
 @Composable
 fun ChIMPFindChannelScreen(
     modifier: Modifier = Modifier,

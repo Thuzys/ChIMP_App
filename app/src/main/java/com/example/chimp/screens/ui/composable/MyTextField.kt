@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
  */
 const val MY_TEXT_FIELD_TAG = "MyTextField"
 
+const val MY_TEXT_FIELD_TRAILING_ICON_TAG = "MyTextFieldTrailingIcon"
+
 /**
  * The height of the spacer between the text label and the text field.
  */
@@ -120,6 +122,7 @@ fun MyTextField(
                 }
                 trailingIcon?.let { icon ->
                     IconButton(
+                        modifier = Modifier.testTag(MY_TEXT_FIELD_TRAILING_ICON_TAG),
                         onClick = onTrailingIconChange
                     ) {
                         Icon(

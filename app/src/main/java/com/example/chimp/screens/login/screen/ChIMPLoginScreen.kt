@@ -16,7 +16,7 @@ import com.example.chimp.screens.login.viewModel.state.LoginScreenState
 import com.example.chimp.screens.login.viewModel.state.Register
 
 @Composable
-fun ChIMPLoginScreen(
+internal fun ChIMPLoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel,
     onLogin: () -> Unit,
@@ -68,6 +68,7 @@ fun ChIMPLoginScreen(
         }
         is LoginScreenState.Success -> {
             onLogin()
+            viewModel.toLogin()
         }
     }
 }

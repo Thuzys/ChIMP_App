@@ -7,11 +7,13 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.twotone.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.chimp.R
 import com.example.chimp.screens.ui.composable.MyTextField
 
 /**
@@ -19,17 +21,24 @@ import com.example.chimp.screens.ui.composable.MyTextField
  */
 private const val PASSWORD_INPUT_HORIZONTAL_PADDING = 16
 
+/**
+ * Creates a password text field.
+ *
+ * @param value The value of the password.
+ * @param isToShow The state of the password.
+ * @param onPasswordChange The callback when the password changes.
+ * @param isToShowChange The callback when the state of the password changes.
+ */
 @Composable
-fun MakePasswordTextField(
+internal fun MakePasswordTextField(
     value: String,
-    label: String,
     isToShow: Boolean,
     onPasswordChange: (String) -> Unit = {},
     isToShowChange: () -> Unit = {},
 ) {
     MyTextField(
         modifier = Modifier.padding(PASSWORD_INPUT_HORIZONTAL_PADDING.dp),
-        label = label,
+        label = stringResource(R.string.password),
         value = value,
         onValueChange = onPasswordChange,
         keyBoardOptions = KeyboardOptions(
