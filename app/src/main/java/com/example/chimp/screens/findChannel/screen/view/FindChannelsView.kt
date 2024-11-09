@@ -22,7 +22,7 @@ import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 @Composable
 fun FindChannelView(
     modifier: Modifier = Modifier,
-    vm: FindChannel /*FindChannelScreenState*/,
+    vm: FindChannel,
     onJoin: (UInt) -> Unit = {},
     onValueChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {}
