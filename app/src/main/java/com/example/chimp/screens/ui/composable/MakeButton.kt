@@ -38,17 +38,12 @@ fun MakeButton(
     enable: Boolean = true,
     onClick: () -> Unit = {},
 ) {
-    Box(
+    Button(
+        onClick = onClick,
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        enabled = enable,
+        shape = RoundedCornerShape(ROUNDED_CORNER_RADIUS_ON_BUTTON.dp)
     ) {
-        Button(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enable,
-            shape = RoundedCornerShape(ROUNDED_CORNER_RADIUS_ON_BUTTON.dp)
-        ) {
-            Text(text, style = buttonStyle)
-        }
+        Text(text, style = buttonStyle)
     }
 }

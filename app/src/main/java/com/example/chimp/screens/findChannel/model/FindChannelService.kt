@@ -2,7 +2,7 @@ package com.example.chimp.screens.findChannel.model
 
 import com.example.chimp.screens.chats.model.channel.Channel
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.either.Either
+import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseErrors
 import kotlinx.coroutines.flow.Flow
 

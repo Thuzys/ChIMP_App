@@ -52,7 +52,7 @@ private const val HORIZONTAL_PADDING = 10
  * @param onRegisterChange the callback to be invoked when the user wants to register
  */
 @Composable
-fun LoginView(
+internal fun LoginView(
     modifier: Modifier = Modifier,
     vm: Login,
     onUsernameChange: (String) -> Unit = {},
@@ -80,9 +80,8 @@ fun LoginView(
         MySpacer()
         MakePasswordTextField(
             value = vm.password,
-            label = stringResource(R.string.password),
-            onPasswordChange = onPasswordChange,
             isToShow = isToShow,
+            onPasswordChange = onPasswordChange,
             isToShowChange = isToShowChange
         )
         val animatedButtonsVisibility by animateFloatAsState(

@@ -5,13 +5,19 @@ import org.junit.Test
 class RegisterTest {
     @Test
     fun isValidTest() {
-        val register = _root_ide_package_.com.example.chimp.screens.login.viewModel.state.Register.RegisterShow("username", "password")
+        val register = Register
+            .RegisterShow(
+                username = "username",
+                password = "P@ssw0rd",
+                confirmPassword = "P@ssw0rd",
+                invitationCode = "123456"
+            )
         assert(register.isValid)
     }
 
     @Test
     fun isNotValidTest() {
-        val register = _root_ide_package_.com.example.chimp.screens.login.viewModel.state.Register.RegisterHide("", "password")
+        val register = Register.RegisterHide("", "password")
         assert(!register.isValid)
     }
 }

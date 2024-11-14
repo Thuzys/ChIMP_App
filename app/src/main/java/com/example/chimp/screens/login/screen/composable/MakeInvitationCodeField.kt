@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.screens.ui.composable.MyTextField
@@ -13,8 +14,14 @@ import com.example.chimp.screens.ui.composable.MyTextField
  */
 private const val INVITATION_CODE_INPUT_HORIZONTAL_PADDING = 16
 
+/**
+ * A composable that creates an invitation code field.
+ *
+ * @param value The value of the invitation code.
+ * @param onInvitationCodeChange The callback that is called when the invitation code changes.
+ */
 @Composable
-fun MakeInvitationCodeField(
+internal fun MakeInvitationCodeField(
     value: String,
     onInvitationCodeChange: (String) -> Unit = {},
 ){
@@ -24,4 +31,10 @@ fun MakeInvitationCodeField(
         value = value,
         onValueChange = onInvitationCodeChange,
     )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun MakeInvitationCodeFieldPreview() {
+    MakeInvitationCodeField(value = "1234567890")
 }

@@ -13,8 +13,13 @@ import com.example.chimp.screens.ui.composable.MyTextField
  */
 private const val USERNAME_INPUT_HORIZONTAL_PADDING = 16
 
+/**
+ * Creates a username text field.
+ * @param value The value of the username text field.
+ * @param onUsernameChange The function to call when the username changes.
+ */
 @Composable
-fun MakeUsernameTextField(
+internal fun MakeUsernameTextField(
     value: String,
     onUsernameChange: (String) -> Unit
 ) {

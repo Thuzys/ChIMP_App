@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,8 @@ import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.screens.ui.composable.GradientBox
 import com.example.chimp.screens.ui.composable.HyperlinkText
 import com.example.chimp.screens.ui.composable.MakeButton
+
+const val ERROR_VIEW_TEST_TAG = "ErrorView"
 
 /**
  * The radius of the rounded corners of the column.
@@ -40,7 +43,7 @@ fun ErrorView(
     tryAgain: () -> Unit = {},
 ) {
     GradientBox(
-        modifier = modifier,
+        modifier = modifier.testTag(ERROR_VIEW_TEST_TAG),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

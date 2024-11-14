@@ -1,7 +1,7 @@
 package com.example.chimp.screens.login.model
 
 import com.example.chimp.models.users.User
-import com.example.chimp.either.Either
+import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseErrors
 
 /**

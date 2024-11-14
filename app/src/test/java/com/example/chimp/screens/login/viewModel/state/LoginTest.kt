@@ -5,7 +5,7 @@ import org.junit.Test
 class LoginTest {
     @Test
     fun isValidTest() {
-        val login = Login.LoginShow("username", "password")
+        val login = Login.LoginShow("username", "P@ssw0rd")
         assert(login.isValid)
     }
 
