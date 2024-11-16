@@ -1,6 +1,5 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
-import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.models.errors.ResponseErrors
 
 /**
