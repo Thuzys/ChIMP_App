@@ -31,7 +31,7 @@ fun SearchBar(
     modifier: Modifier = default_modifier,
     value: String = "",
     placeholderText : String = "Search...",
-    iconTint: Color  = MaterialTheme.colorScheme.onPrimary,
+    iconTint: Color  = MaterialTheme.colorScheme.onPrimaryContainer,
     onValueChange: (String) -> Unit = {},
     onSearch: () -> Unit = {},
 ) {
