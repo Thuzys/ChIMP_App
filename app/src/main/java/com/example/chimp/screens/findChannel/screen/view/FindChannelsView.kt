@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,9 +26,9 @@ fun FindChannelView(
     modifier: Modifier = Modifier,
     vm: FindChannel,
     onJoin: (UInt) -> Unit = {},
-    onValueChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {}
 ) {
+    val (searchBarInput, setSearchBarInput) = rememberSaveable { mutableStateOf("") }
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,9 +36,9 @@ fun FindChannelView(
     ) {
         SearchBar(
             modifier = modifier,
-            value = vm.searchChannelInput,
-            onValueChange = onValueChange,
-            onSearch = { onSearch(vm.searchChannelInput) },
+            value = searchBarInput,
+            onValueChange = { setSearchBarInput(it) },
+            onSearch = { onSearch(searchBarInput) },
         )
         Column(
             modifier = modifier
@@ -70,7 +72,6 @@ private fun ChatListPreview() {
     }
     val vm =
         FindChannel.FindChannelIdle(
-            searchChannelInput = "",
             publicChannels = channels,
 
             )

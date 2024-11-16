@@ -55,7 +55,6 @@ private fun FindChannelBase(
             .fillMaxSize()
             .wrapContentSize(Alignment.Center),
         vm = curr,
-        onValueChange = viewModel::updateSearchChannelInput,
         onJoin = viewModel::joinChannel,
         onSearch = viewModel::findChannel,
     )
