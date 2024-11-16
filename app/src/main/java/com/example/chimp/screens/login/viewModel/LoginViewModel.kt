@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
+import com.example.chimp.models.either.Either
 import com.example.chimp.screens.login.model.LoginService
 import com.example.chimp.screens.login.viewModel.state.Register
 import com.example.chimp.screens.login.viewModel.state.Login
