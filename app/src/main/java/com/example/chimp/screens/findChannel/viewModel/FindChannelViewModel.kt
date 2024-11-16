@@ -22,12 +22,12 @@ class FindChannelViewModel(
     var state: FindChannelScreenState by mutableStateOf(FindChannelScreenState.Loading)
         private set
 
-    fun joinChannel(channelId: UInt) {
+    fun joinChannel(channelId: UInt, invitationCode: String?) {
         val curr = state
         if (curr !is FindChannel.FindChannelIdle) return
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
-            state = when (val result = service.joinChannel(channelId)) {
+            state = when (val result = service.joinChannel(channelId, invitationCode)) {
                 is Success -> FindChannelScreenState.Joined(channelId)
 
                 is Failure ->

@@ -10,6 +10,7 @@ import com.example.chimp.models.errors.ResponseErrors
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.put
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
@@ -25,9 +26,10 @@ class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String
 ): FindChannelService {
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> =
-        client.put("$url$CHANNEL_BASE_URL/$channelId")
-            .let { response ->
+    override suspend fun joinChannel(channelId: UInt, invitationCode: String?): Either<ResponseErrors, Unit> =
+        client.put("$url$CHANNEL_BASE_URL/$channelId") {
+            invitationCode?.let { parameter("invitationCode", invitationCode) }
+        }.let { response ->
                 return if (response.status == HttpStatusCode.OK) {
                     success(Unit)
                 } else {
@@ -35,10 +37,9 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, FindChannelItem> {
-        val name = channelName.encode()
-        return client
-            .get("$url$CHANNEL_NAME_URL$name")
+    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, FindChannelItem> =
+        client
+            .get("$url$CHANNEL_NAME_URL${channelName.encode()}")
             .let { response ->
                 return if (response.status == HttpStatusCode.OK) {
                     val channel = response.body<FindChannelDto>().toFindChannelItem()
@@ -47,11 +48,8 @@ class CHIMPFindChannelAPI(
                     failure(response.body<ErrorDto>().toResponseErrors())
                 }
             }
-    }
 
-    override suspend fun findChannelsByPartialName(
-        channelName: ChannelName,
-    ): Either<ResponseErrors, Flow<FindChannelItem>> {
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<FindChannelItem>> {
         TODO("Not yet implemented")
     }
 

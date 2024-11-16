@@ -29,7 +29,7 @@ class DummyFindChannelService: FindChannelService {
         ),
     )
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> {
+    override suspend fun joinChannel(channelId: UInt, invitationCode: String?): Either<ResponseErrors, Unit> {
         TODO("Not yet implemented")
     }
 

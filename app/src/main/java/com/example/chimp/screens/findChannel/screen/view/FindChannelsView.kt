@@ -20,12 +20,13 @@ import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.screen.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
+import kotlin.reflect.KFunction2
 
 @Composable
 fun FindChannelView(
     modifier: Modifier = Modifier,
     vm: FindChannel,
-    onJoin: (UInt) -> Unit = {},
+    onJoin: (UInt, String?) -> Unit,
     onSearch: (String) -> Unit = {}
 ) {
     val (searchBarInput, setSearchBarInput) = rememberSaveable { mutableStateOf("") }
@@ -49,7 +50,7 @@ fun FindChannelView(
             channels?.forEach { chatItem ->
                 ChatItemRow(
                     chatItem = chatItem,
-                    onJoin = { onJoin(chatItem.cId) }
+                    onJoin = { onJoin(chatItem.cId, null) }
                 )
                 Spacer(Modifier.width(5.dp))
             }
@@ -77,6 +78,6 @@ private fun ChatListPreview() {
             )
     FindChannelView(
         vm = vm,
-        onJoin = { }
+        onJoin = { _, _ -> }
     )
 }
