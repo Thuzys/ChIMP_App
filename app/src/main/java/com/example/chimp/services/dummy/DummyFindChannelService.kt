@@ -1,8 +1,8 @@
 package com.example.chimp.services.dummy
 
-import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
+import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseErrors
@@ -15,14 +15,17 @@ class DummyFindChannelService: FindChannelService {
         FindChannelItem(
             cId = 1u,
             name = ChannelName("Channel 1"),
+            icon = TODO(),
         ),
         FindChannelItem(
             cId = 2u,
             name = ChannelName("Channel 2"),
+            icon = TODO(),
         ),
         FindChannelItem(
             cId = 3u,
             name = ChannelName("Channel 3"),
+            icon = TODO(),
         ),
     )
 
@@ -30,7 +33,11 @@ class DummyFindChannelService: FindChannelService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findChannel(channelName: ChannelName): Either<ResponseErrors, FindChannelItem> {
+    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, FindChannelItem> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<FindChannelItem>> {
         TODO("Not yet implemented")
     }
 
