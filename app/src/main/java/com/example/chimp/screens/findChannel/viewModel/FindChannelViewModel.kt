@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
+import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
@@ -28,7 +29,14 @@ class FindChannelViewModel(
         viewModelScope.launch {
             state = when (val result = service.joinChannel(channelId)) {
                 is Success -> FindChannelScreenState.Joined(channelId)
-                is Failure -> FindChannelScreenState.Error(result.value)
+
+                is Failure ->
+                    FindChannelScreenState.Error(
+                        ResponseErrors(
+                            result.value.cause,
+                            result.value.urlInfo
+                        )
+                    )
             }
         }
     }
@@ -38,9 +46,16 @@ class FindChannelViewModel(
         if (curr !is FindChannel.FindChannelIdle) return
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
-            state = when (val result = service.findChannel(ChannelName(channelName))) {
-                is Success -> FindChannelScreenState.Success(listOf(result.value))
-                is Failure -> FindChannelScreenState.Error(result.value)
+            state = when (val result = service.findChannelByName(ChannelName(channelName))) {
+                is Success ->
+                    FindChannel.FindChannelIdle(listOf(result.value))
+
+                is Failure -> FindChannelScreenState.Error(
+                    ResponseErrors(
+                        result.value.cause,
+                        result.value.urlInfo
+                    )
+                )
             }
         }
     }
@@ -51,16 +66,16 @@ class FindChannelViewModel(
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
             state = when (val result = service.getChannels(offset, limit)) {
-                is Success -> FindChannelScreenState.Success(result.value.toList())
-                is Failure -> FindChannelScreenState.Error(result.value)
-            }
-        }
-    }
+                is Success ->
+                    FindChannel.FindChannelIdle(result.value.toList())
 
-    fun updateSearchChannelInput(searchChannelInput: String) {
-        val curr = state
-        if (curr is FindChannel.FindChannelIdle) {
-            state = curr.updateSearchChannelInput(searchChannelInput)
+                is Failure -> FindChannelScreenState.Error(
+                    ResponseErrors(
+                        result.value.cause,
+                        result.value.urlInfo
+                    )
+                )
+            }
         }
     }
 
@@ -73,7 +88,7 @@ class FindChannelViewModel(
 
     fun toFindChannel() {
         if (state !is FindChannel) {
-            state = FindChannel.FindChannelIdle("", null)
+            state = FindChannel.FindChannelIdle(null)
         }
     }
 }
