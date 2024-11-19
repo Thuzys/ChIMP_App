@@ -2,6 +2,8 @@ package com.example.chimp.screens.ui.composable
 
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Surface
@@ -22,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -34,9 +38,14 @@ import com.example.chimp.screens.chats.screen.composable.ChatsHeader
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+private const val CORRECTION_WIDTH = 40
+private const val BOARD_STROKE_WIDTH = 1
+private const val ROUNDED_CORNER = 16
+
 @Composable
 fun SwipeableRow(
     modifier: Modifier = Modifier,
+    cornerShape: RoundedCornerShape = RoundedCornerShape(ROUNDED_CORNER.dp),
     actions: @Composable RowScope.() -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -44,7 +53,9 @@ fun SwipeableRow(
     val offset = remember { Animatable(initialValue = 0f) }
     val scope = rememberCoroutineScope()
     Box(
-        modifier = modifier.height(IntrinsicSize.Max)
+        modifier = modifier
+            .clip(cornerShape)
+            .height(IntrinsicSize.Max)
     ) {
         Row(
             modifier = Modifier
@@ -55,8 +66,11 @@ fun SwipeableRow(
             actions()
         }
         Surface(
+            border = BorderStroke(BOARD_STROKE_WIDTH.dp, Color.Gray),
+            shape = cornerShape,
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color.Transparent)
                 .offset { IntOffset(offset.value.roundToInt(), 0) }
                 .pointerInput(rowWidth) {
                     detectHorizontalDragGestures(
@@ -69,7 +83,7 @@ fun SwipeableRow(
                         onDragEnd = {
                             when {
                                 offset.value >= rowWidth / 2 -> { scope.launch {
-                                    offset.animateTo(rowWidth)
+                                    offset.animateTo(rowWidth - CORRECTION_WIDTH)
                                 } }
                                 else -> { scope.launch {
                                     offset.animateTo(0f)
@@ -105,28 +119,5 @@ fun SwipeableHeaderPreview() {
                 onClick = {}
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SwipeableRowPreview() {
-    SwipeableRow(
-        actions = {
-            ActionIcon(
-                modifier = Modifier.fillMaxHeight(),
-                backgroundColor = Color.Red,
-                icon = Icons.Default.Delete,
-            )
-        }
-    ) {
-        ChatItemRow(
-            modifier = Modifier.fillMaxWidth(),
-            chatItem = ChannelBasicInfo(
-                cId = 0u,
-                name = ChannelName("Channel name")
-            ),
-            onClick = {}
-        )
     }
 }

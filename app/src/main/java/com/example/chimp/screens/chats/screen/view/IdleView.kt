@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
@@ -20,10 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.chimp.R
 import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.Idle
@@ -35,6 +36,11 @@ const val CHATS_IDLE_VIEW_TAG = "ChatsIdleView"
 const val CHATS_IDLE_VIEW_HEADER_TAG = "ChatsIdleViewHeader"
 
 private const val LIST_ITEM_HEIGHT = 90
+private const val HEADER_PADDING = 16
+private const val LIST_ITEM_PADDING = 8
+private const val ACTION_LIST_WIDTH = 90
+private const val ACTION_ICON_WIDTH = 45
+private const val ACTION_ICON_PADDING = 8
 
 @Composable
 internal fun IdleView(
@@ -53,11 +59,11 @@ internal fun IdleView(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.onSurface)
-                .padding(16.dp),
+                .padding(HEADER_PADDING.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Chats",
+                text = stringResource(R.string.my_chats),
                 color = MaterialTheme.colorScheme.surface,
                 style = MaterialTheme.typography.headlineMedium
             )
@@ -75,24 +81,25 @@ internal fun IdleView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(LIST_ITEM_HEIGHT.dp)
-                        .padding(bottom = 8.dp)
-                        .clip(RoundedCornerShape(16.dp)),
+                        .padding(top = LIST_ITEM_PADDING.dp),
                     actions = {
                         Row(
                             modifier = Modifier
                                 .fillParentMaxHeight()
-                                .width(80.dp),
+                                .width(ACTION_LIST_WIDTH.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Column(
+                                modifier = Modifier
+                                    .fillParentMaxHeight(),
                                 verticalArrangement = Arrangement.Center,
                             ) {
                                 ActionIcon(
                                     modifier = Modifier
                                         .fillParentMaxHeight()
                                         .weight(1f)
-                                        .width(45.dp),
+                                        .width(ACTION_ICON_WIDTH.dp),
                                     icon = Icons.Default.Delete,
                                     backgroundColor = MaterialTheme.colorScheme.error,
                                     onClick = { onDeleteChannel(channel) },
@@ -100,13 +107,15 @@ internal fun IdleView(
                                 )
                             }
                             Column(
+                                modifier = Modifier
+                                    .fillParentMaxHeight(),
                                 verticalArrangement = Arrangement.Center,
                             ) {
                                 ActionIcon(
                                     modifier = Modifier
                                         .fillParentMaxHeight()
-                                        .weight(1f)
-                                        .width(45.dp),
+                                        .width(ACTION_ICON_WIDTH.dp)
+                                        .padding(end = ACTION_ICON_PADDING.dp),
                                     icon = Icons.Default.Info,
                                     backgroundColor = MaterialTheme.colorScheme.primary,
                                     onClick = { onInfoClick(channel) },
@@ -120,7 +129,7 @@ internal fun IdleView(
                         modifier = Modifier
                             .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
                             .fillParentMaxWidth()
-                            .clip(RoundedCornerShape(16.dp)),
+                            .background(Color.Transparent),
                         chatItem = channel,
                         onClick = { onChannelClick(channel) }
                     )
