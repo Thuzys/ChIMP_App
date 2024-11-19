@@ -1,10 +1,9 @@
-package com.example.chimp.screens.findChannel.model
+package com.example.chimp.screens.chats.model.channel
 
 import androidx.annotation.DrawableRes
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelName
 
-data class FindChannelItem(
+data class ChannelBasicInfo(
     val cId: UInt,
     val name: ChannelName,
     @DrawableRes val icon: Int = R.drawable.github_mark,

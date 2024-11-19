@@ -20,7 +20,7 @@ const val MAKE_MARK_TAG = "Make Mark"
 fun MakeMark(
     modifier: Modifier = Modifier,
     lightMode: Int,
-    darkMode: Int,
+    darkMode: Int = lightMode,
     contentDescription: String
 ) {
     if (isSystemInDarkTheme()) {

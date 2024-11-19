@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
@@ -64,7 +65,7 @@ class FindChannelViewModel(
         }
     }
 
-    fun updatePublicChannels(publicChannels: List<FindChannelItem>) {
+    fun updatePublicChannels(publicChannels: List<ChannelBasicInfo>) {
         val curr = state
         if (curr is FindChannel.FindChannelIdle) {
             state = curr.updatePublicChannels(publicChannels)

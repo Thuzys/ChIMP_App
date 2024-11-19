@@ -1,6 +1,6 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
-import com.example.chimp.screens.findChannel.model.FindChannelItem
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 
 /**
  * The state of the Find Channel screen.
@@ -10,10 +10,10 @@ import com.example.chimp.screens.findChannel.model.FindChannelItem
  */
 sealed class FindChannel(
     open val searchChannelInput: String = "",
-    open val publicChannels: List<FindChannelItem>? = null,
+    open val publicChannels: List<ChannelBasicInfo>? = null,
 ): FindChannelScreenState {
     abstract fun updateSearchChannelInput(searchChannelInput: String): FindChannel
-    abstract fun updatePublicChannels(publicChannels: List<FindChannelItem>): FindChannel
+    abstract fun updatePublicChannels(publicChannels: List<ChannelBasicInfo>): FindChannel
 
     /**
      * The state representing an idle Find Channel screen.
@@ -23,12 +23,12 @@ sealed class FindChannel(
      */
     data class FindChannelIdle(
         override val searchChannelInput: String,
-        override val publicChannels: List<FindChannelItem>?,
+        override val publicChannels: List<ChannelBasicInfo>?,
     ) : FindChannel(searchChannelInput, publicChannels) {
         override fun updateSearchChannelInput(searchChannelInput: String): FindChannel {
             return copy(searchChannelInput = searchChannelInput)
         }
-        override fun updatePublicChannels(publicChannels: List<FindChannelItem>): FindChannel {
+        override fun updatePublicChannels(publicChannels: List<ChannelBasicInfo>): FindChannel {
             return copy(publicChannels = publicChannels)
         }
     }

@@ -1,13 +1,17 @@
 package com.example.chimp.screens.login.screen.view
 
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
-import com.example.chimp.R
-import com.example.chimp.screens.login.viewModel.state.Register
+import com.example.chimp.screens.login.viewModel.state.LoginScreenState.Register
+import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_INPUT_TAG
+import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_TRAILING_ICON_TAG
 import org.junit.Rule
 import org.junit.Test
 
@@ -17,135 +21,103 @@ class RegisterViewKtTest {
 
     @Test
     fun testOnUserChange() {
-        val username = "username"
-        val change = "change"
-        val expected = change + username
-        var result = ""
-        val funTest: (String) -> Unit = { result = it }
+        val text = "test"
+        val pass = "pass"
+        rule.setContent { RegisterView(Register(password = pass)) }
         rule
-            .setContent {
-                RegisterView(
-                    vm = Register.RegisterShow(
-                        username = username,
-                        password = "",
-                        confirmPassword = ""
-                    ),
-                    onUsernameChange = funTest
-                )
-            }
+            .onNodeWithText(text)
+            .assertDoesNotExist()
         rule
-            .onNodeWithText(
-                text = username,
-                useUnmergedTree = true
-            )
-            .performTextInput(change)
-        assert(result == expected)
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)
+            .onFirst()
+            .performTextInput(text)
+        rule
+            .onNodeWithText(text)
+            .assertExists()
     }
 
     @Test
     fun testOnPasswordChange() {
-        val password = "password"
-        val change = "change"
-        val expected = change + password
-        var result = ""
-        val funTest: (String) -> Unit = { result = it }
+        val text = "test"
+        val user = "user"
+        rule.setContent { RegisterView(Register(username = user)) }
         rule
-            .setContent {
-                RegisterView(
-                    vm = Register.RegisterShow(
-                        username = "",
-                        password = password,
-                        confirmPassword = ""
-                    ),
-                    onPasswordChange = funTest
-                )
-            }
+            .onNodeWithText(text)
+            .assertDoesNotExist()
         rule
-            .onNodeWithText(
-                text = password,
-                useUnmergedTree = true
-            )
-            .performTextInput(change)
-        assert(result == expected)
+            .onAllNodesWithTag(MY_TEXT_FIELD_TRAILING_ICON_TAG)
+            .onFirst()
+            .performClick()
+        rule
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)[1]
+            .performTextInput(text)
+        rule
+            .onNodeWithText(text)
+            .assertExists()
     }
 
     @Test
     fun testOnConfirmPasswordChange() {
-        val confirmPassword = "confirmPassword"
-        val change = "change"
-        val expected = change + confirmPassword
-        var result = ""
-        val funTest: (String) -> Unit = { result = it }
+        val pass = "pass"
+        val user = "user"
+        val text = "test"
+        rule.setContent { RegisterView(Register(username = user, password = pass)) }
         rule
-            .setContent {
-                RegisterView(
-                    vm = Register.RegisterShow("", "", confirmPassword),
-                    onConfirmPasswordChange = funTest
-                )
-            }
+            .onNodeWithText(text)
+            .assertDoesNotExist()
         rule
-            .onNodeWithText(
-                text = confirmPassword,
-                useUnmergedTree = true
-            )
-            .performTextInput(change)
-        assert(result == expected)
+            .onAllNodesWithTag(MY_TEXT_FIELD_TRAILING_ICON_TAG)
+            .onLast()
+            .performClick()
+        rule
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)[2]
+            .performTextInput(text)
+        rule
+            .onNodeWithText(text)
+            .assertExists()
     }
 
     @Test
     fun testOnInvitationCodeChange() {
-        val invitationCode = "invitationCode"
-        val change = "change"
-        val expected = change + invitationCode
-        var result = ""
-        val funTest: (String) -> Unit = { result = it }
+        val pass = "pass"
+        val user = "user"
+        val text = "test"
+        rule.setContent { RegisterView(Register(username = user, password = pass)) }
         rule
-            .setContent {
-                RegisterView(
-                    vm = Register.RegisterShow(
-                        username = "",
-                        password = "",
-                        confirmPassword = "",
-                        invitationCode = invitationCode
-                    ),
-                    onInvitationCodeChange = funTest
-                )
-            }
+            .onNodeWithText(text)
+            .assertDoesNotExist()
         rule
-            .onNodeWithText(
-                text = invitationCode,
-                useUnmergedTree = true
-            )
-            .performTextInput(change)
-        assert(result == expected)
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)
+            .onLast()
+            .performTextInput(text)
+        rule
+            .onNodeWithText(text)
+            .assertExists()
     }
 
     @Test
     fun testOnRegisterChange() {
         var result = false
-        val funTest: () -> Unit = { result = true }
+        val funTest: (String, String, String) -> Unit = {_, _, _ -> result = true }
         val username = "Valid"
         val password = "P@ssw0rd"
         val invitationCode = "123456"
-        var register = ""
         rule
             .setContent {
-                register = stringResource(R.string.register)
                 RegisterView(
-                    vm = Register.RegisterShow(
-                        username = username,
-                        password = password,
-                        confirmPassword = password,
-                        invitationCode = invitationCode
-                    ),
+                    state = Register(username, password),
                     onRegisterChange = funTest
                 )
             }
         rule
-            .onNodeWithText(
-                text = register,
-                useUnmergedTree = true
-            )
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)
+            .onLast()
+            .performTextInput(invitationCode)
+        rule
+            .onAllNodesWithTag(MY_TEXT_FIELD_INPUT_TAG)[2]
+            .performTextInput(password)
+        rule
+            .onNodeWithTag(REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG)
             .performScrollTo()
             .performClick()
         assert(result)
@@ -154,29 +126,18 @@ class RegisterViewKtTest {
     @Test
     fun testOnRegisterIsNotEnabled() {
         var result = false
-        val funTest: () -> Unit = { result = true }
+        val funTest: (String, String, String) -> Unit = {_, _, _ -> result = true }
         val username = "Valid"
         val password = ""
-        val invitationCode = "123456"
-        var register = ""
         rule
             .setContent {
-                register = stringResource(R.string.register)
                 RegisterView(
-                    vm = Register.RegisterShow(
-                        username = username,
-                        password = password,
-                        confirmPassword = password,
-                        invitationCode = invitationCode
-                    ),
+                    state = Register(username, password),
                     onRegisterChange = funTest
                 )
             }
         rule
-            .onNodeWithText(
-                text = register,
-                useUnmergedTree = true
-            )
+            .onNodeWithTag(REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG)
             .performScrollTo()
             .performClick()
         assert(!result)
@@ -185,21 +146,16 @@ class RegisterViewKtTest {
     @Test
     fun testOnLoginChange() {
         var result = false
-        val funTest: () -> Unit = { result = true }
-        var login = ""
+        val funTest: (String, String) -> Unit = {_ ,_ -> result = true }
         rule
             .setContent {
-                login = stringResource(R.string.login)
                 RegisterView(
-                    vm = Register.RegisterShow("", "", ""),
+                    state = Register(),
                     onLoginChange = funTest
                 )
             }
         rule
-            .onNodeWithText(
-                text = login,
-                useUnmergedTree = true
-            )
+            .onNodeWithTag(REGISTER_VIEW_LOGIN_BUTTON_TEST_TAG)
             .performScrollTo()
             .performClick()
         assert(result)

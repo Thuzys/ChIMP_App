@@ -9,7 +9,6 @@ import com.example.chimp.screens.findChannel.screen.view.FindChannelView
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
-import com.example.chimp.screens.ui.views.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
 
 @Composable
@@ -23,13 +22,7 @@ fun ChIMPFindChannelScreen(
             FindChannelBase(modifier, curr, viewModel)
         }
         is FindChannelScreenState.Error -> {
-            ErrorView(
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center),
-                error = curr.error,
-                tryAgain = viewModel::toFindChannel,
-            )
+
         }
         is FindChannelScreenState.Joined -> {
             onJoinChannel()
