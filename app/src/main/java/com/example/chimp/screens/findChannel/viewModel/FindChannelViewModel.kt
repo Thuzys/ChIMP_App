@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.findChannel.model.FindChannelItem
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState

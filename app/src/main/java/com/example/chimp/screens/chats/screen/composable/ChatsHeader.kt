@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.ui.composable.MakeMark
 import com.example.chimp.screens.ui.composable.MyHorizontalDivider
 

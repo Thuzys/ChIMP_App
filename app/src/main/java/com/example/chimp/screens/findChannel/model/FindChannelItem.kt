@@ -2,7 +2,7 @@ package com.example.chimp.screens.findChannel.model
 
 import androidx.annotation.DrawableRes
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelName
 
 data class FindChannelItem(
     val cId: UInt,

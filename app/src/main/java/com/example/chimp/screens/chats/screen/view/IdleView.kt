@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.Idle
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
@@ -75,7 +75,7 @@ internal fun IdleView(
         ) {
             itemsIndexed(
                 items = chats.channels,
-                key = { _: Int, channel:ChannelBasicInfo -> channel.cId.toInt() }
+                key = { _: Int, channel: ChannelBasicInfo -> channel.cId.toInt() }
             ) { _, channel ->
                 SwipeableRow(
                     modifier = Modifier

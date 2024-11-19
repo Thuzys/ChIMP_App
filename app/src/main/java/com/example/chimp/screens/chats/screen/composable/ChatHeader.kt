@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 
 @Composable
 internal fun ChatHeader(

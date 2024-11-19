@@ -3,18 +3,13 @@ package com.example.chimp.services.http
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChannelInfo
 import com.example.chimp.screens.chats.model.channel.ChatsServices
 import com.example.chimp.screens.chats.model.messages.Messages
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.websocket.ws
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
+import io.ktor.client.plugins.sse.sse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.runBlocking
 
 class ChIMPChatsAPI(private val client: HttpClient): ChatsServices {
     override suspend fun fetchChannels(user: User): Either<ResponseErrors, List<ChannelBasicInfo>> {
@@ -29,8 +24,7 @@ class ChIMPChatsAPI(private val client: HttpClient): ChatsServices {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo):
-            Either<ResponseErrors, MutableStateFlow<List<Messages>>> {
+    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo): Either<ResponseErrors, List<Messages>> {
         TODO("Not yet implemented")
     }
 
@@ -49,9 +43,7 @@ class ChIMPChatsAPI(private val client: HttpClient): ChatsServices {
         TODO()
     }
 
-    override suspend fun fetchSSLMessages(channel: ChannelBasicInfo):
-            Either<ResponseErrors, Flow<Messages>>
-    {
+    override suspend fun fetchSseMessages(user: User): Either<ResponseErrors, Flow<Messages>> {
         TODO()
     }
 }

@@ -4,13 +4,12 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChannelInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.chats.model.channel.ChatsServices
 import com.example.chimp.screens.chats.model.messages.Messages
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class FakeService: ChatsServices {
     private val channels = mutableListOf(
@@ -31,7 +30,7 @@ internal class FakeService: ChatsServices {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo): Either<ResponseErrors, MutableStateFlow<List<Messages>>> {
+    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo): Either<ResponseErrors, List<Messages>> {
         TODO("Not yet implemented")
     }
 
@@ -42,7 +41,7 @@ internal class FakeService: ChatsServices {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchSSLMessages(channel: ChannelBasicInfo): Either<ResponseErrors, Flow<Messages>> {
+    override suspend fun fetchSseMessages(user: User): Either<ResponseErrors, Flow<Messages>> {
         TODO("Not yet implemented")
     }
 }

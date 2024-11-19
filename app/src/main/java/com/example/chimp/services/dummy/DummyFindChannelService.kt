@@ -1,6 +1,6 @@
 package com.example.chimp.services.dummy
 
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelItem

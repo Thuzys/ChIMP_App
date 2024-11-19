@@ -1,4 +1,4 @@
-package com.example.chimp.screens.chats.model.channel
+package com.example.chimp.models.channel
 
 import androidx.annotation.DrawableRes
 import com.example.chimp.R

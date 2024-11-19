@@ -2,7 +2,7 @@ package com.example.chimp.screens.chats.viewModel.state
 
 import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.messages.Messages
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

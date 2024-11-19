@@ -6,7 +6,7 @@ import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChatsServices
 import com.example.chimp.screens.chats.model.messages.Messages
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState
@@ -22,17 +22,39 @@ class ChatsViewModel(
     private val service: ChatsServices,
     initialState: ChatsScreenState = ChatsScreenState.Initial,
     private val user: User,
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
+    private val _notification = MutableStateFlow<List<Messages>>(emptyList())
     val state = _state.asStateFlow()
+    val notification = _notification.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            service.fetchSseMessages(user).let {
+                when (it) {
+                    is Success<Flow<Messages>> -> it
+                        .value
+                        .collect { msg ->
+                            val curr = state.value
+                            if (curr is ChatSelected) {
+                                curr.addMessage(msg)
+                            } else {
+                                _notification.emit(_notification.value + msg)
+                            }
+                        }
+                    //TODO: Improve error handling
+                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(it.value))
+                }
+            }
+        }
+    }
 
     fun init() {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is ChatsScreenState.Initial) return@launch
             _state.emit(ChatsScreenState.Loading)
-            //TODO: Add dataStore to save user data
-            when(val result = service.fetchChannels(user)) {
+            when (val result = service.fetchChannels(user)) {
                 is Success<List<ChannelBasicInfo>> -> _state.emit(Idle(result.value))
                 is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
             }
@@ -56,7 +78,7 @@ class ChatsViewModel(
         viewModelScope.launch {
             if (state.value is Idle) return@launch
             _state.emit(ChatsScreenState.Loading)
-            when(val result = service.fetchChannels(user)) {
+            when (val result = service.fetchChannels(user)) {
                 is Success<List<ChannelBasicInfo>> -> _state.emit(Idle(result.value))
                 is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
             }
@@ -69,24 +91,6 @@ class ChatsViewModel(
         }
     }
 
-    fun sseMessageLoader() {
-        viewModelScope.launch {
-            val curr = state.value
-            while (curr is ChatSelected) {
-                when(val result = service.fetchSSLMessages(curr.channel)) {
-                    is Success<Flow<Messages>> -> {
-                        result
-                            .value
-                            .collect {
-                                curr.addMessage(it)
-                            }
-                    }
-                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
-                }
-            }
-        }
-    }
-
     fun toChatInfo(channel: ChannelBasicInfo) {
         viewModelScope.launch {
             if (state.value is ChannelInfo) return@launch
@@ -94,7 +98,7 @@ class ChatsViewModel(
         }
     }
 
-    fun outChatInfo() {
+    fun fromChatInfo() {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is ChannelInfo) return@launch
@@ -105,10 +109,19 @@ class ChatsViewModel(
     fun toChatSelected(channel: ChannelBasicInfo) {
         viewModelScope.launch {
             if (state.value is ChatSelected) return@launch
-            _state.emit(ChatsScreenState.Loading)
-            when(val result =service.fetchChannelMessages(channel)){
-                is Success -> _state.emit(ChatSelected(channel, result.value, user))
-                is Failure -> _state.emit(ChatsScreenState.Error(result.value))
+            service.fetchChannelMessages(channel).let {
+                when (it) {
+                    is Success<List<Messages>> -> _state
+                        .emit(
+                            ChatSelected(
+                                channel = channel,
+                                _messages = MutableStateFlow(it.value),
+                                user = user
+                            )
+                        )
+
+                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(it.value))
+                }
             }
         }
     }

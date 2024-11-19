@@ -1,6 +1,6 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 
 /**
  * The state of the Find Channel screen.

@@ -6,8 +6,8 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeRight
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.chats.screen.composable.CHATS_HEADER_IMAGE_TAG
 import com.example.chimp.screens.chats.screen.composable.CHATS_HEADER_NAME_TAG
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.Idle

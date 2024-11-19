@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.findChannel.screen.composable.SearchBar
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 
 @Composable
