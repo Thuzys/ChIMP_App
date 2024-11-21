@@ -1,0 +1,12 @@
+package com.example.chimp.models.notification
+
+import com.example.chimp.models.either.Either
+import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.users.User
+import com.example.chimp.screens.chats.model.messages.Messages
+import kotlinx.coroutines.flow.Flow
+
+interface NotificationService {
+    suspend fun getNotification(user: User): Either<ResponseErrors, Flow<List<Messages>>>
+    suspend fun clearNotification()
+}
