@@ -3,13 +3,12 @@ package com.example.chimp.screens.login.viewModel
 import com.example.chimp.screens.login.service.FakeService
 import com.example.chimp.screens.login.viewModel.state.LoginScreenState
 import com.example.chimp.utils.ReplaceMainDispatcherRule
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelTest {
 
     @get:Rule
@@ -22,7 +21,10 @@ class LoginViewModelTest {
             val vm = LoginViewModel(FakeService())
 
             // Act
-            val state = vm.state.last()
+            var state: LoginScreenState? = null
+            vm.state.take(1).collect {
+                state = it
+            }
 
             // Assert
             assert(state is LoginScreenState.Login) {
@@ -40,7 +42,10 @@ class LoginViewModelTest {
             vm.login(service.validUsername, service.validPassword)
             service.unlock()
             // Assert
-            val state = vm.state.last()
+            var state: LoginScreenState? = null
+            vm.state.take(1).collect {
+                state = it
+            }
             assert(state is LoginScreenState.Success) {
                 "Expected LoginScreenState.Success, but was $state"
             }
@@ -54,8 +59,12 @@ class LoginViewModelTest {
         // Act
         vm.toRegister("", "")
 
+        delay(50)
         // Assert
-        val state = vm.state.last()
+        var state: LoginScreenState? = null
+        vm.state.take(1).collect {
+            state = it
+        }
         assert(state is LoginScreenState.Register) {
             "Expected LoginScreenState.Register, but was $state"
         }
@@ -68,9 +77,12 @@ class LoginViewModelTest {
 
         // Act
         vm.toLogin("", "")
-
+        delay(50)
         // Assert
-        val state = vm.state.last()
+        var state: LoginScreenState? = null
+        vm.state.take(1).collect {
+            state = it
+        }
         assert(state is LoginScreenState.Login) {
             "Expected LoginScreenState.Login, but was $state"
         }
@@ -87,7 +99,10 @@ class LoginViewModelTest {
         service.unlock()
 
         // Assert
-        val state = vm.state.last()
+        var state: LoginScreenState? = null
+        vm.state.take(1).collect {
+            state = it
+        }
         assert(state is LoginScreenState.Error) {
             "Expected LoginScreenState.Error, but was $state"
         }
