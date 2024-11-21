@@ -3,7 +3,6 @@ package com.example.chimp.services.dummy
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseErrors
 import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo

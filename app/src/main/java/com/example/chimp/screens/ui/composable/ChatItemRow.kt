@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.Marquee
 
