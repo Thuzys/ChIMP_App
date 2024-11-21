@@ -47,8 +47,9 @@ class FindChannelViewModel(
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
             state = when (val result = service.findChannelByName(ChannelName(channelName))) {
-                is Success ->
-                    FindChannel.FindChannelIdle(listOf(result.value))
+                is Success -> FindChannel.FindChannelIdle(
+                    publicChannels = listOf(result.value)
+                )
 
                 is Failure -> FindChannelScreenState.Error(
                     ResponseErrors(
@@ -67,7 +68,9 @@ class FindChannelViewModel(
         viewModelScope.launch {
             state = when (val result = service.getChannels(offset, limit)) {
                 is Success ->
-                    FindChannel.FindChannelIdle(result.value.toList())
+                    FindChannel.FindChannelIdle(
+                        publicChannels = result.value.toList()
+                    )
 
                 is Failure -> FindChannelScreenState.Error(
                     ResponseErrors(
@@ -88,7 +91,7 @@ class FindChannelViewModel(
 
     fun toFindChannel() {
         if (state !is FindChannel) {
-            state = FindChannel.FindChannelIdle(null)
+            state = FindChannel.FindChannelIdle(publicChannels = emptyList())
         }
     }
 }

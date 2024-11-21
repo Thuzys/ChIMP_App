@@ -22,8 +22,8 @@ sealed class FindChannel(
      * @property publicChannels the public channels
      */
     data class FindChannelIdle(
-        override val searchChannelInput: String,
-        override val publicChannels: List<ChannelBasicInfo>?,
+        override val searchChannelInput: String = "",
+        override val publicChannels: List<ChannelBasicInfo>,
     ) : FindChannel(searchChannelInput, publicChannels) {
         override fun updateSearchChannelInput(searchChannelInput: String): FindChannel {
             return copy(searchChannelInput = searchChannelInput)
