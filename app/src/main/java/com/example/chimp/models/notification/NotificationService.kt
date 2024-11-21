@@ -8,5 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NotificationService {
     suspend fun getNotification(user: User): Either<ResponseErrors, Flow<List<Messages>>>
-    suspend fun clearNotification()
+    suspend fun clearAllNotification()
+    suspend fun clearNotification(message: Messages)
+    suspend fun clearNotification(messages: List<Messages>)
 }
