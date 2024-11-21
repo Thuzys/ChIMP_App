@@ -107,4 +107,25 @@ class LoginViewModelTest {
             "Expected LoginScreenState.Error, but was $state"
         }
     }
+
+    @Test
+    fun testStateIsLoading() = runTest(dispatcherRule.testDispatcher) {
+        // Arrange
+        val service = FakeService()
+        val vm = LoginViewModel(service)
+
+        // Act
+        vm.login("", "")
+
+        delay(50)
+        // Assert
+        var state: LoginScreenState? = null
+        vm.state.take(1).collect {
+            state = it
+        }
+        assert(state is LoginScreenState.Loading) {
+            "Expected LoginScreenState.Loading, but was $state"
+        }
+        service.unlock()
+    }
 }
