@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,11 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.findChannel.model.FindChannelItem
-import com.example.chimp.screens.findChannel.screen.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.SearchBar
+import com.example.chimp.screens.ui.composable.ChatItemRow
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
-import kotlin.reflect.KFunction2
 
 @Composable
 fun FindChannelView(
@@ -49,8 +50,12 @@ fun FindChannelView(
             val channels = vm.publicChannels
             channels?.forEach { chatItem ->
                 ChatItemRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                     chatItem = chatItem,
-                    onJoin = { onJoin(chatItem.cId, null) }
+                    onClick = { onJoin(chatItem.cId, null) }
                 )
                 Spacer(Modifier.width(5.dp))
             }
@@ -61,10 +66,10 @@ fun FindChannelView(
 @Preview(showBackground = true)
 @Composable
 private fun ChatListPreview() {
-    val channels = mutableListOf<FindChannelItem>()
+    val channels = mutableListOf<ChannelBasicInfo>()
     repeat(50) {
         channels.add(
-            FindChannelItem(
+            ChannelBasicInfo(
                 cId = it.toUInt(),
                 name = ChannelName("Channel $it"),
                 icon = R.drawable.github_mark,
@@ -73,6 +78,7 @@ private fun ChatListPreview() {
     }
     val vm =
         FindChannel.FindChannelIdle(
+            searchChannelInput = "",
             publicChannels = channels,
 
             )

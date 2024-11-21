@@ -12,7 +12,7 @@ internal class FakeService : LoginService {
     private val controller = Channel<Unit>()
     val validUsername = "test"
     val validPassword = "test"
-    val validInvitationCode = "test"
+    private val validInvitationCode = "test"
     override suspend fun login(
         username: String,
         password: String

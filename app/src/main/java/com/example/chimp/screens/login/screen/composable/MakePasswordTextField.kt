@@ -32,13 +32,14 @@ private const val PASSWORD_INPUT_HORIZONTAL_PADDING = 16
 @Composable
 internal fun MakePasswordTextField(
     value: String,
+    label : String = stringResource(R.string.password),
     isToShow: Boolean,
     onPasswordChange: (String) -> Unit = {},
     isToShowChange: () -> Unit = {},
 ) {
     MyTextField(
         modifier = Modifier.padding(PASSWORD_INPUT_HORIZONTAL_PADDING.dp),
-        label = stringResource(R.string.password),
+        label = label,
         value = value,
         onValueChange = onPasswordChange,
         keyBoardOptions = KeyboardOptions(

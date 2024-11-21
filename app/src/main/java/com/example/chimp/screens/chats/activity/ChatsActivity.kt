@@ -5,13 +5,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.chimp.application.DependenciesContainer
 import com.example.chimp.screens.about.activity.AboutActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.chats.screen.ChIMPChatsScreen
+import com.example.chimp.screens.chats.viewModel.ChatsViewModel
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
 const val TAG = "CHIMP"
@@ -22,6 +25,12 @@ const val TAG = "CHIMP"
  * activities.
  */
 class ChatsActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<ChatsViewModel>(
+//        factoryProducer = {
+//            ChatsViewModelFactory((application as DependenciesContainer).chatsService)
+//        }
+    )
 
     private val navigateToAboutIntent: Intent by lazy {
         Intent(this, AboutActivity::class.java)
@@ -36,19 +45,11 @@ class ChatsActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChIMPTheme {
-                Scaffold(
-                    bottomBar = {
-                        MenuBottomBar(
-                            menuIsEnable = false,
-                            addChannelClick = { startActivity(navigateToFindChannelIntent) },
-                            aboutClick = { startActivity(navigateToAboutIntent) }
-                        )
-                    }
-                ) { innerPadding ->
-                    ChIMPChatsScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                ChIMPChatsScreen(
+                    onFindChannelNavigate = { startActivity(navigateToFindChannelIntent) },
+                    onAboutNavigate = { startActivity(navigateToAboutIntent) },
+                    vm = viewModel
+                )
             }
         }
     }

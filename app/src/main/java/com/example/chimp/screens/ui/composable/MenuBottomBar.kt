@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
  * MenuBottomBar is a composable that represents the bottom bar of the app.
  *
  * @param modifier Modifier The modifier to be applied to the layout.
- * @param menuIsEnable Boolean The state of the menu button.
+ * @param chatsIsEnable Boolean The state of the menu button.
  * @param addChannelIsEnable Boolean The state of the add channel button.
  * @param aboutIsEnable Boolean The state of the about button.
  * @param onMenuClick () -> Unit The action to be performed when the menu button is clicked.
@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 @Preview
 fun MenuBottomBar(
     modifier: Modifier = Modifier,
-    menuIsEnable: Boolean = true,
+    chatsIsEnable: Boolean = true,
     addChannelIsEnable: Boolean = true,
     aboutIsEnable: Boolean = true,
     onMenuClick: () -> Unit = {},
@@ -42,7 +42,7 @@ fun MenuBottomBar(
     ) {
         IconButton(
             onClick = onMenuClick,
-            enabled = menuIsEnable
+            enabled = chatsIsEnable
         ) {
             Icon(Icons.Default.Home, contentDescription = "Menu")
         }
