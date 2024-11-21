@@ -12,19 +12,28 @@ import io.ktor.client.plugins.sse.sse
 import kotlinx.coroutines.flow.Flow
 
 class ChIMPChatsAPI(private val client: HttpClient): ChatsServices {
-    override suspend fun fetchChannels(user: User): Either<ResponseErrors, List<ChannelBasicInfo>> {
+
+    override suspend fun fetchChannels(user: User):
+            Either<ResponseErrors, List<ChannelBasicInfo>>
+    {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteChannel(channel: ChannelBasicInfo): Either<ResponseErrors, Unit> {
+    override suspend fun deleteChannel(channel: ChannelBasicInfo):
+            Either<ResponseErrors, Unit>
+    {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseErrors, ChannelInfo> {
+    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo):
+            Either<ResponseErrors, ChannelInfo>
+    {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo): Either<ResponseErrors, List<Messages>> {
+    override suspend fun fetchChannelMessages(channel: ChannelBasicInfo):
+            Either<ResponseErrors, List<Messages>>
+    {
         TODO("Not yet implemented")
     }
 
@@ -35,15 +44,19 @@ class ChIMPChatsAPI(private val client: HttpClient): ChatsServices {
         TODO("Not yet implemented")
     }
 
-    private fun connectToChannel(channel: ChannelBasicInfo) {
+    private fun connectToChannel(channel: ChannelBasicInfo)
+    {
         TODO()
     }
 
-    private fun parseMessage(message: String): Messages {
+    private fun parseMessage(message: String): Messages
+    {
         TODO()
     }
 
-    override suspend fun fetchSseMessages(user: User): Either<ResponseErrors, Flow<Messages>> {
+    override suspend fun fetchSseMessages(user: User):
+            Either<ResponseErrors, Flow<Messages>>
+    {
         TODO()
     }
 }

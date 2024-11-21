@@ -13,7 +13,6 @@ import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.ChannelInfo
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.ChatSelected
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.Idle
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -29,27 +28,27 @@ class ChatsViewModel(
     val notification = _notification.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            service.fetchSseMessages(user).let {
-                when (it) {
-                    is Success<Flow<Messages>> -> it
-                        .value
-                        .collect { msg ->
-                            val curr = state.value
-                            if (curr is ChatSelected) {
-                                curr.addMessage(msg)
-                            } else {
-                                _notification.emit(_notification.value + msg)
-                            }
-                        }
-                    //TODO: Improve error handling
-                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(it.value))
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            service.fetchSseMessages(user).let {
+//                when (it) {
+//                    is Success<Flow<Messages>> -> it
+//                        .value
+//                        .collect { msg ->
+//                            val curr = state.value
+//                            if (curr is ChatSelected) {
+//                                curr.addMessage(msg)
+//                            } else {
+//                                _notification.emit(_notification.value + msg)
+//                            }
+//                        }
+//                    //TODO: Improve error handling
+//                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(it.value))
+//                }
+//            }
+//        }
     }
 
-    fun init() {
+    fun loadChannels() {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is ChatsScreenState.Initial) return@launch

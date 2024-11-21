@@ -23,7 +23,7 @@ internal fun ChIMPChatsScreen(
         modifier = modifier
     ) {
         when(val curr = vm.state.collectAsState().value) {
-            is ChatsScreenState.Initial -> { vm.init() }
+            is ChatsScreenState.Initial -> { vm.loadChannels() }
             is ChatsScreenState.Loading -> TODO()
             is ChatsScreenState.Idle -> {
                 ChatsScreenAux(
