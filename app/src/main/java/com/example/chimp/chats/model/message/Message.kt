@@ -1,7 +1,7 @@
 package com.example.chimp.chats.model.message
 
-import com.example.chimp.chats.model.channel.ChannelName
-import com.example.chimp.chats.model.users.UserName
+import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.screens.chats.model.users.UserName
 import java.sql.Timestamp
 
 data class Message(

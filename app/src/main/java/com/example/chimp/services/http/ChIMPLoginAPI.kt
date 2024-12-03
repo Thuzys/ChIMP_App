@@ -2,9 +2,9 @@ package com.example.chimp.services.http
 
 import com.example.chimp.screens.login.model.LoginService
 import com.example.chimp.models.users.User
-import com.example.chimp.models.either.Either
-import com.example.chimp.models.either.failure
-import com.example.chimp.models.either.success
+import com.example.chimp.either.Either
+import com.example.chimp.either.failure
+import com.example.chimp.either.success
 import com.example.chimp.models.errors.ResponseErrors
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

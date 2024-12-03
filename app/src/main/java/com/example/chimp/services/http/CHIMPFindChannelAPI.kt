@@ -1,9 +1,9 @@
 package com.example.chimp.services.http
 
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.models.either.Either
-import com.example.chimp.models.either.failure
-import com.example.chimp.models.either.success
+import com.example.chimp.either.Either
+import com.example.chimp.either.failure
+import com.example.chimp.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseErrors
