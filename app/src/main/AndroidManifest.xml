@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ChIMP"
         tools:targetApi="31">
         <activity
-            android:name=".screens.login.activity.LoginActivity"
+            android:name=".screens.register.activity.RegisterActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP"
