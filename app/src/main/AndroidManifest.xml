@@ -16,7 +16,6 @@
         <activity
             android:name=".screens.register.activity.RegisterActivity"
             android:exported="true"
-            android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
