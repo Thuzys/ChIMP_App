@@ -18,6 +18,7 @@ import com.example.chimp.screens.chats.viewModel.ChatsViewModel
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
 const val TAG = "CHIMP"
+
 /**
  * ChatsActivity is the activity that displays the chats screen.
  *
