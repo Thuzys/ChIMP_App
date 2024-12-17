@@ -43,14 +43,14 @@ class ChIMPFormValidator : FormValidation {
             username.isBlank() ->
                 Left("Username cannot be empty.")
 
-            username.length < MIN_USERNAME_LENGTH ->
-                Left("Username must have at least 3 characters.")
-
             !username.matches(UPPER_CASE) ->
                 Left("Username must contain at least one uppercase letter.")
 
             !username.matches(LOWER_CASE) ->
                 Left("Username must contain at least one lowercase letter.")
+
+            username.length < MIN_USERNAME_LENGTH ->
+                Left("Username must have at least $MIN_USERNAME_LENGTH characters.")
 
             else ->
                 Either.Right(true)
@@ -60,9 +60,6 @@ class ChIMPFormValidator : FormValidation {
         when {
             password.isBlank() ->
                 Left("Password cannot be empty.")
-
-            password.length < MIN_PASSWORD_LENGTH ->
-                Left("Password must have at least 3 characters.")
 
             !password.matches(SPECIAL_CHARACTERS) ->
                 Left("Password must contain at least one special character.")
@@ -75,6 +72,9 @@ class ChIMPFormValidator : FormValidation {
 
             !password.matches(LOWER_CASE) ->
                 Left("Password must contain at least one lowercase letter.")
+
+            password.length < MIN_PASSWORD_LENGTH ->
+                Left("Password must have at least $MIN_PASSWORD_LENGTH characters.")
 
             else ->
                 Either.Right(true)

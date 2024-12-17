@@ -93,8 +93,8 @@ internal fun RegisterView(
             mutableStateOf(
                 username.isValid
                         && password.isValid
-                        && confirmPass === password.input
-                        && invitationCode !== ""
+                        && confirmPass == password.input
+                        && invitationCode != ""
             )
         }
         var isToShowPass by rememberSaveable { mutableStateOf(false) }

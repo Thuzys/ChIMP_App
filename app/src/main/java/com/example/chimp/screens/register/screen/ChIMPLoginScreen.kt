@@ -1,5 +1,6 @@
 package com.example.chimp.screens.register.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
@@ -13,13 +14,17 @@ import com.example.chimp.screens.register.screen.view.RegisterView
 import com.example.chimp.screens.register.viewModel.LoginViewModel
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 
+const val LOGIN_SCREEN_TAG = "LoginScreen"
+
 @Composable
 internal fun ChIMPLoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel,
     onLogin: () -> Unit = {},
 ) {
-    when(val curr = viewModel.state.collectAsState().value) {
+    val curr = viewModel.state.collectAsState().value
+    Log.i(LOGIN_SCREEN_TAG, "State: ${curr::class.simpleName}")
+    when(curr) {
         is RegisterScreenState.LogIn -> {
             LoginView(
                 state = curr,
@@ -40,6 +45,8 @@ internal fun ChIMPLoginScreen(
                     .wrapContentSize(Alignment.Center),
                 onRegister = viewModel::register,
                 onLoginClick = viewModel::toLogin,
+                onUsernameChange = viewModel::updateUsername,
+                onPasswordChange = viewModel::updatePassword,
             )
         }
         is RegisterScreenState.Error -> {
@@ -60,7 +67,6 @@ internal fun ChIMPLoginScreen(
         }
         is RegisterScreenState.Success -> {
             onLogin()
-            viewModel.toLogin()
         }
     }
 }

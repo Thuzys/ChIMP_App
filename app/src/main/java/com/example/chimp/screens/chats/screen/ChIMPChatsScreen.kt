@@ -1,5 +1,6 @@
 package com.example.chimp.screens.chats.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,8 @@ import com.example.chimp.screens.chats.viewModel.ChatsViewModel
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 
+const val CHATS_SCREEN_TAG = "ChatsScreen"
+
 @Composable
 internal fun ChIMPChatsScreen(
     modifier: Modifier = Modifier,
@@ -22,7 +25,9 @@ internal fun ChIMPChatsScreen(
     Column(
         modifier = modifier
     ) {
-        when(val curr = vm.state.collectAsState().value) {
+        val curr = vm.state.collectAsState().value
+        Log.i(CHATS_SCREEN_TAG, "State: ${curr::class.simpleName}")
+        when(curr) {
             is ChatsScreenState.Initial -> { vm.loadChannels() }
             is ChatsScreenState.Loading -> TODO()
             is ChatsScreenState.Idle -> {
