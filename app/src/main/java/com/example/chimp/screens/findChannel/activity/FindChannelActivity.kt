@@ -19,6 +19,9 @@ import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
+/**
+ * The activity that represents the find channel screen.
+ */
 class FindChannelActivity: ComponentActivity() {
     private val viewModel by viewModels<FindChannelViewModel>(
         factoryProducer = {
