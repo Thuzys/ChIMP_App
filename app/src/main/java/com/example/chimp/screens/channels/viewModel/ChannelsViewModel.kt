@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.screens.channels.model.channel.ChannelsServices
 import com.example.chimp.screens.channels.model.channel.FetchChannelsResult
@@ -39,7 +39,7 @@ class ChannelsViewModel(
                     Scrolling(result.value.first, result.value.second)
                 )
 
-                is Failure<ResponseErrors> -> _state.emit(
+                is Failure<ResponseError> -> _state.emit(
                     Error(result.value, curr)
                 )
             }
@@ -53,7 +53,7 @@ class ChannelsViewModel(
             _state.emit(ChannelsScreenState.Loading)
             when (val result = service.fetchChannelInfo(channel)) {
                 is Success<ChannelInfo> -> _state.emit(Info(result.value, curr))
-                is Failure<ResponseErrors> -> _state.emit(
+                is Failure<ResponseError> -> _state.emit(
                     Error(result.value, curr)
                 )
             }
@@ -75,7 +75,7 @@ class ChannelsViewModel(
             val curr = state.value
             if (curr !is Scrolling) return@launch
             when (val result = service.fetchMore()) {
-                is Failure<ResponseErrors> -> _state.emit(Error(result.value, curr))
+                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
 
                 is Success -> return@launch
             }

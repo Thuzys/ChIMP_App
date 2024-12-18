@@ -6,7 +6,7 @@ import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.model.FindChannelService
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -25,7 +25,7 @@ class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String
 ): FindChannelService {
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> =
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, Unit> =
         client.put("$url$CHANNEL_BASE_URL/$channelId")
             .let { response ->
                 return if (response.status == HttpStatusCode.OK) {
@@ -35,14 +35,14 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun findChannel(channelName: ChannelName): Either<ResponseErrors, FindChannelItem> {
+    override suspend fun findChannel(channelName: ChannelName): Either<ResponseError, FindChannelItem> {
         TODO("Not yet implemented")
     }
 
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?
-    ): Either<ResponseErrors, Flow<FindChannelItem>> =
+    ): Either<ResponseError, Flow<FindChannelItem>> =
         client
             .get(buildString {
                 append("$url$CHANNEL_BASE_URL")
@@ -69,7 +69,7 @@ class CHIMPFindChannelAPI(
         val title: String,
         val type: String,
     ) {
-        fun toResponseErrors() = ResponseErrors(cause = title, urlInfo = type)
+        fun toResponseErrors() = ResponseError(cause = title, urlInfo = type)
     }
 
     @Serializable

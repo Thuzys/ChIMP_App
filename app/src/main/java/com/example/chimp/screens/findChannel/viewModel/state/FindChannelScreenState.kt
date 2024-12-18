@@ -1,7 +1,7 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
 import com.example.chimp.screens.findChannel.model.FindChannelItem
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 
 /**
  * The state of the Find Channel screen.
@@ -24,7 +24,7 @@ sealed interface FindChannelScreenState {
      *
      * @property error the error that occurred
      */
-    data class Error(val error: ResponseErrors) : FindChannelScreenState
+    data class Error(val error: ResponseError) : FindChannelScreenState
 
     /**
      * The screen has joined a channel.

@@ -1,6 +1,7 @@
 package com.example.chimp.infrastructure
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
 import com.example.chimp.utils.CleanDataStoreRule
 import kotlinx.coroutines.flow.first
@@ -15,6 +16,8 @@ class UserInfoPreferencesRepositoryTest {
     @get:Rule
     val cleanDataStoreRule = CleanDataStoreRule()
 
+    private val token = Token("token")
+
     @Test
     fun userInfo_emits_null_when_no_user_is_stored() = runTest {
         val sut = UserInfoPreferencesRepository(cleanDataStoreRule.dataStore)
@@ -25,7 +28,7 @@ class UserInfoPreferencesRepositoryTest {
     @Test
     fun update_user_stores_the_user() = runTest {
         val sut = UserInfoPreferencesRepository(cleanDataStoreRule.dataStore)
-        val expectedUser = User(1u, "John", "token")
+        val expectedUser = User(1u, "John", token)
         sut.updateUserInfo(expectedUser)
         val storedUser = sut.userInfo.first()
         assert(storedUser == expectedUser)
@@ -34,7 +37,7 @@ class UserInfoPreferencesRepositoryTest {
     @Test
     fun clear_user_removes_the_user() = runTest {
         val sut = UserInfoPreferencesRepository(cleanDataStoreRule.dataStore)
-        val expectedUser = User(1u, "John", "token")
+        val expectedUser = User(1u, "John", token)
         sut.updateUserInfo(expectedUser)
         sut.clearUserInfo()
         val user = sut.userInfo.first()

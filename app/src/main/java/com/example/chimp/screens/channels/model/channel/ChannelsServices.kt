@@ -2,7 +2,7 @@ package com.example.chimp.screens.channels.model.channel
 
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.Either
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.Flow
 typealias FetchChannelsResult = Pair<Flow<List<ChannelBasicInfo>>, Flow<Boolean>>
 
 interface ChannelsServices {
-    suspend fun fetchChannels(): Either<ResponseErrors, FetchChannelsResult>
-    suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseErrors, Unit>
-    suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseErrors, ChannelInfo>
-    suspend fun fetchMore(): Either<ResponseErrors, Unit>
+    suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult>
+    suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit>
+    suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo>
+    suspend fun fetchMore(): Either<ResponseError, Unit>
 }

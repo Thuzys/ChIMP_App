@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.ui.composable.GradientBox
 import com.example.chimp.screens.ui.composable.MakeButton
 
@@ -49,7 +49,7 @@ private const val BUTTON_PADDING = 16
 internal fun ErrorView(
     modifier: Modifier,
     tryAgain: () -> Unit = {},
-    errors: ResponseErrors
+    errors: ResponseError
 ) {
     GradientBox(
         colors = listOf(
@@ -111,6 +111,6 @@ internal fun ErrorView(
 private fun ErrorViewPreview() {
     ErrorView(
         modifier = Modifier.fillMaxSize(),
-        errors = ResponseErrors("Error", "https://www.google.com")
+        errors = ResponseError("Error", "https://www.google.com")
     )
 }

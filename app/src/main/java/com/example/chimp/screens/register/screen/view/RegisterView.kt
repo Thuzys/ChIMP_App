@@ -33,6 +33,7 @@ import com.example.chimp.screens.register.screen.composable.InputErrorDisplay
 import com.example.chimp.screens.register.screen.composable.MakeInvitationCodeField
 import com.example.chimp.screens.register.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.register.screen.composable.MakeUsernameTextField
+import com.example.chimp.screens.register.screen.composable.ShowErrorMessage
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Register
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.MySpacer
@@ -174,16 +175,6 @@ internal fun RegisterView(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun ShowErrorMessage(message: InputValidation) {
-    if (message is Failure<String>) {
-        InputErrorDisplay(
-            modifier = Modifier.fillMaxWidth(),
-            message = message.value
-        )
     }
 }
 

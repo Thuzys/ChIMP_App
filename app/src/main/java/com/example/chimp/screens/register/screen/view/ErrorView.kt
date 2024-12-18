@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Error
 import com.example.chimp.screens.ui.composable.GradientBox
 import com.example.chimp.screens.ui.composable.HyperlinkText
@@ -96,6 +96,6 @@ internal fun ErrorView(
 private fun ErrorViewPreview() {
     ErrorView(
         modifier = Modifier.fillMaxSize(),
-        state = Error("", ResponseErrors("Some error", "Some message"))
+        state = Error("", ResponseError("Some error", "Some message"))
     )
 }

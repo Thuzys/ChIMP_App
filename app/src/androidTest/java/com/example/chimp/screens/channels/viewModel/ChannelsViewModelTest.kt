@@ -2,7 +2,7 @@ package com.example.chimp.screens.channels.viewModel
 
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.channels.service.FakeService
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
@@ -101,7 +101,7 @@ class ChannelsViewModelTest {
             val vm = ChannelsViewModel(
                 service,
                 fakeUserInfoRepo.repo,
-                Error(ResponseErrors("error", "error"), initialState),
+                Error(ResponseError("error", "error"), initialState),
             )
             
             vm.goBack()

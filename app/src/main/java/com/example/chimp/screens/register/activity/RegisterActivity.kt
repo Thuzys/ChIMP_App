@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.application.DependenciesContainer
-import com.example.chimp.screens.chats.activity.ChannelsActivity
+import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.register.screen.ChIMPLoginScreen
-import com.example.chimp.screens.register.viewModel.LoginViewModel
+import com.example.chimp.screens.register.viewModel.RegisterViewModel
 import com.example.chimp.screens.register.viewModel.LoginViewModelFactory
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
@@ -20,7 +20,7 @@ import com.example.chimp.screens.ui.theme.ChIMPTheme
  * The activity that represents the login and signIn screen.
  */
 class RegisterActivity: ComponentActivity() {
-    private val viewModel by viewModels<LoginViewModel>(
+    private val viewModel by viewModels<RegisterViewModel>(
         factoryProducer = {
             LoginViewModelFactory(
                 (application as DependenciesContainer).loginService,

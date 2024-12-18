@@ -2,7 +2,7 @@ package com.example.chimp.screens.register.model
 
 import com.example.chimp.models.users.User
 import com.example.chimp.models.either.Either
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 
 /**
  * LoginService is the interface that defines the service used in LoginViewModel.
@@ -14,12 +14,12 @@ interface RegisterService {
      * @param username the username of the user
      * @param password the password of the user
      * @return an [Either] with the [User] if the login was successful,
-     * or a [ResponseErrors] if it failed.
+     * or a [ResponseError] if it failed.
      */
     suspend fun login(
         username: String,
         password: String
-    ): Either<ResponseErrors, User>
+    ): Either<ResponseError, User>
 
     /**
      * Registers a new user with the given username, password, and invitation code.
@@ -28,11 +28,11 @@ interface RegisterService {
      * @param password the password of the user
      * @param invitationCode the invitation code used to register
      * @return an [Either] with the [User] if the registration was successful,
-     * or a [ResponseErrors] if it failed.
+     * or a [ResponseError] if it failed.
      */
     suspend fun register(
         username: String,
         password: String,
         invitationCode: String,
-    ): Either<ResponseErrors, User>
+    ): Either<ResponseError, User>
 }

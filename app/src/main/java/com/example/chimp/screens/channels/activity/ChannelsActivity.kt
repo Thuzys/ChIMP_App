@@ -1,4 +1,4 @@
-package com.example.chimp.screens.chats.activity
+package com.example.chimp.screens.channels.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -52,6 +52,7 @@ class ChannelsActivity : ComponentActivity() {
                 ChIMPChannelsScreen(
                     onFindChannelNavigate = { startActivity(navigateToFindChannelIntent) },
                     onAboutNavigate = { startActivity(navigateToAboutIntent) },
+                    onRegisterNavigate = { startActivity(navigateToRegisterIntent) },
                     vm = viewModel
                 )
             }

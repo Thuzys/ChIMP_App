@@ -3,7 +3,8 @@ package com.example.chimp.screens.register.service
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
 import com.example.chimp.screens.register.model.RegisterService
 import kotlinx.coroutines.channels.Channel
@@ -16,24 +17,24 @@ internal class FakeService : RegisterService {
     private val user = User(
         id = 1u,
         name = validUsername,
-        "token"
+        token = Token("token")
     )
     override suspend fun login(
         username: String,
         password: String
-    ): Either<ResponseErrors, User> {
+    ): Either<ResponseError, User> {
         controller.receive()
         if (username == validUsername && password == validPassword) {
             return success(
                 User(
                     id = 1u,
                     name = "test",
-                    token = "test"
+                    token = Token("token")
                 )
             )
         } else {
             return failure(
-                ResponseErrors(
+                ResponseError(
                     cause = "Invalid username or password",
                     urlInfo = "https://example.com"
                 )
@@ -47,7 +48,7 @@ internal class FakeService : RegisterService {
         username: String,
         password: String,
         invitationCode: String
-    ): Either<ResponseErrors, User> {
+    ): Either<ResponseError, User> {
         if (
             username == validUsername &&
             password == validPassword &&
@@ -57,7 +58,7 @@ internal class FakeService : RegisterService {
             return success(user)
         } else {
             return failure(
-                ResponseErrors(
+                ResponseError(
                     cause = "Invalid username or password",
                     urlInfo = "https://example.com"
                 )

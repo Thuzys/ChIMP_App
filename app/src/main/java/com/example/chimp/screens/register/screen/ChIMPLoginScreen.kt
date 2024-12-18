@@ -11,7 +11,7 @@ import com.example.chimp.screens.register.screen.view.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
 import com.example.chimp.screens.register.screen.view.LoginView
 import com.example.chimp.screens.register.screen.view.RegisterView
-import com.example.chimp.screens.register.viewModel.LoginViewModel
+import com.example.chimp.screens.register.viewModel.RegisterViewModel
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 
 const val LOGIN_SCREEN_TAG = "LoginScreen"
@@ -19,7 +19,7 @@ const val LOGIN_SCREEN_TAG = "LoginScreen"
 @Composable
 internal fun ChIMPLoginScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel,
+    viewModel: RegisterViewModel,
     onLogin: () -> Unit = {},
 ) {
     val curr = viewModel.state.collectAsState().value

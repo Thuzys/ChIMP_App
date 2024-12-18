@@ -13,7 +13,6 @@ import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.services.dummy.DummyChannelsService
 import com.example.chimp.services.dummy.DummyFindChannelService
-import com.example.chimp.services.dummy.DummyRegisterService
 import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
 import io.ktor.client.HttpClient
