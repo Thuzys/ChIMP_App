@@ -54,7 +54,7 @@ fun ChatItemRow(
                 .padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = chatItem.icon),
+                painter = painterResource(id = R.drawable.user_mark),
                 contentDescription = "Avatar",
                 modifier = Modifier
                     .size(64.dp)
@@ -100,6 +100,6 @@ fun ChatItemRow(
 )
 @Composable
 private fun ChatItemRowPreview() {
-    val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
+    val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"))
     ChatItemRow(chatItem = item, buttonString = "test") { }
 }

@@ -15,35 +15,25 @@ class DummyFindChannelService: FindChannelService {
         ChannelBasicInfo(
             cId = 1u,
             name = ChannelName("Channel 1"),
-            icon = TODO(),
         ),
         ChannelBasicInfo(
             cId = 2u,
             name = ChannelName("Channel 2"),
-            icon = TODO(),
         ),
         ChannelBasicInfo(
             cId = 3u,
             name = ChannelName("Channel 3"),
-            icon = TODO(),
         ),
     )
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, Unit> {
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, ChannelBasicInfo> {
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun findChannel(channelName: ChannelName): Either<ResponseError, FindChannelItem> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun getChannels(
         offset: UInt?,
