@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +39,8 @@ private const val TEXT_LENGTH_THRESHOLD = 15
 fun ChatItemRow(
     modifier: Modifier = Modifier,
     chatItem: ChannelBasicInfo,
+    buttonModifier: Modifier = Modifier.minimumInteractiveComponentSize(),
+    buttonString: String,
     onClick: () -> Unit,
 ) {
     Card(
@@ -83,8 +85,8 @@ fun ChatItemRow(
                 }
             }
             MakeButton(
-                modifier = Modifier.width(12.dp),
-                text = "Join",
+                modifier = buttonModifier,
+                text = buttonString,
                 onClick = onClick,
             )
 //            MakeJoinButton { onJoin() }
@@ -99,5 +101,5 @@ fun ChatItemRow(
 @Composable
 private fun ChatItemRowPreview() {
     val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
-    ChatItemRow(chatItem = item) { }
+    ChatItemRow(chatItem = item, buttonString = "test") { }
 }

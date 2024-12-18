@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.screens.chats.screen.composable.ChatsHeader
+import com.example.chimp.screens.channels.screen.composable.ChatsHeader
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 

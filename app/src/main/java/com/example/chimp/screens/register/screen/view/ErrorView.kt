@@ -25,7 +25,7 @@ import com.example.chimp.screens.ui.composable.GradientBox
 import com.example.chimp.screens.ui.composable.HyperlinkText
 import com.example.chimp.screens.ui.composable.MakeButton
 
-const val ERROR_VIEW_TEST_TAG = "ErrorView"
+const val REGISTER_ERROR_VIEW_TEST_TAG = "ErrorView"
 
 /**
  * The radius of the rounded corners of the column.
@@ -45,7 +45,7 @@ internal fun ErrorView(
 ) {
     val error = state.error
     GradientBox(
-        modifier = modifier.testTag(ERROR_VIEW_TEST_TAG),
+        modifier = modifier.testTag(REGISTER_ERROR_VIEW_TEST_TAG),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

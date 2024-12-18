@@ -53,6 +53,7 @@ fun FindChannelView(
                         .height(100.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     chatItem = chatItem,
+                    buttonString = "Join",
                     onClick = { onJoin(chatItem.cId) }
                 )
                 Spacer(Modifier.width(5.dp))

@@ -11,6 +11,7 @@ import com.example.chimp.screens.register.model.RegisterService
  *
  * @property service the service used in the ViewModel context.
  * @property formValidation the form validation used in the ViewModel context.
+ * @property userInfoRepository the repository used in the ViewModel context.
  */
 @Suppress("UNCHECKED_CAST")
 internal class LoginViewModelFactory(

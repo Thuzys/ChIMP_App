@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.application.DependenciesContainer
-import com.example.chimp.screens.chats.activity.ChatsActivity
+import com.example.chimp.screens.chats.activity.ChannelsActivity
 import com.example.chimp.screens.register.screen.ChIMPLoginScreen
 import com.example.chimp.screens.register.viewModel.LoginViewModel
 import com.example.chimp.screens.register.viewModel.LoginViewModelFactory
@@ -31,7 +31,7 @@ class RegisterActivity: ComponentActivity() {
     )
 
     private val navigateToChatsIntent by lazy {
-        Intent(this, ChatsActivity::class.java)
+        Intent(this, ChannelsActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

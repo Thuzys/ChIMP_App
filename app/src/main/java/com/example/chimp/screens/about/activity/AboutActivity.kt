@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.chimp.screens.chats.activity.ChatsActivity
+import com.example.chimp.screens.chats.activity.ChannelsActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.about.screen.ChIMPAboutScreen
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 import com.example.chimp.screens.about.viewModel.AboutViewModel
+
+const val ABOUT_SCREEN_TAG = "AboutScreen"
 
 /**
  * AboutActivity is the activity that displays the about screen.
@@ -27,7 +29,7 @@ class AboutActivity: ComponentActivity() {
     private val viewModel by viewModels<AboutViewModel>()
 
     private val navigateToChatsIntent by lazy {
-        Intent(this, ChatsActivity::class.java)
+        Intent(this, ChannelsActivity::class.java)
     }
 
     private val navigateToFindChannelIntent by lazy {
