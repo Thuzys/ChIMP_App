@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.chimp.screens.findChannel.screen.view.ErrorView
 import com.example.chimp.screens.findChannel.screen.view.IdleView
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
@@ -20,7 +22,7 @@ fun ChIMPFindChannelScreen(
     onChatsNavigate: () -> Unit,
     onAboutNavigate: () -> Unit
 ) {
-    when (val curr = viewModel.state) {
+    when (val curr = viewModel.state.collectAsState().value) {
         is FindChannelScreenState.Idle -> {
             FindChannelScreenAux(
                 bottomBar = {
@@ -37,14 +39,38 @@ fun ChIMPFindChannelScreen(
                         .wrapContentSize(Alignment.Center),
                     state = curr,
                     onJoin = viewModel::joinChannel,
-                    onSearch = viewModel::findChannel,
+                    onSearch = viewModel::updateSearchText
                 )
             }
         }
 
-        is FindChannelScreenState.Error -> TODO()
+        is FindChannelScreenState.Error -> {
+            ErrorView(
+                state = curr,
+                modifier = modifier,
+                close = viewModel::closeError
+            )
+        }
 
         is FindChannelScreenState.Loading -> {
+            FindChannelScreenAux(
+                bottomBar = {
+                    MenuBottomBar(
+                        addChannelIsEnable = false,
+                        onMenuClick = onChatsNavigate,
+                        aboutClick = onAboutNavigate
+                    )
+                }
+            ) {
+                LoadingView(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .wrapContentSize(Alignment.Center),
+                )
+            }
+        }
+
+        FindChannelScreenState.Init -> {
             FindChannelScreenAux(
                 bottomBar = {
                     MenuBottomBar(
