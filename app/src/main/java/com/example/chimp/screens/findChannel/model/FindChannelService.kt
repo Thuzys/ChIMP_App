@@ -1,7 +1,7 @@
 package com.example.chimp.screens.findChannel.model
 
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseErrors
 import kotlinx.coroutines.flow.Flow

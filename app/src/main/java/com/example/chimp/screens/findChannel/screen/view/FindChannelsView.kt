@@ -19,17 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.ui.composable.SearchBar
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.ui.composable.ChatItemRow
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState.Idle
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
+import com.example.chimp.screens.ui.composable.SearchBar
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun IdleView(
     modifier: Modifier = Modifier,
-    state: Idle,
+    state: FindChannelScreenState.Idle,
     onJoin: (UInt, String?) -> Unit,
     onSearch: (String) -> Unit = {},
     onFetchMore: () -> Unit = {}
@@ -61,8 +61,9 @@ fun IdleView(
                         .fillMaxWidth()
                         .height(100.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    chatItem = channel,
-                    onClick = { onJoin(channel.cId, null) }
+                    chatItem = chatItem,
+                    buttonString = "Join",
+                    onClick = { onJoin(chatItem.cId) }
                 )
                 Spacer(Modifier.width(5.dp))
 
@@ -77,7 +78,7 @@ fun IdleView(
 @Preview(showBackground = true)
 @Composable
 private fun ChatListPreview() {
-    val state = Idle(
+    val state = FindChannelScreenState.Idle(
         publicChannels = flowOf(List(37) {
             ChannelBasicInfo(
                 cId = it.toUInt(),

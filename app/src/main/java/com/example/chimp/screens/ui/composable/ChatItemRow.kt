@@ -4,16 +4,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,10 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
-import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.ui.composable.MakeButton
-import com.example.chimp.screens.ui.composable.Marquee
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 
 /**
  * The threshold for the length of the text to determine if marquee effect should be applied.
@@ -42,6 +39,8 @@ private const val TEXT_LENGTH_THRESHOLD = 15
 fun ChatItemRow(
     modifier: Modifier = Modifier,
     chatItem: ChannelBasicInfo,
+    buttonModifier: Modifier = Modifier.minimumInteractiveComponentSize(),
+    buttonString: String,
     onClick: () -> Unit,
 ) {
     Card(
@@ -86,8 +85,8 @@ fun ChatItemRow(
                 }
             }
             MakeButton(
-                modifier = Modifier.width(12.dp),
-                text = "Join",
+                modifier = buttonModifier,
+                text = buttonString,
                 onClick = onClick,
             )
 //            MakeJoinButton { onJoin() }
@@ -102,5 +101,5 @@ fun ChatItemRow(
 @Composable
 private fun ChatItemRowPreview() {
     val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
-    ChatItemRow(chatItem = item) { }
+    ChatItemRow(chatItem = item, buttonString = "test") { }
 }

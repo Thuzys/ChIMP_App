@@ -1,11 +1,11 @@
 package com.example.chimp.services.dummy
 
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
-import com.example.chimp.screens.chats.model.channel.ChannelName
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseErrors
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 

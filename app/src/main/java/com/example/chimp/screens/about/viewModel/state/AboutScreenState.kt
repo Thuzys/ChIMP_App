@@ -7,11 +7,11 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import com.example.chimp.R
+import com.example.chimp.screens.about.activity.ABOUT_SCREEN_TAG
 import com.example.chimp.screens.about.model.Dev
 import com.example.chimp.screens.about.model.Email
 import com.example.chimp.screens.about.model.SocialMedia
 import com.example.chimp.screens.about.viewModel.AboutViewModel
-import com.example.chimp.screens.chats.activity.TAG
 import java.net.URL
 
 private fun getDevelopers(): Set<Dev> {
@@ -67,7 +67,7 @@ sealed interface AboutScreenState {
                     }
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Log.e(TAG, "Failed to open URL", e)
+                Log.e(ABOUT_SCREEN_TAG, "Failed to open URL", e)
                 Toast
                     .makeText(
                         context,
@@ -88,7 +88,7 @@ sealed interface AboutScreenState {
                     }
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Log.e(TAG, "Failed to send email", e)
+                Log.e(ABOUT_SCREEN_TAG, "Failed to send email", e)
                 Toast
                     .makeText(
                         context,

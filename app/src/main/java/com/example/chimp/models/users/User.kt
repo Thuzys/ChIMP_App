@@ -1,4 +1,5 @@
 package com.example.chimp.models.users
+
 /**
  * User is a data class that represents a user.
  *
