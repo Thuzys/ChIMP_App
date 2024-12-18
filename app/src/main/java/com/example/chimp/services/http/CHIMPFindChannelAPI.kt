@@ -49,34 +49,16 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<ChannelBasicInfo>> {
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
-    ): Either<ResponseErrors, Flow<ChannelBasicInfo>> =
-        client
-            .get(buildString {
-                append("$url$CHANNEL_BASE_URL")
-                val queryParams = listOfNotNull(
-                    offset?.let { "offset=$it" },
-                    limit?.let { "limit=$it" }
-                )
-                if (queryParams.isNotEmpty()) {
-                    append("?")
-                    append(queryParams.joinToString("&"))
-                }
-            })
-            .let { response ->
-                return if (response.status == HttpStatusCode.OK) {
-                    val channels = response.body<List<FindChannelDto>>().map(FindChannelDto::toChannelBasicInfo)
-                    success(flowOf(*channels.toTypedArray()))
-                } else {
-                    failure(response.body<ErrorDto>().toResponseErrors())
-                }
-            }
+    ): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
+        TODO("Not yet implemented")
+    }
 
     @Serializable
     private data class ErrorDto(

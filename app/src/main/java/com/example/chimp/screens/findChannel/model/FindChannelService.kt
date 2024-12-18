@@ -35,7 +35,7 @@ interface FindChannelService {
      */
     suspend fun findChannelsByPartialName(
         channelName: ChannelName,
-    ): Either<ResponseErrors, Flow<ChannelBasicInfo>>
+    ): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>>
 
     /**
      * Get a list of channels.
@@ -48,5 +48,5 @@ interface FindChannelService {
     suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
-    ): Either<ResponseErrors, Flow<ChannelBasicInfo>>
+    ): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>>
 }

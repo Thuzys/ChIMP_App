@@ -1,6 +1,8 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
 import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
+import kotlinx.coroutines.flow.Flow
 
 /**
  * The state of the Find Channel screen.
@@ -19,9 +21,13 @@ sealed interface FindChannelScreenState {
     data class Error(val error: ResponseErrors) : FindChannelScreenState
 
     /**
-     * The screen has joined a channel.
+     * The screen is idle.
      *
-     * @property channelId the channel id joined
+     * @property searchChannelInput the search channel input
+     * @property publicChannels the public channels found
      */
-    data class Joined(val channelId: UInt) : FindChannelScreenState
+    data class Idle(
+        val searchChannelInput: String = "",
+        val publicChannels: Flow<List<ChannelBasicInfo>>,
+    ) : FindChannelScreenState
 }
