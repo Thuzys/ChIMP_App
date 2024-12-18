@@ -7,12 +7,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.chimp.BuildConfig
 import com.example.chimp.infrastructure.UserInfoPreferencesRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.screens.channels.model.channel.ChannelsServices
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.services.dummy.DummyFindChannelService
 import com.example.chimp.services.dummy.DummyRegisterService
-import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -22,6 +22,7 @@ import kotlinx.serialization.json.Json
 
 interface DependenciesContainer {
     val loginService: RegisterService
+    val channelsService: ChannelsServices
     val findChannelService: FindChannelService
     val formValidation: FormValidation
     val preferencesDataStore: DataStore<Preferences>
@@ -47,6 +48,8 @@ class ChIMPApplication : Application(), DependenciesContainer {
         //ChIMPRegisterAPI(client, url)
         DummyRegisterService()
     }
+    override val channelsService: ChannelsServices
+        get() = TODO("Not yet implemented")
 
     override val findChannelService: FindChannelService by lazy {
         DummyFindChannelService()
@@ -56,7 +59,8 @@ class ChIMPApplication : Application(), DependenciesContainer {
         ChIMPFormValidator()
     }
 
-    override val preferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
+    override val preferencesDataStore: DataStore<Preferences> by
+    preferencesDataStore(name = "preferences")
 
     override val userInfoRepository: UserInfoRepository by lazy {
         UserInfoPreferencesRepository(preferencesDataStore)

@@ -13,7 +13,7 @@ internal class FakeService : RegisterService {
     val validUsername = "test"
     val validPassword = "test"
     private val validInvitationCode = "test"
-    val user = User(
+    private val user = User(
         id = 1u,
         name = validUsername,
         "token"
