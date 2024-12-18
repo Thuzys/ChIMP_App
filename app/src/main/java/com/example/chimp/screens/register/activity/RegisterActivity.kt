@@ -44,7 +44,10 @@ class RegisterActivity: ComponentActivity() {
                     ChIMPLoginScreen(
                         modifier = Modifier.padding(innerPadding),
                         viewModel = viewModel,
-                        onLogin = { startActivity(navigateToChatsIntent) }
+                        onLogin = {
+                            startActivity(navigateToChatsIntent)
+                            finish()
+                        }
                     )
                 }
             }

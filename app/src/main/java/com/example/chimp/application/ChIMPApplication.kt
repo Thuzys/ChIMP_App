@@ -7,12 +7,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.chimp.BuildConfig
 import com.example.chimp.infrastructure.UserInfoPreferencesRepository
 import com.example.chimp.models.repository.UserInfoRepository
-import com.example.chimp.screens.channels.model.channel.ChannelsServices
+import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
-import com.example.chimp.services.dummy.DummyChannelsService
 import com.example.chimp.services.dummy.DummyFindChannelService
+import com.example.chimp.services.http.ChIMPChannelsAPI
 import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
 import io.ktor.client.HttpClient
@@ -50,8 +50,8 @@ class ChIMPApplication : Application(), DependenciesContainer {
 //        DummyRegisterService()
     }
     override val channelsService: ChannelsServices by lazy {
-        //ChIMPChannelsAPI(client, url)
-        DummyChannelsService()
+        ChIMPChannelsAPI(client, url, userInfoRepository.userInfo)
+//        DummyChannelsService()
     }
 
     override val findChannelService: FindChannelService by lazy {

@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.model.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInfo
 import org.junit.Rule
 import org.junit.Test
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.users.UserInfo
 
 /**
  * The threshold for the length of the text to determine if marquee effect should be applied.
@@ -100,6 +101,11 @@ fun ChatItemRow(
 )
 @Composable
 private fun ChatItemRowPreview() {
-    val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
+    val item = ChannelBasicInfo(
+        1u,
+        ChannelName("One Piece Fansssssssssss"),
+        UserInfo(1u, "Thuzy"),
+        R.drawable.thuzy_profile_pic,
+    )
     ChatItemRow(chatItem = item, buttonString = "test") { }
 }

@@ -9,4 +9,13 @@ package com.example.chimp.models.errors
 data class ResponseError(
     val cause: String,
     val urlInfo: String = "",
-)
+) {
+    companion object {
+        val Unauthorized = ResponseError("Unauthorized")
+        val NotFound = ResponseError("Not Found")
+        val BadRequest = ResponseError("Bad Request")
+        val InternalServerError = ResponseError("Internal Server Error")
+        val Unknown =
+            ResponseError("Unknown error, please verify internet connection and try again later.")
+    }
+}

@@ -15,4 +15,6 @@
     <string name="my_chats">My Chats</string>
     <string name="password_mismatch">Passwords do not match</string>
     <string name="enter_channels">Enter</string>
+    <string name="no_description">No description available</string>
+    <string name="channel_owner">Owner: %1$s</string>
 </resources>

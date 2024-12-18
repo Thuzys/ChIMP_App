@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.model.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.screens.channels.screen.view.CHANNEL_INFO_VIEW_TAG
 import com.example.chimp.screens.channels.screen.view.CHANNEL_SCROLLING_VIEW
 import com.example.chimp.screens.channels.service.FakeService

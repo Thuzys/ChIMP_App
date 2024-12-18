@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.chimp.screens.register.screen.view.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
 import com.example.chimp.screens.register.screen.view.LoginView
 import com.example.chimp.screens.register.screen.view.RegisterView
 import com.example.chimp.screens.register.viewModel.RegisterViewModel
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
+import com.example.chimp.screens.ui.views.ErrorView
 
 const val REGISTER_SCREEN_TAG = "RegisterScreen"
 
@@ -51,11 +51,11 @@ internal fun ChIMPLoginScreen(
         }
         is RegisterScreenState.Error -> {
             ErrorView(
-                state = curr,
+                error = curr.error,
                 modifier = modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center),
-                tryAgain = viewModel::toLogin,
+                tryAgain = { viewModel.toLogin(curr.username, "") },
             )
         }
         is RegisterScreenState.Loading -> {

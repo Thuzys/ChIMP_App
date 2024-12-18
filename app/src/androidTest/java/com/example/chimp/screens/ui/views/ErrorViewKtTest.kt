@@ -20,7 +20,7 @@ class ErrorViewKtTest {
         rule.setContent {
             ErrorView(
                 modifier = Modifier,
-                errors = error
+                error = error
             )
         }
 
@@ -38,7 +38,7 @@ class ErrorViewKtTest {
         rule.setContent {
             ErrorView(
                 modifier = Modifier,
-                errors = error,
+                error = error,
                 tryAgain = funTest
             )
         }

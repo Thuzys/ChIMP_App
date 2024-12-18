@@ -21,13 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.channels.screen.composable.BubbleShape
-import com.example.chimp.screens.channels.screen.composable.ChatType
-import com.example.chimp.screens.chats.model.messages.Messages
+import com.example.chimp.screens.channel.model.Message
 
 @Composable
 internal fun MakeMessage(
-    message: Messages,
+    message: Message,
     owner: User,
 ) {
     if (message.owner.id == owner.id) {

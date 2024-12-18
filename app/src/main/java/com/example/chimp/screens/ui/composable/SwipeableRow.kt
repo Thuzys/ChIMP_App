@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.screen.composable.ChatsHeader
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -114,7 +115,8 @@ fun SwipeableHeaderPreview() {
             ChatsHeader(
                 chat = ChannelBasicInfo(
                     cId = 0u,
-                    name = ChannelName("Channel name")
+                    name = ChannelName("Channel name"),
+                    owner = UserInfo(1u, "Owner name"),
                 ),
                 onClick = {}
             )

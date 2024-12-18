@@ -16,7 +16,7 @@
 //import com.example.chimp.models.users.User
 //import com.example.chimp.models.channel.ChannelBasicInfo
 //import com.example.chimp.models.channel.ChannelName
-//import com.example.chimp.screens.chats.model.messages.Messages
+//import com.example.chimp.screens.channel.model.Messages
 //import com.example.chimp.screens.channels.screen.composable.ChatHeader
 //import com.example.chimp.screens.channels.screen.composable.MakeMessage
 //import com.example.chimp.screens.channels.screen.composable.TextInput

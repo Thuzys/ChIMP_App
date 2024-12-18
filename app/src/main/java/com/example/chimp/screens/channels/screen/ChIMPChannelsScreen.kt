@@ -75,6 +75,9 @@ internal fun ChIMPChannelsScreen(
                         modifier = modifier,
                         chats = curr,
                         onLogout = vm::logout,
+                        onReload = vm::reset,
+                        onDeleteOrLeave = vm::deleteOrLeave,
+                        onInfoClick = vm::toChannelInfo,
                     )
                 }
             }
@@ -83,7 +86,7 @@ internal fun ChIMPChannelsScreen(
                 ErrorView(
                     modifier = modifier.fillMaxSize(),
                     tryAgain = vm::goBack,
-                    errors = curr.error
+                    error = curr.error
                 )
             }
 

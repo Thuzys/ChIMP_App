@@ -7,6 +7,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeRight
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.screen.composable.LOGOUT_ICON_TAG
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.ui.composable.LOAD_MORE_ICON_TAG
@@ -24,7 +25,8 @@ class ScrollingViewKtTest {
                 List(nr) {
                     ChannelBasicInfo(
                         cId = nr.toUInt(),
-                        name = ChannelName("${nr}ºChannel")
+                        name = ChannelName("${nr}ºChannel"),
+                        owner = UserInfo(nr.toUInt(), "Owner"),
                     )
                 }
             ),

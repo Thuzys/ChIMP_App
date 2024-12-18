@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.MakeMark
 import com.example.chimp.screens.ui.composable.MyHorizontalDivider
 
@@ -77,6 +78,7 @@ private fun ChatsHeaderPreview() {
     val channel = ChannelBasicInfo(
         cId = 0u,
         name = ChannelName("Channel name with case of a very long name"),
+        owner = UserInfo(1u, "Owner name"),
     )
     ChatsHeader(
         chat = channel,

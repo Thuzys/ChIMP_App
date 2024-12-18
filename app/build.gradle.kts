@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.datastore)
+    implementation(libs.google.swipe)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)

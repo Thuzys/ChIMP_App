@@ -3,6 +3,7 @@ package com.example.chimp.screens.channels.viewModel
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.service.FakeService
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
@@ -78,7 +79,7 @@ class ChannelsViewModelTest {
         runTest(dispatcherRule.testDispatcher) {
             val service = FakeService()
             val initialState = Scrolling(flowOf(emptyList()), flowOf(false))
-            val channel = ChannelBasicInfo(1u, ChannelName("test"))
+            val channel = ChannelBasicInfo(1u, ChannelName("test"), UserInfo(1u, "test"))
             val vm = ChannelsViewModel(
                 service,
                 fakeUserInfoRepo.repo,

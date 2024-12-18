@@ -7,7 +7,9 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.users.Token
+import com.example.chimp.services.http.dtos.input.user.AuthUserInputModel
+import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
+import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
@@ -15,9 +17,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.utils.io.InternalAPI
-import kotlinx.serialization.Serializable
-import java.sql.Timestamp
 
 /**
  * Implementation of the LoginService that fetches user data from a remote server using HTTP.
@@ -31,16 +30,13 @@ class ChIMPRegisterAPI(
 
     private val api = "$url/api/users"
 
-    private val unknownError = "Unknown error, please verify internet connection and try again later."
-
     override suspend fun login(
         username: String,
         password: String,
     ): Either<ResponseError, User> =
         client
             .post("$api/login") {
-                contentType(ContentType.Application.Json)
-                contentType(ContentType.Application.ProblemJson)
+                makeHeader()
                 setBody(
                     mapOf(
                         "username" to username,
@@ -51,17 +47,16 @@ class ChIMPRegisterAPI(
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(response.body<UserDto>().toUser(username))
+                        success(response.body<AuthUserInputModel>().toUser(username))
                     } else {
-                        failure(response.body<ErrorDto>().toResponseErrors())
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(REGISTER_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(ResponseError(cause = e.message ?: unknownError))
+                    return failure(e.message?.let { ResponseError(cause = it) } ?: ResponseError.Unknown)
                 }
             }
 
-    @OptIn(InternalAPI::class)
     override suspend fun register(
         username: String,
         password: String,
@@ -69,8 +64,7 @@ class ChIMPRegisterAPI(
     ): Either<ResponseError, User> {
         client
             .post("$api/signup") {
-                contentType(ContentType.Application.Json)
-                contentType(ContentType.Application.ProblemJson)
+                makeHeader()
                 setBody(mapOf(
                     "username" to username,
                     "password" to password,
@@ -79,34 +73,17 @@ class ChIMPRegisterAPI(
             }.let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(response.body<UserDto>().toUser(username))
+                        success(response.body<AuthUserInputModel>().toUser(username))
                     } else {
-                        failure(response.body<ErrorDto>().toResponseErrors())
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(REGISTER_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(ResponseError(cause = e.message ?: unknownError))
+                    return failure(e.message?.let { ResponseError(cause = it) } ?: ResponseError.Unknown)
                 }
             }
     }
 
-    @Serializable
-    internal data class ErrorDto(
-        val type: String,
-        val title: String,
-    ) {
-        fun toResponseErrors() = ResponseError(cause = title, urlInfo = type)
-    }
-
-    @Serializable
-    internal data class UserDto(
-        val uId: UInt,
-        val token: String,
-        val expirationDate: String
-    ) {
-        fun toUser(name: String) =
-            User(id = uId, name = name, token = Token(token, Timestamp.valueOf(expirationDate)))
-    }
 
     companion object {
         const val REGISTER_SERVICE_TAG = "RegisterService"

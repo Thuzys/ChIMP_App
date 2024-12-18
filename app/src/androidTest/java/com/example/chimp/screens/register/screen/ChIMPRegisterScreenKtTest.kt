@@ -4,7 +4,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.screens.register.screen.view.REGISTER_ERROR_VIEW_TEST_TAG
 import com.example.chimp.screens.register.screen.view.LOGIN_VIEW_TEST_TAG
 import com.example.chimp.screens.register.screen.view.REGISTER_VIEW_TEST_TAG
 import com.example.chimp.screens.register.service.FakeService
@@ -13,6 +12,7 @@ import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Error
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Register
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Success
+import com.example.chimp.screens.ui.views.ERROR_VIEW_TEST_TAG
 import com.example.chimp.screens.ui.views.LOADING_VIEW_TEST_TAG
 import com.example.chimp.services.validation.ChIMPFormValidator
 import com.example.chimp.utils.FakeUserInfoRepositoryRule
@@ -89,7 +89,7 @@ class ChIMPRegisterScreenKtTest {
         )
         rule.setContent { ChIMPLoginScreen(viewModel = viewModel) }
         rule
-            .onNodeWithTag(REGISTER_ERROR_VIEW_TEST_TAG)
+            .onNodeWithTag(ERROR_VIEW_TEST_TAG)
             .assertIsDisplayed()
     }
 

@@ -1,6 +1,7 @@
-package com.example.chimp.screens.channels.model.channel
+package com.example.chimp.screens.channels.model
 
 import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import kotlinx.coroutines.flow.Flow

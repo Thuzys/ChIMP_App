@@ -28,12 +28,15 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.screen.composable.ChannelsScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.LoadMoreIcon
 import com.example.chimp.screens.ui.composable.SwipeableRow
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
 
 
@@ -104,6 +107,7 @@ const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
  * @param onLogout Function() The function to be called when the logout icon is clicked.
  * @param onChannelClick Function(ChannelBasicInfo) The function to be called when a channel is clicked.
  * @param onDeleteOrLeave Function(ChannelBasicInfo) The function to be called when the delete icon is clicked.
+ * @param onReload Function() The function to be called when the view is gonna be reloaded.
  * @param onLoadMore Function() The function to be called when more channels need to be loaded.
  */
 @Composable
@@ -112,6 +116,7 @@ internal fun ScrollingView(
     chats: Scrolling,
     onLogout: () -> Unit = {},
     onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onReload: () -> Unit = {},
     onChannelClick: (ChannelBasicInfo) -> Unit = {},
     onDeleteOrLeave: (ChannelBasicInfo) -> Unit = {},
     onLoadMore: () -> Unit = {}
@@ -124,88 +129,95 @@ internal fun ScrollingView(
         verticalArrangement = Arrangement.Center
     ) {
         ChannelsScrollHeader(onLogout)
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        SwipeRefresh(
+            state = SwipeRefreshState(false),
+            onRefresh = {
+                onReload()
+            }
         ) {
-            itemsIndexed(
-                items = channels,
-                key = { _: Int, channel: ChannelBasicInfo -> channel.cId.toInt() },
-            ) { _, channel ->
-                SwipeableRow(
-                    modifier = Modifier
-                        .fillParentMaxWidth()
-                        .height(LIST_ITEM_HEIGHT.dp)
-                        .testTag(SWIPEBLE_ROW_TAG)
-                        .padding(top = LIST_ITEM_PADDING.dp),
-                    actions = {
-                        Row(
-                            modifier = Modifier
-                                .width(ACTION_LIST_WIDTH.dp)
-                                .fillParentMaxHeight(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Column(
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                itemsIndexed(
+                    items = channels,
+                    key = { _: Int, channel: ChannelBasicInfo -> channel.cId.toInt() },
+                ) { _, channel ->
+                    SwipeableRow(
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .height(LIST_ITEM_HEIGHT.dp)
+                            .testTag(SWIPEBLE_ROW_TAG)
+                            .padding(top = LIST_ITEM_PADDING.dp),
+                        actions = {
+                            Row(
                                 modifier = Modifier
+                                    .width(ACTION_LIST_WIDTH.dp)
                                     .fillParentMaxHeight(),
-                                verticalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                ActionIcon(
+                                Column(
                                     modifier = Modifier
-                                        .fillParentMaxHeight()
-                                        .weight(1f)
-                                        .testTag(DELETE_OR_LEAVE_ICON_TAG)
-                                        .width(ACTION_ICON_WIDTH.dp),
-                                    icon = Icons.Default.Delete,
-                                    backgroundColor = MaterialTheme.colorScheme.error,
-                                    onClick = { onDeleteOrLeave(channel) },
-                                    contentDescription = "Delete or leave a channel"
-                                )
-                            }
-                            Column(
-                                modifier = Modifier
-                                    .fillParentMaxHeight(),
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                ActionIcon(
+                                        .fillParentMaxHeight(),
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    ActionIcon(
+                                        modifier = Modifier
+                                            .fillParentMaxHeight()
+                                            .weight(1f)
+                                            .testTag(DELETE_OR_LEAVE_ICON_TAG)
+                                            .width(ACTION_ICON_WIDTH.dp),
+                                        icon = Icons.Default.Delete,
+                                        backgroundColor = MaterialTheme.colorScheme.error,
+                                        onClick = { onDeleteOrLeave(channel) },
+                                        contentDescription = "Delete or leave a channel"
+                                    )
+                                }
+                                Column(
                                     modifier = Modifier
-                                        .fillParentMaxHeight()
-                                        .width(ACTION_ICON_WIDTH.dp)
-                                        .testTag(INFO_ICON_TAG)
-                                        .padding(end = ACTION_ICON_PADDING.dp),
-                                    icon = Icons.Default.Info,
-                                    backgroundColor = MaterialTheme.colorScheme.primary,
-                                    onClick = { onInfoClick(channel) },
-                                    contentDescription = "Channel info"
-                                )
+                                        .fillParentMaxHeight(),
+                                    verticalArrangement = Arrangement.Center,
+                                ) {
+                                    ActionIcon(
+                                        modifier = Modifier
+                                            .fillParentMaxHeight()
+                                            .width(ACTION_ICON_WIDTH.dp)
+                                            .testTag(INFO_ICON_TAG)
+                                            .padding(end = ACTION_ICON_PADDING.dp),
+                                        icon = Icons.Default.Info,
+                                        backgroundColor = MaterialTheme.colorScheme.primary,
+                                        onClick = { onInfoClick(channel) },
+                                        contentDescription = "Channel info"
+                                    )
+                                }
                             }
                         }
+                    ) {
+                        ChatItemRow(
+                            modifier = Modifier
+                                .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
+                                .fillParentMaxWidth()
+                                .background(Color.Transparent),
+                            chatItem = channel,
+                            buttonModifier = Modifier.testTag(CHANNEL_BUTTON_TAG),
+                            buttonString = stringResource(R.string.enter_channels),
+                            onClick = { onChannelClick(channel) }
+                        )
                     }
-                ) {
-                   ChatItemRow(
-                        modifier = Modifier
-                            .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
-                            .fillParentMaxWidth()
-                            .background(Color.Transparent),
-                        chatItem = channel,
-                        buttonModifier = Modifier.testTag(CHANNEL_BUTTON_TAG),
-                        buttonString = stringResource(R.string.enter_channels),
-                        onClick = { onChannelClick(channel) }
-                    )
                 }
-            }
-            item(
-                key = hasMore
-            ) {
-                if (hasMore) {
-                    LoadMoreIcon(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(LIST_ITEM_HEIGHT.dp),
-                        onVisible = onLoadMore
-                    )
+                item(
+                    key = hasMore
+                ) {
+                    if (hasMore) {
+                        LoadMoreIcon(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(LIST_ITEM_HEIGHT.dp),
+                            onVisible = onLoadMore
+                        )
+                    }
                 }
             }
         }
@@ -221,7 +233,8 @@ private fun IdleViewPreview() {
                 List(27) {
                     ChannelBasicInfo(
                         cId = it.toUInt(),
-                        name = ChannelName("Channel $it")
+                        name = ChannelName("Channel $it"),
+                        owner = UserInfo(it.toUInt(), "Owner $it")
                     )
                 }
             ),

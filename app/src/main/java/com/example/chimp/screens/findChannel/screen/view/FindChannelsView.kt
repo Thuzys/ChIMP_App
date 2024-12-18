@@ -19,6 +19,7 @@ import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.findChannel.screen.composable.SearchBar
 import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
 
 @Composable
@@ -72,6 +73,7 @@ private fun ChatListPreview() {
                 cId = it.toUInt(),
                 name = ChannelName("Channel $it"),
                 icon = R.drawable.github_mark,
+                owner = UserInfo(it.toUInt(), "Owner $it")
             )
         )
     }

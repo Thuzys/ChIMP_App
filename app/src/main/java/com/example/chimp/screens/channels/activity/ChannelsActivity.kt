@@ -52,7 +52,11 @@ class ChannelsActivity : ComponentActivity() {
                 ChIMPChannelsScreen(
                     onFindChannelNavigate = { startActivity(navigateToFindChannelIntent) },
                     onAboutNavigate = { startActivity(navigateToAboutIntent) },
-                    onRegisterNavigate = { startActivity(navigateToRegisterIntent) },
+                    onRegisterNavigate =
+                    {
+                        startActivity(navigateToRegisterIntent)
+                        finish()
+                    },
                     vm = viewModel
                 )
             }

@@ -3,7 +3,7 @@ package com.example.chimp.screens.channels.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.chimp.models.repository.UserInfoRepository
-import com.example.chimp.screens.channels.model.channel.ChannelsServices
+import com.example.chimp.screens.channels.model.ChannelsServices
 
 /**
  * The factory for the [ChannelsViewModel].
