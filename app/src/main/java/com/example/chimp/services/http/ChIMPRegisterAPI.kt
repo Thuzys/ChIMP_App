@@ -9,7 +9,10 @@ import com.example.chimp.models.errors.ResponseErrors
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import io.ktor.utils.io.InternalAPI
 import kotlinx.serialization.Serializable
 
@@ -32,10 +35,11 @@ class ChIMPRegisterAPI(
     ): Either<ResponseErrors, User> =
         client
         .post("$api/login") {
-            body = mapOf(
+            contentType(ContentType.Application.Json)
+            setBody(mapOf(
                 "username" to username,
                 "password" to password
-            )
+            ))
         }
         .let { response ->
             return if (response.status == HttpStatusCode.OK) {

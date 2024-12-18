@@ -66,8 +66,8 @@ internal fun ChIMPLoginScreen(
             )
         }
         is RegisterScreenState.Success -> {
-            viewModel.toLogin()
             onLogin()
+            viewModel.toLogin()
         }
     }
 }
