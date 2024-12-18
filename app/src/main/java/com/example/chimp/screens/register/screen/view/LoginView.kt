@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import com.example.chimp.R
 import com.example.chimp.screens.register.screen.composable.BaseView
 import com.example.chimp.screens.register.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.register.screen.composable.MakeUsernameTextField
+import com.example.chimp.screens.register.screen.composable.ShowErrorMessage
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 import com.example.chimp.screens.ui.composable.MySpacer
 import com.example.chimp.screens.ui.composable.MakeButton
@@ -81,6 +83,9 @@ internal fun LoginView(
     ) { imeVisible ->
         var isToShow by rememberSaveable { mutableStateOf(false) }
         val (username, password) = state
+        val (isValid) = remember(username, password) {
+            mutableStateOf(username.isValid && password.isValid)
+        }
         MySpacer()
         Text(
             text = stringResource(R.string.login_message),
@@ -91,16 +96,18 @@ internal fun LoginView(
         MySpacer()
         MakeUsernameTextField(
             modifier = Modifier.testTag(USERNAME_TEXT_FIELD),
-            value = username,
+            value = username.input,
             onUsernameChange = onUsernameChange,
         )
+        ShowErrorMessage(username.validation)
         MySpacer()
         MakePasswordTextField(
-            value = password,
+            value = password.input,
             isToShow = isToShow,
             onPasswordChange = onPasswordChange,
             isToShowChange = { isToShow = !isToShow }
         )
+        ShowErrorMessage(password.validation)
         val animatedButtonsVisibility by animateFloatAsState(
             targetValue = if (imeVisible) 0f else 1f,
             label = "Buttons Visibility"
@@ -120,8 +127,8 @@ internal fun LoginView(
                         .testTag(LOGIN_VIEW_LOGIN_BUTTON)
                         .width(BUTTON_WIDTH.dp),
                     text = stringResource(R.string.login),
-                    enable = state.isValid,
-                    onClick = { onLogin(username, password) }
+                    enable = isValid,
+                    onClick = { onLogin(username.input, password.input) }
                 )
                 MakeButton(
                     modifier = Modifier

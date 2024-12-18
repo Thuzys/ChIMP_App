@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.application.DependenciesContainer
-import com.example.chimp.screens.chats.activity.ChannelsActivity
+import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.findChannel.screen.ChIMPFindChannelScreen
 import com.example.chimp.screens.findChannel.viewModel.FindChannelVMFactory
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel

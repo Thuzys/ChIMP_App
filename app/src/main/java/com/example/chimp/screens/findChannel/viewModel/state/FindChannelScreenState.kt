@@ -1,7 +1,7 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.channel.ChannelBasicInfo
-import com.example.chimp.models.errors.ResponseErrors
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -18,7 +18,7 @@ sealed interface FindChannelScreenState {
      *
      * @property error the error that occurred
      */
-    data class Error(val error: ResponseErrors) : FindChannelScreenState
+    data class Error(val error: ResponseError) : FindChannelScreenState
 
     /**
      * The screen is idle.

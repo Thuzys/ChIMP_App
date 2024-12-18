@@ -6,9 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.sql.Timestamp
 
 /**
  * A [UserInfoRepository] implementation that stores user info in a [DataStore].
@@ -42,7 +44,8 @@ private val usernameKey = stringPreferencesKey("username")
 /**
  * The token key.
  */
-private val tokenKy = stringPreferencesKey("token")
+private val tokenKey = stringPreferencesKey("token")
+private val tokenTimestampKey = stringPreferencesKey("token_timestamp")
 
 /**
  * Utility functions for converting between User and Preferences.
@@ -53,7 +56,9 @@ private val tokenKy = stringPreferencesKey("token")
 private fun Preferences.toUser(): User? {
     val userId = this[userIdKey]?.toUIntOrNull() ?: return null
     val username = this[usernameKey] ?: return null
-    val token = this[tokenKy] ?: return null
+    val tokenValue = this[tokenKey] ?: return null
+    val tokenTimestamp = this[tokenTimestampKey] ?: return null
+    val token = Token(tokenValue, Timestamp.valueOf(tokenTimestamp))
     return User(userId, username, token)
 }
 
@@ -66,5 +71,6 @@ private fun Preferences.toUser(): User? {
 private fun User.writeToPreferences(preferences: MutablePreferences) {
     preferences[userIdKey] = id.toString()
     preferences[usernameKey] = name
-    preferences[tokenKy] = token
+    preferences[tokenKey] = token.token
+    preferences[tokenTimestampKey] = token.expirationDate.toString()
 }

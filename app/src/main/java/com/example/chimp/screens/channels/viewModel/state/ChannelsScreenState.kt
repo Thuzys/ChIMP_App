@@ -1,6 +1,6 @@
 package com.example.chimp.screens.channels.viewModel.state
 
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.screens.channels.model.channel.ChannelInfo
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,7 @@ sealed interface ChannelsScreenState {
     data object Loading : ChannelsScreenState
     data object BackToRegistration : ChannelsScreenState
     data class Error(
-        val error: ResponseErrors,
+        val error: ResponseError,
         val goBack: ChannelsScreenState
     ) : ChannelsScreenState
     data class Scrolling(

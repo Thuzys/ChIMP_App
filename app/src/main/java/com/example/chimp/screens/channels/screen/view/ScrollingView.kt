@@ -101,6 +101,7 @@ const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
  * @param modifier Modifier The modifier to be applied to the view.
  * @param chats Scrolling The scrolling state of the channels.
  * @param onInfoClick Function(ChannelBasicInfo) The function to be called when the info icon is clicked.
+ * @param onLogout Function() The function to be called when the logout icon is clicked.
  * @param onChannelClick Function(ChannelBasicInfo) The function to be called when a channel is clicked.
  * @param onDeleteOrLeave Function(ChannelBasicInfo) The function to be called when the delete icon is clicked.
  * @param onLoadMore Function() The function to be called when more channels need to be loaded.
@@ -109,7 +110,7 @@ const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
 internal fun ScrollingView(
     modifier: Modifier = Modifier,
     chats: Scrolling,
-    logout: () -> Unit = {},
+    onLogout: () -> Unit = {},
     onInfoClick: (ChannelBasicInfo) -> Unit = {},
     onChannelClick: (ChannelBasicInfo) -> Unit = {},
     onDeleteOrLeave: (ChannelBasicInfo) -> Unit = {},
@@ -122,7 +123,7 @@ internal fun ScrollingView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ChannelsScrollHeader(logout)
+        ChannelsScrollHeader(onLogout)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),

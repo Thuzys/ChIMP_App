@@ -4,7 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.model.channel.ChannelInfo
 import com.example.chimp.screens.channels.screen.view.CHANNEL_INFO_VIEW_TAG
@@ -75,7 +75,7 @@ class ChIMPChannelsScreenKtTest {
         val vm = ChannelsViewModel(
             service = service,
             userInfoRepository = repo.repo,
-            initialState = Error(ResponseErrors("Error", "Error"), Loading)
+            initialState = Error(ResponseError("Error", "Error"), Loading)
         )
 
         rule.setContent { ChIMPChannelsScreen(vm = vm) }

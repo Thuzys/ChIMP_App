@@ -9,6 +9,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.example.chimp.models.either.success
+import com.example.chimp.screens.register.model.DataInput
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.LogIn
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_INPUT_TAG
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_TRAILING_ICON_TAG
@@ -24,10 +26,10 @@ class LogInViewKtTest {
         val text = "test"
         val pass = "pass"
         var success = false
-        val testFunc : (String) -> Unit = { success = true }
+        val testFunc: (String) -> Unit = { success = true }
         rule.setContent {
             LoginView(
-                LogIn(password = pass),
+                LogIn(password = DataInput.fromString(pass)),
                 onUsernameChange = testFunc
             )
         }
@@ -46,11 +48,11 @@ class LogInViewKtTest {
         val text = "test"
         val user = "user"
         var success = false
-        val testFunc : (String) -> Unit = { success = true }
+        val testFunc: (String) -> Unit = { success = true }
         rule
             .setContent {
                 LoginView(
-                    LogIn(username = user),
+                    LogIn(username = DataInput.fromString(user)),
                     onPasswordChange = testFunc
                 )
             }
@@ -74,7 +76,10 @@ class LogInViewKtTest {
         rule
             .setContent {
                 LoginView(
-                    state = LogIn("valid", "V@lid123"),
+                    state = LogIn(
+                        DataInput("valid", success(true)),
+                        DataInput("V@lid123", success(true))
+                    ),
                     onLogin = funTest
                 )
             }
@@ -109,7 +114,7 @@ class LogInViewKtTest {
     @Test
     fun on_register_click() {
         var success = false
-        val funTest: () -> Unit = {success = true }
+        val funTest: () -> Unit = { success = true }
         rule
             .setContent {
                 LoginView(

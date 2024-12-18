@@ -6,11 +6,10 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.client.request.put
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
@@ -25,9 +24,9 @@ class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String
 ): FindChannelService {
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> =
-        client.put("$url$CHANNEL_BASE_URL/$channelId") {
-        }.let { response ->
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, Unit> =
+        client.put("$url$CHANNEL_BASE_URL/$channelId")
+            .let { response ->
                 return if (response.status == HttpStatusCode.OK) {
                     success(Unit)
                 } else {
@@ -35,7 +34,7 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, ChannelBasicInfo> =
+    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseError, ChannelBasicInfo> =
         client
             .get("$url$CHANNEL_NAME_URL${channelName.encode()}")
             .let { response ->
@@ -51,10 +50,14 @@ class CHIMPFindChannelAPI(
         TODO("Not yet implemented")
     }
 
+    override suspend fun findChannel(channelName: ChannelName): Either<ResponseError, FindChannelItem> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
-    ): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
+    ): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
         TODO("Not yet implemented")
     }
 
@@ -63,7 +66,7 @@ class CHIMPFindChannelAPI(
         val title: String,
         val type: String,
     ) {
-        fun toResponseErrors() = ResponseErrors(cause = title, urlInfo = type)
+        fun toResponseErrors() = ResponseError(cause = title, urlInfo = type)
     }
 
     @Serializable

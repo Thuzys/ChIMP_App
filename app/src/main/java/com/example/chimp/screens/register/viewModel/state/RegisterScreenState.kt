@@ -1,7 +1,6 @@
 package com.example.chimp.screens.register.viewModel.state
 
-import com.example.chimp.models.errors.ResponseErrors
-import com.example.chimp.models.users.User
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.register.model.DataInput
 
 /**
@@ -20,7 +19,7 @@ internal sealed interface RegisterScreenState {
      */
     data class Error(
         val username : String,
-        val error: ResponseErrors,
+        val error: ResponseError,
     ) : RegisterScreenState
 
     /**
@@ -32,12 +31,9 @@ internal sealed interface RegisterScreenState {
      * The screen when the user is logging in.
      */
     data class LogIn(
-        val username: String = "",
-        val password: String = "",
-    ) : RegisterScreenState {
-        val isValid: Boolean
-            get() = username.isNotEmpty() && password.isNotEmpty()
-    }
+        val username: DataInput = DataInput.initialState,
+        val password: DataInput = DataInput.initialState,
+    ) : RegisterScreenState
 
     /**
      * The screen when the user is registering.

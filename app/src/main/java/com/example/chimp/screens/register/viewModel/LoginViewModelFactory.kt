@@ -7,7 +7,7 @@ import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.screens.register.model.RegisterService
 
 /**
- * The factory for the [LoginViewModel].
+ * The factory for the [RegisterViewModel].
  *
  * @property service the service used in the ViewModel context.
  * @property formValidation the form validation used in the ViewModel context.
@@ -20,6 +20,6 @@ internal class LoginViewModelFactory(
     private val userInfoRepository: UserInfoRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return LoginViewModel(service, formValidation, userInfoRepository) as T
+        return RegisterViewModel(service, formValidation, userInfoRepository) as T
     }
 }

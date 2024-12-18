@@ -22,7 +22,7 @@ class LogInViewModelTest {
     fun view_model_initial_state_is_login() =
         runTest(dispatcherRule.testDispatcher) {
             // Arrange
-            val vm = LoginViewModel(
+            val vm = RegisterViewModel(
                 FakeService(),
                 ChIMPFormValidator(),
                 fakeUserInfoRepo.repo
@@ -39,7 +39,7 @@ class LogInViewModelTest {
         runTest(dispatcherRule.testDispatcher) {
             // Arrange
             val service = FakeService()
-            val vm = LoginViewModel(
+            val vm = RegisterViewModel(
                 service,
                 ChIMPFormValidator(),
                 fakeUserInfoRepo.repo
@@ -56,7 +56,7 @@ class LogInViewModelTest {
     @Test
     fun view_model_goes_to_register() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
-        val vm = LoginViewModel(
+        val vm = RegisterViewModel(
             FakeService(),
             ChIMPFormValidator(),
             fakeUserInfoRepo.repo
@@ -73,7 +73,7 @@ class LogInViewModelTest {
     @Test
     fun view_model_goes_to_login() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
-        val vm = LoginViewModel(
+        val vm = RegisterViewModel(
             FakeService(),
             ChIMPFormValidator(),
             fakeUserInfoRepo.repo,
@@ -92,7 +92,7 @@ class LogInViewModelTest {
     fun error_on_login() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
         val service = FakeService()
-        val vm = LoginViewModel(
+        val vm = RegisterViewModel(
             service,
             ChIMPFormValidator(),
             fakeUserInfoRepo.repo
@@ -112,7 +112,7 @@ class LogInViewModelTest {
     fun view_model_is_loading() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
         val service = FakeService()
-        val vm = LoginViewModel(
+        val vm = RegisterViewModel(
             service,
             ChIMPFormValidator(),
             fakeUserInfoRepo.repo
@@ -132,7 +132,7 @@ class LogInViewModelTest {
     fun on_login_with_success_the_user_is_saved_in_the_repo() = runTest {
         // Arrange
         val service = FakeService()
-        val vm = LoginViewModel(
+        val vm = RegisterViewModel(
             service,
             ChIMPFormValidator(),
             fakeUserInfoRepo.repo

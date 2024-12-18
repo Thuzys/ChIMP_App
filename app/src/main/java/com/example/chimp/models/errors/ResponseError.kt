@@ -6,7 +6,7 @@ package com.example.chimp.models.errors
  * @property cause the cause of the error
  * @property urlInfo the URL that explains the error
  */
-data class ResponseErrors(
+data class ResponseError(
     val cause: String,
-    val urlInfo: String,
+    val urlInfo: String = "",
 )

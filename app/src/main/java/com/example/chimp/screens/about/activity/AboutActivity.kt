@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.chimp.screens.chats.activity.ChannelsActivity
+import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.about.screen.ChIMPAboutScreen

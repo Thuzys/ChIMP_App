@@ -74,6 +74,7 @@ internal fun ChIMPChannelsScreen(
                     ScrollingView(
                         modifier = modifier,
                         chats = curr,
+                        onLogout = vm::logout,
                     )
                 }
             }

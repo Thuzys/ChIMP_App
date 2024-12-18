@@ -196,7 +196,7 @@ class ScrollingViewKtTest {
         rule.setContent {
             ScrollingView(
                 chats = idle,
-                logout = testFunc
+                onLogout = testFunc
             )
         }
 
