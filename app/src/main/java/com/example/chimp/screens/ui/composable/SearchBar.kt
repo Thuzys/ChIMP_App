@@ -1,42 +1,54 @@
-package com.example.chimp.findChannel.screen.composable
+package com.example.chimp.screens.ui.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.chimp.R
+
+private val default_modifier =
+    Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
+        .clip(RoundedCornerShape(50.dp))
 
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = default_modifier,
     value: String = "",
+    placeholderText : String = "Search...",
+    iconTint: Color  = MaterialTheme.colorScheme.onPrimaryContainer,
     onValueChange: (String) -> Unit = {},
     onSearch: () -> Unit = {},
-
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     OutlinedTextField(
+        modifier = modifier,
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text("Search...") },
+        placeholder = { Text(placeholderText) },
         leadingIcon = {
             Icon(
-                painter = painterResource(id = android.R.drawable.ic_menu_search),
-                contentDescription = "Search Icon",
-                tint = Color.Gray
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(R.string.search_bar_content),
+                tint = iconTint
             )
         },
         singleLine = true,
@@ -50,10 +62,6 @@ fun SearchBar(
                 keyboardController?.hide()
             }
         ),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .background(Color(0xFFF0F0F0), shape = RoundedCornerShape(50.dp))
     )
 }
 

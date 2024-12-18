@@ -17,4 +17,5 @@
     <string name="enter_channels">Enter</string>
     <string name="no_description">No description available</string>
     <string name="channel_owner">Owner: %1$s</string>
+    <string name="search_bar_content">Search</string>
 </resources>

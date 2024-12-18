@@ -1,7 +1,5 @@
 package com.example.chimp.models.either
 
-import com.example.chimp.models.either.failure
-import com.example.chimp.models.either.success
 import org.junit.Test
 
 class EitherTest {

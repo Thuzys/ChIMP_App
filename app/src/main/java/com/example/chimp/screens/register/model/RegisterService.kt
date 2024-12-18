@@ -1,8 +1,8 @@
 package com.example.chimp.screens.register.model
 
-import com.example.chimp.models.users.User
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.users.User
 
 /**
  * LoginService is the interface that defines the service used in LoginViewModel.
