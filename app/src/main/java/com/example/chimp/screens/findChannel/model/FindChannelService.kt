@@ -25,7 +25,7 @@ interface FindChannelService {
      * @return an [Either] with the [Channel] if the channel was found,
      * or a [ResponseErrors] if it failed.
      */
-    suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, FindChannelItem>
+    suspend fun findChannelByName(channelName: ChannelName): Either<ResponseErrors, FindChannelItem?>
 
     /**
      * Find channels by their partial names.
@@ -35,7 +35,7 @@ interface FindChannelService {
      */
     suspend fun findChannelsByPartialName(
         channelName: ChannelName,
-    ): Either<ResponseErrors, Flow<FindChannelItem>>
+    ): Either<ResponseErrors, Flow<List<FindChannelItem>>>
 
     /**
      * Get a list of channels.
@@ -48,5 +48,5 @@ interface FindChannelService {
     suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
-    ): Either<ResponseErrors, Flow<FindChannelItem>>
+    ): Either<ResponseErrors, Flow<List<FindChannelItem>>>
 }

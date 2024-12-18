@@ -1,6 +1,7 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
 import com.example.chimp.screens.findChannel.model.FindChannelItem
+import kotlinx.coroutines.flow.Flow
 
 /**
  * The state of the Find Channel screen.
@@ -8,9 +9,9 @@ import com.example.chimp.screens.findChannel.model.FindChannelItem
  * @property publicChannels the public channels found
  */
 sealed class FindChannel(
-    open val publicChannels: List<FindChannelItem>? = null,
+    open val publicChannels: Flow<List<FindChannelItem>>? = null,
 ): FindChannelScreenState {
-    abstract fun updatePublicChannels(publicChannels: List<FindChannelItem>): FindChannel
+    abstract fun updatePublicChannels(publicChannels: Flow<List<FindChannelItem>>?): FindChannel
 
     /**
      * The state representing an idle Find Channel screen.
@@ -18,9 +19,9 @@ sealed class FindChannel(
      * @property publicChannels the public channels
      */
     data class FindChannelIdle(
-        override val publicChannels: List<FindChannelItem>?,
+        override val publicChannels: Flow<List<FindChannelItem>>?,
     ) : FindChannel(publicChannels) {
-        override fun updatePublicChannels(publicChannels: List<FindChannelItem>): FindChannel {
+        override fun updatePublicChannels(publicChannels: Flow<List<FindChannelItem>>?): FindChannel {
             return copy(publicChannels = publicChannels)
         }
     }

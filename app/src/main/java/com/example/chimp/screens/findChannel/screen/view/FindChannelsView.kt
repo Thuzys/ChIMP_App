@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -20,7 +22,7 @@ import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.findChannel.screen.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannel
-import kotlin.reflect.KFunction2
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun FindChannelView(
@@ -46,8 +48,10 @@ fun FindChannelView(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            val channels = vm.publicChannels
-            channels?.forEach { chatItem ->
+            val channelsFlow = vm.publicChannels ?: flowOf(emptyList())
+            val channels by channelsFlow.collectAsState(initial = emptyList())
+
+            channels.forEach { chatItem ->
                 ChatItemRow(
                     chatItem = chatItem,
                     onJoin = { onJoin(chatItem.cId, null) }
@@ -73,7 +77,7 @@ private fun ChatListPreview() {
     }
     val vm =
         FindChannel.FindChannelIdle(
-            publicChannels = channels,
+            publicChannels = flowOf(channels),
 
             )
     FindChannelView(

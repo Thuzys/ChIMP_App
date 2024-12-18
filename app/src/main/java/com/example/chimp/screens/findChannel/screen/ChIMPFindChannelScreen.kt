@@ -3,6 +3,9 @@ package com.example.chimp.screens.findChannel.screen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.chimp.screens.findChannel.screen.view.FindChannelView
@@ -18,16 +21,18 @@ fun ChIMPFindChannelScreen(
     viewModel: FindChannelViewModel,
     onJoinChannel: () -> Unit,
 ) {
-    when(val curr = viewModel.state) {
-        is FindChannel -> {
-            FindChannelBase(modifier, curr, viewModel)
+    val curr by viewModel.state.collectAsState()
+
+    when (curr) {
+        is FindChannel.FindChannelIdle -> {
+            FindChannelBase(modifier, (curr as FindChannel.FindChannelIdle), viewModel)
         }
         is FindChannelScreenState.Error -> {
             ErrorView(
                 modifier = modifier
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center),
-                error = curr.error,
+                error = (curr as FindChannelScreenState.Error).error,
                 tryAgain = viewModel::toFindChannel,
             )
         }
@@ -43,6 +48,7 @@ fun ChIMPFindChannelScreen(
         }
     }
 }
+
 
 @Composable
 private fun FindChannelBase(

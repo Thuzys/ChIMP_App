@@ -49,14 +49,14 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<FindChannelItem>> {
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<List<FindChannelItem>>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
-    ): Either<ResponseErrors, Flow<FindChannelItem>> =
+    ): Either<ResponseErrors, Flow<List<FindChannelItem>>> =
         client
             .get(buildString {
                 append("$url$CHANNEL_BASE_URL")
@@ -71,8 +71,8 @@ class CHIMPFindChannelAPI(
             })
             .let { response ->
                 return if (response.status == HttpStatusCode.OK) {
-                    val channels = response.body<List<FindChannelDto>>().map(FindChannelDto::toFindChannelItem)
-                    success(flowOf(*channels.toTypedArray()))
+                    val channels = response.body<List<FindChannelDto>>().map { it.toFindChannelItem() }
+                    success(flowOf(channels))
                 } else {
                     failure(response.body<ErrorDto>().toResponseErrors())
                 }
