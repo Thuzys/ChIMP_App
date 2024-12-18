@@ -9,6 +9,10 @@ import kotlinx.coroutines.flow.Flow
  */
 sealed interface FindChannelScreenState {
     /**
+     * The screen is initial.
+     */
+    data object Init: FindChannelScreenState
+    /**
      * The screen is loading.
      */
     data object Loading : FindChannelScreenState
