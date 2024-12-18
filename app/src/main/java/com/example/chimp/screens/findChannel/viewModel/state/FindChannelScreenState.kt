@@ -1,7 +1,7 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.errors.ResponseErrors
-import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import kotlinx.coroutines.flow.Flow
 
 /**

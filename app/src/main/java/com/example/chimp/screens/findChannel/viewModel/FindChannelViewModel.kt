@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseErrors
@@ -21,17 +22,13 @@ class FindChannelViewModel(
     var state: FindChannelScreenState by mutableStateOf(FindChannelScreenState.Loading)
         private set
 
-    fun joinChannel(channelId: UInt, invitationCode: String?) {
+    fun joinChannel(channelId: UInt) {
         val curr = state
         if (curr !is FindChannelScreenState.Idle) return
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
-            state = when (val result = service.joinChannel(channelId, invitationCode)) {
-                is Success -> FindChannelScreenState.Idle(
-                    publicChannels = curr.publicChannels.map {
-                        it.filter { it.cId != channelId }
-                    }
-                )
+            state = when (val result = service.joinChannel(channelId)) {
+                is Success -> FindChannelScreenState.Idle(publicChannels = curr.publicChannels)
 
                 is Failure ->
                     FindChannelScreenState.Error(

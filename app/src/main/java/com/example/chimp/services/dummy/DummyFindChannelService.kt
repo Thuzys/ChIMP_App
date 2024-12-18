@@ -8,6 +8,7 @@ import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseErrors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOf
 
 class DummyFindChannelService: FindChannelService {
 
@@ -29,7 +30,7 @@ class DummyFindChannelService: FindChannelService {
         ),
     )
 
-    override suspend fun joinChannel(channelId: UInt, invitationCode: String?): Either<ResponseErrors, Unit> {
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> {
         TODO("Not yet implemented")
     }
 
@@ -37,14 +38,14 @@ class DummyFindChannelService: FindChannelService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<ChannelBasicInfo>> {
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
         TODO("Not yet implemented")
     }
 
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?
-    ): Either<ResponseErrors, Flow<ChannelBasicInfo>> {
-        return success(channels.asFlow())
+    ): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
+        return success(flowOf(channels))
     }
 }

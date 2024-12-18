@@ -25,9 +25,8 @@ class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String
 ): FindChannelService {
-    override suspend fun joinChannel(channelId: UInt, invitationCode: String?): Either<ResponseErrors, Unit> =
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit> =
         client.put("$url$CHANNEL_BASE_URL/$channelId") {
-            invitationCode?.let { parameter("invitationCode", invitationCode) }
         }.let { response ->
                 return if (response.status == HttpStatusCode.OK) {
                     success(Unit)

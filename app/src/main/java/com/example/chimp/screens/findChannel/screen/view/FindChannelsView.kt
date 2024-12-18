@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.flowOf
 fun IdleView(
     modifier: Modifier = Modifier,
     state: FindChannelScreenState.Idle,
-    onJoin: (UInt, String?) -> Unit,
+    onJoin: (UInt) -> Unit,
     onSearch: (String) -> Unit = {},
     onFetchMore: () -> Unit = {}
 ) {
@@ -61,9 +61,9 @@ fun IdleView(
                         .fillMaxWidth()
                         .height(100.dp)
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    chatItem = chatItem,
+                    chatItem = channel,
                     buttonString = "Join",
-                    onClick = { onJoin(chatItem.cId) }
+                    onClick = { onJoin(channel.cId) }
                 )
                 Spacer(Modifier.width(5.dp))
 
@@ -88,6 +88,6 @@ private fun ChatListPreview() {
     )
     IdleView(
         state = state,
-        onJoin = { _, _ -> }
+        onJoin = { _ -> }
     )
 }
