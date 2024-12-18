@@ -71,11 +71,11 @@ class ChIMPRegisterAPI(
             .post("$api/signup") {
                 contentType(ContentType.Application.Json)
                 contentType(ContentType.Application.ProblemJson)
-                body = mapOf(
+                setBody(mapOf(
                     "username" to username,
                     "password" to password,
                     "invitationCode" to invitationCode
-                )
+                ))
             }.let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {

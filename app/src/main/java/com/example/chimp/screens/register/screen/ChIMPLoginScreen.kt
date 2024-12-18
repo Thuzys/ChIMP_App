@@ -14,7 +14,7 @@ import com.example.chimp.screens.register.screen.view.RegisterView
 import com.example.chimp.screens.register.viewModel.RegisterViewModel
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 
-const val LOGIN_SCREEN_TAG = "LoginScreen"
+const val REGISTER_SCREEN_TAG = "RegisterScreen"
 
 @Composable
 internal fun ChIMPLoginScreen(
@@ -23,7 +23,7 @@ internal fun ChIMPLoginScreen(
     onLogin: () -> Unit = {},
 ) {
     val curr = viewModel.state.collectAsState().value
-    Log.i(LOGIN_SCREEN_TAG, "State: ${curr::class.simpleName}")
+    Log.i(REGISTER_SCREEN_TAG, "State: ${curr::class.simpleName}")
     when(curr) {
         is RegisterScreenState.LogIn -> {
             LoginView(
