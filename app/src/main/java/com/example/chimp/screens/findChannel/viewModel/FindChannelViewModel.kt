@@ -6,14 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class FindChannelViewModel(
@@ -32,7 +29,7 @@ class FindChannelViewModel(
 
                 is Failure ->
                     FindChannelScreenState.Error(
-                        ResponseErrors(
+                        ResponseError(
                             result.value.cause,
                             result.value.urlInfo
                         )
@@ -46,13 +43,13 @@ class FindChannelViewModel(
         if (curr !is FindChannelScreenState.Idle) return
         state = FindChannelScreenState.Loading
         viewModelScope.launch {
-            state = when (val result = service.findChannelByName(ChannelName(channelName))) {
+            state = when (val result = service.findChannelsByPartialName(ChannelName(channelName))) {
                 is Success -> FindChannelScreenState.Idle(
-                    publicChannels = flowOf(listOf(result.value))
+                    publicChannels = result.value
                 )
 
                 is Failure -> FindChannelScreenState.Error(
-                    ResponseErrors(
+                    ResponseError(
                         result.value.cause,
                         result.value.urlInfo
                     )
@@ -73,7 +70,7 @@ class FindChannelViewModel(
                     )
 
                 is Failure -> FindChannelScreenState.Error(
-                    ResponseErrors(
+                    ResponseError(
                         result.value.cause,
                         result.value.urlInfo
                     )
