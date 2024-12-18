@@ -8,13 +8,13 @@ import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.screens.channels.model.ChannelsServices
-import com.example.chimp.screens.channels.model.channel.FetchChannelsResult
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Info
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

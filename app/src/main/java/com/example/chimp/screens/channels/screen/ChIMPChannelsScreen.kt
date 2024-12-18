@@ -78,6 +78,7 @@ internal fun ChIMPChannelsScreen(
                         onReload = vm::reset,
                         onDeleteOrLeave = vm::deleteOrLeave,
                         onInfoClick = vm::toChannelInfo,
+                        onLoadMore = vm::loadMore
                     )
                 }
             }

@@ -8,7 +8,7 @@ import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.screens.channels.model.ChannelsServices
-import com.example.chimp.screens.channels.model.channel.FetchChannelsResult
+import com.example.chimp.screens.channels.model.FetchChannelsResult
 import kotlinx.coroutines.flow.flowOf
 
 class DummyChannelsService : ChannelsServices {

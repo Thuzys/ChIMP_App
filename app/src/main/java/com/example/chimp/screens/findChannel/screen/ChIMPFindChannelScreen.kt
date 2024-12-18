@@ -21,57 +21,59 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit
 ) {
     when (val curr = viewModel.state) {
-        is FindChannelScreenState.Idle -> {
-            FindChannelScreenAux(
-                bottomBar = {
-                    MenuBottomBar(
-                        addChannelIsEnable = false,
-                        onMenuClick = onChatsNavigate,
-                        aboutClick = onAboutNavigate
-                    )
-                }
-            ) {
-                IdleView(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.Center),
-                    state = curr,
-                    onJoin = viewModel::joinChannel,
-                    onSearch = viewModel::findChannel,
-                )
-            }
-        }
 
-        is FindChannelScreenState.Error -> TODO()
-
-        is FindChannelScreenState.Loading -> {
-            FindChannelScreenAux(
-                bottomBar = {
-                    MenuBottomBar(
-                        addChannelIsEnable = false,
-                        onMenuClick = onChatsNavigate,
-                        aboutClick = onAboutNavigate
-                    )
-                }
-            ) {
-                LoadingView(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.Center),
-                )
-            }
-        }
     }
+//        is FindChannelScreenState.Idle -> {
+//            FindChannelScreenAux(
+//                bottomBar = {
+//                    MenuBottomBar(
+//                        addChannelIsEnable = false,
+//                        onMenuClick = onChatsNavigate,
+//                        aboutClick = onAboutNavigate
+//                    )
+//                }
+//            ) {
+//                IdleView(
+//                    modifier = modifier
+//                        .fillMaxSize()
+//                        .wrapContentSize(Alignment.Center),
+//                    state = curr,
+//                    onJoin = viewModel::joinChannel,
+//                    onSearch = viewModel::findChannel,
+//                )
+//            }
+//        }
+//
+//        is FindChannelScreenState.Error -> TODO()
+//
+//        is FindChannelScreenState.Loading -> {
+//            FindChannelScreenAux(
+//                bottomBar = {
+//                    MenuBottomBar(
+//                        addChannelIsEnable = false,
+//                        onMenuClick = onChatsNavigate,
+//                        aboutClick = onAboutNavigate
+//                    )
+//                }
+//            ) {
+//                LoadingView(
+//                    modifier = modifier
+//                        .fillMaxSize()
+//                        .wrapContentSize(Alignment.Center),
+//                )
+//            }
+//        }
+//    }
 }
 
-@Composable
-private fun FindChannelScreenAux(
-    bottomBar: @Composable () -> Unit = {},
-    content: @Composable (Modifier) -> Unit
-) {
-    Scaffold(
-        bottomBar = bottomBar
-    ) { innerPadding ->
-        content(Modifier.padding(innerPadding))
-    }
-}
+//@Composable
+//private fun FindChannelScreenAux(
+//    bottomBar: @Composable () -> Unit = {},
+//    content: @Composable (Modifier) -> Unit
+//) {
+//    Scaffold(
+//        bottomBar = bottomBar
+//    ) { innerPadding ->
+//        content(Modifier.padding(innerPadding))
+//    }
+//}

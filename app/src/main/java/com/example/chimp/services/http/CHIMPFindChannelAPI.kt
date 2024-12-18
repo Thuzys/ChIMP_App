@@ -8,6 +8,7 @@ import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.users.UserInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -19,6 +20,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
+import java.security.acl.Owner
 
 /**
  * Implementation of the FindChannelsService that fetches channel data from a remote server using HTTP.
@@ -109,6 +111,7 @@ class CHIMPFindChannelAPI(
         fun toChannelBasicInfo() = ChannelBasicInfo(
             cId = id,
             name = name.toChannelName(),
+            owner = UserInfo(owner.id, owner.name),
         )
     }
 

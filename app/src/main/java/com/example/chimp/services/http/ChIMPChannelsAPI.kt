@@ -9,7 +9,7 @@ import com.example.chimp.models.either.success
 import com.example.chimp.models.users.User
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.screens.channels.model.ChannelsServices
-import com.example.chimp.screens.channels.model.channel.FetchChannelsResult
+import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
@@ -113,6 +113,7 @@ class ChIMPChannelsAPI(
 
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        Log.i(CHANNELS_SERVICE_TAG, "Fetching more channels")
         idx += limit
         client
             .get("$api/my?offset=$idx&limit=$hasMore") { makeHeader(curr) }

@@ -22,7 +22,10 @@ import com.example.chimp.screens.ui.theme.ChIMPTheme
 class FindChannelActivity: ComponentActivity() {
     private val viewModel by viewModels<FindChannelViewModel>(
         factoryProducer = {
-            FindChannelVMFactory((application as DependenciesContainer).findChannelService)
+            FindChannelVMFactory(
+                (application as DependenciesContainer).findChannelService,
+                (application as DependenciesContainer).userInfoRepository
+            )
         }
     )
 
