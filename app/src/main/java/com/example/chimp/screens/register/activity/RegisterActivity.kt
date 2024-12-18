@@ -24,7 +24,8 @@ class RegisterActivity: ComponentActivity() {
         factoryProducer = {
             LoginViewModelFactory(
                 (application as DependenciesContainer).loginService,
-                (application as DependenciesContainer).formValidation
+                (application as DependenciesContainer).formValidation,
+                (application as DependenciesContainer).userInfoRepository
             )
         }
     )

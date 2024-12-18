@@ -68,6 +68,11 @@ const val REGISTER_VIEW_LOGIN_BUTTON_TEST_TAG = "RegisterViewLoginButtonTestTag"
 private const val TOP_TEXT_PADDING = 60
 
 /**
+ * The bottom padding of the text field.
+ */
+private const val BOTTOM_PADDING = 16
+
+/**
  * The RegisterView composable that displays the register screen.
  *
  * @param modifier the modifier to be applied to the composable
@@ -146,15 +151,15 @@ internal fun RegisterView(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(animatedButtonsVisibility)
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = BOTTOM_PADDING.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 MakeButton(
                     modifier = Modifier
+                        .testTag(REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG)
                         .padding(HORIZONTAL_PADDING.dp)
-                        .width(BUTTON_WIDTH.dp)
-                        .testTag(REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG),
+                        .width(BUTTON_WIDTH.dp),
                     text = stringResource(R.string.register),
                     enable = isValid,
                     onClick = { onRegister(username.input, password.input, invitationCode) }

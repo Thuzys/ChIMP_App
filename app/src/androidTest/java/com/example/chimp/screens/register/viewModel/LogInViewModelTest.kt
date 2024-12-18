@@ -3,8 +3,9 @@ package com.example.chimp.screens.register.viewModel
 import com.example.chimp.screens.register.service.FakeService
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 import com.example.chimp.services.validation.ChIMPFormValidator
+import com.example.chimp.utils.FakeUserInfoRepositoryRule
 import com.example.chimp.utils.ReplaceMainDispatcherRule
-
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.junit.Rule
@@ -14,12 +15,18 @@ class LogInViewModelTest {
 
     @get:Rule
     val dispatcherRule = ReplaceMainDispatcherRule()
+    @get:Rule
+    val fakeUserInfoRepo = FakeUserInfoRepositoryRule()
 
     @Test
     fun view_model_initial_state_is_login() =
         runTest(dispatcherRule.testDispatcher) {
             // Arrange
-            val vm = LoginViewModel(FakeService(), ChIMPFormValidator())
+            val vm = LoginViewModel(
+                FakeService(),
+                ChIMPFormValidator(),
+                fakeUserInfoRepo.repo
+            )
 
             // Assert
             assert(vm.state.value is RegisterScreenState.LogIn) {
@@ -32,7 +39,11 @@ class LogInViewModelTest {
         runTest(dispatcherRule.testDispatcher) {
             // Arrange
             val service = FakeService()
-            val vm = LoginViewModel(service, ChIMPFormValidator())
+            val vm = LoginViewModel(
+                service,
+                ChIMPFormValidator(),
+                fakeUserInfoRepo.repo
+            )
             // Act
             vm.login(service.validUsername, service.validPassword)
             service.unlock()
@@ -45,7 +56,11 @@ class LogInViewModelTest {
     @Test
     fun view_model_goes_to_register() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
-        val vm = LoginViewModel(FakeService(), ChIMPFormValidator())
+        val vm = LoginViewModel(
+            FakeService(),
+            ChIMPFormValidator(),
+            fakeUserInfoRepo.repo
+        )
 
         // Act
         vm.toRegister()
@@ -58,7 +73,12 @@ class LogInViewModelTest {
     @Test
     fun view_model_goes_to_login() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
-        val vm = LoginViewModel(FakeService(), ChIMPFormValidator(),RegisterScreenState.Register())
+        val vm = LoginViewModel(
+            FakeService(),
+            ChIMPFormValidator(),
+            fakeUserInfoRepo.repo,
+            RegisterScreenState.Register()
+        )
 
         // Act
         vm.toLogin()
@@ -72,7 +92,11 @@ class LogInViewModelTest {
     fun error_on_login() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
         val service = FakeService()
-        val vm = LoginViewModel(service, ChIMPFormValidator())
+        val vm = LoginViewModel(
+            service,
+            ChIMPFormValidator(),
+            fakeUserInfoRepo.repo
+        )
 
         // Act
         vm.login("", "")
@@ -88,7 +112,11 @@ class LogInViewModelTest {
     fun view_model_is_loading() = runTest(dispatcherRule.testDispatcher) {
         // Arrange
         val service = FakeService()
-        val vm = LoginViewModel(service, ChIMPFormValidator())
+        val vm = LoginViewModel(
+            service,
+            ChIMPFormValidator(),
+            fakeUserInfoRepo.repo
+        )
 
         // Act
         vm.login("", "")
@@ -98,5 +126,25 @@ class LogInViewModelTest {
             "Expected LoginScreenState.Loading, but was ${vm.state.value}"
         }
         service.unlock()
+    }
+
+    @Test
+    fun on_login_with_success_the_user_is_saved_in_the_repo() = runTest {
+        // Arrange
+        val service = FakeService()
+        val vm = LoginViewModel(
+            service,
+            ChIMPFormValidator(),
+            fakeUserInfoRepo.repo
+        )
+
+        // Act
+        vm.login(service.validUsername, service.validPassword)
+        service.unlock()
+
+        // Assert
+        assert(vm.state.value is RegisterScreenState.Success)
+        val user = fakeUserInfoRepo.repo.userInfo.first()
+        assert(user != null)
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import com.example.chimp.models.either.failure
@@ -16,8 +15,6 @@ import com.example.chimp.screens.register.model.DataInput
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Register
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_INPUT_TAG
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_TRAILING_ICON_TAG
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 

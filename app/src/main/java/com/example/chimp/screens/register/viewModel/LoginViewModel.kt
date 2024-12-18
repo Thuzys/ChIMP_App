@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
+import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.screens.register.model.DataInput
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.screens.register.model.RegisterService
@@ -32,6 +33,7 @@ private const val DEBOUNCE_TIME = 500L
 internal class LoginViewModel(
     private val service: RegisterService,
     private val validator: FormValidation,
+    private val repository: UserInfoRepository,
     initialState: RegisterScreenState = LogIn()
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
@@ -71,7 +73,10 @@ internal class LoginViewModel(
             _state.emit(Loading)
             _state.emit(
                 when (val result = service.login(username, password)) {
-                    is Success -> RegisterScreenState.Success(result.value)
+                    is Success -> {
+                        repository.updateUserInfo(result.value)
+                        RegisterScreenState.Success
+                    }
                     is Failure -> RegisterScreenState.Error(username, result.value)
                 }
             )
@@ -160,7 +165,10 @@ internal class LoginViewModel(
                         service
                             .register(username, password, invitationCode)
                 ) {
-                    is Success -> RegisterScreenState.Success(result.value)
+                    is Success -> {
+                        repository.updateUserInfo(result.value)
+                        RegisterScreenState.Success
+                    }
                     is Failure -> RegisterScreenState.Error(username, result.value)
                 }
             )

@@ -13,6 +13,11 @@ internal class FakeService : RegisterService {
     val validUsername = "test"
     val validPassword = "test"
     private val validInvitationCode = "test"
+    val user = User(
+        id = 1u,
+        name = validUsername,
+        "token"
+    )
     override suspend fun login(
         username: String,
         password: String
@@ -49,13 +54,7 @@ internal class FakeService : RegisterService {
             invitationCode == validInvitationCode
         ) {
             controller.receive()
-            return success(
-                User(
-                    id = 1u,
-                    name = "test",
-                    token = "test"
-                )
-            )
+            return success(user)
         } else {
             return failure(
                 ResponseErrors(

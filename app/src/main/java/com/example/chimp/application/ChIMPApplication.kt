@@ -1,7 +1,12 @@
 package com.example.chimp.application
 
 import android.app.Application
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.chimp.BuildConfig
+import com.example.chimp.infrastructure.UserInfoPreferencesRepository
+import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
@@ -19,6 +24,8 @@ interface DependenciesContainer {
     val loginService: RegisterService
     val findChannelService: FindChannelService
     val formValidation: FormValidation
+    val preferencesDataStore: DataStore<Preferences>
+    val userInfoRepository: UserInfoRepository
 }
 
 class ChIMPApplication : Application(), DependenciesContainer {
@@ -47,5 +54,11 @@ class ChIMPApplication : Application(), DependenciesContainer {
 
     override val formValidation: FormValidation by lazy {
         ChIMPFormValidator()
+    }
+
+    override val preferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
+
+    override val userInfoRepository: UserInfoRepository by lazy {
+        UserInfoPreferencesRepository(preferencesDataStore)
     }
 }

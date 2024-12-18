@@ -25,10 +25,8 @@ internal sealed interface RegisterScreenState {
 
     /**
      * The screen is successful.
-     *
-     * @property user the user that logged in
      */
-    data class Success(val user: User) : RegisterScreenState
+    data object Success : RegisterScreenState
 
     /**
      * The screen when the user is logging in.
