@@ -66,6 +66,10 @@ private const val HORIZONTAL_PADDING = 10
 private const val BOX_WEIGHT = 1f
 
 /**
+ * The tag used to identify the input text field in automated tests.
+ */
+const val MY_TEXT_FIELD_INPUT_TAG = "MyTextFieldInput"
+/**
  * A text field with a label.
  *
  * @param modifier The modifier to apply to this layout node.
@@ -97,6 +101,7 @@ fun MyTextField(
         Text(text = label)
         Spacer(modifier = Modifier.height(TEXT_FIELD_SPACER_HEIGHT.dp))
         BasicTextField(
+            modifier = Modifier.testTag(MY_TEXT_FIELD_INPUT_TAG),
             value = value,
             onValueChange = onValueChange,
             keyboardOptions = keyBoardOptions,

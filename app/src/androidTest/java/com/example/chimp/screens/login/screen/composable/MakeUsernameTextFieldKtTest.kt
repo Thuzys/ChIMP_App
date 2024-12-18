@@ -18,7 +18,10 @@ class MakeUsernameTextFieldKtTest {
         val expected = change+value
         val funcTest: (String) -> Unit = { result = it }
         rule.setContent {
-            MakeUsernameTextField(value, funcTest)
+            MakeUsernameTextField(
+                value = value,
+                onUsernameChange = funcTest
+            )
         }
         rule
             .onNodeWithText(

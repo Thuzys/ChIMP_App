@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +27,8 @@ import com.example.chimp.screens.login.screen.composable.BaseView
 import com.example.chimp.screens.login.screen.composable.MakeInvitationCodeField
 import com.example.chimp.screens.login.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.login.screen.composable.MakeUsernameTextField
-import com.example.chimp.screens.login.viewModel.state.Register
-import com.example.chimp.screens.login.viewModel.state.Visibility
+import com.example.chimp.screens.login.viewModel.state.LoginScreenState.Register
+import com.example.chimp.screens.login.viewModel.state.LoginScreenState.Register.Companion.isValid
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.MySpacer
 
@@ -42,6 +43,21 @@ const val REGISTER_VIEW_TEST_TAG = "RegisterViewTestTag"
 private const val HORIZONTAL_PADDING = 10
 
 /**
+ * The width of the button.
+ */
+private const val BUTTON_WIDTH = 150
+
+/**
+ * The tag used to identify the register button in automated tests.
+ */
+const val REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG = "RegisterViewRegisterButtonTestTag"
+
+/**
+ * The tag used to identify the login button in automated tests.
+ */
+const val REGISTER_VIEW_LOGIN_BUTTON_TEST_TAG = "RegisterViewLoginButtonTestTag"
+
+/**
  * The top padding of the text field.
  */
 private const val TOP_TEXT_PADDING = 60
@@ -50,28 +66,29 @@ private const val TOP_TEXT_PADDING = 60
  * The RegisterView composable that displays the register screen.
  *
  * @param modifier the modifier to be applied to the composable
- * @param vm the view model that holds the state of the register screen
- * @param onUsernameChange the callback to be invoked when the username changes
- * @param onPasswordChange the callback to be invoked when the password changes
- * @param onConfirmPasswordChange the callback to be invoked when the confirm password changes
- * @param isToShowChange the callback to be invoked when the user wants to show/hide the password
+ * @param onRegisterChange the function to be invoked when the user wants to register
+ * @param onLoginChange the function to be invoked when the user wants to login
  */
 @Composable
 internal fun RegisterView(
+    state: Register,
     modifier: Modifier = Modifier,
-    vm: Register,
-    onUsernameChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {},
-    onConfirmPasswordChange: (String) -> Unit = {},
-    onInvitationCodeChange: (String) -> Unit = {},
-    onRegisterChange: () -> Unit = {},
-    onLoginChange: () -> Unit = {},
-    isToShowChange: () -> Unit = {},
+    onRegisterChange: (String, String, String) -> Unit = {_, _, _ -> },
+    onLoginChange: (String, String) -> Unit = {_, _ ->},
 ) {
     BaseView(
         modifier = modifier.testTag(REGISTER_VIEW_TEST_TAG),
-        visibility = vm as Visibility,
-    ) { isToShow, imeVisible ->
+    ) { imeVisible ->
+        val (username, setUsername) = rememberSaveable { mutableStateOf(state.username) }
+        val (password, setPassword) = rememberSaveable { mutableStateOf(state.password) }
+        val (confirmPass, setConfirmPass) = rememberSaveable { mutableStateOf("") }
+        val (isValid, setIsValid) = rememberSaveable {
+            mutableStateOf(isValid(state.username, state.password, state.password))
+        }
+        val (invitationCode, setInvitationCode) = rememberSaveable { mutableStateOf("") }
+        var isToShowPass by rememberSaveable { mutableStateOf(false) }
+        var isToShowConfirmPass by rememberSaveable { mutableStateOf(false) }
+
         MySpacer()
         Text(
             modifier = Modifier.padding(top = TOP_TEXT_PADDING.dp),
@@ -82,27 +99,28 @@ internal fun RegisterView(
         )
         MySpacer()
         MakeUsernameTextField(
-            value = vm.username,
-            onUsernameChange = onUsernameChange
+            value = username,
+            onUsernameChange = { setUsername(it); setIsValid(isValid(it, password, confirmPass)) },
         )
         MySpacer()
         MakePasswordTextField(
-            value = vm.password,
-            isToShow = isToShow,
-            onPasswordChange = onPasswordChange,
-            isToShowChange = isToShowChange
+            value = password,
+            isToShow = isToShowPass,
+            onPasswordChange = { setPassword(it); setIsValid(isValid(username, it, confirmPass)) },
+            isToShowChange = { isToShowPass = !isToShowPass }
         )
         MySpacer()
         MakePasswordTextField(
-            value = vm.confirmPassword,
-            isToShow = isToShow,
-            onPasswordChange = onConfirmPasswordChange,
-            isToShowChange = isToShowChange
+            value = confirmPass,
+            label = stringResource(R.string.confirm_password),
+            isToShow = isToShowConfirmPass,
+            onPasswordChange = { setConfirmPass(it); setIsValid(isValid(username, password, it)) },
+            isToShowChange = { isToShowConfirmPass = !isToShowConfirmPass }
         )
         MySpacer()
         MakeInvitationCodeField(
-            value = vm.invitationCode,
-            onInvitationCodeChange = onInvitationCodeChange
+            value = invitationCode,
+            onInvitationCodeChange = setInvitationCode
         )
         val animatedButtonsVisibility by animateFloatAsState(
             targetValue = if (imeVisible) 0f else 1f,
@@ -121,15 +139,19 @@ internal fun RegisterView(
                 MakeButton(
                     modifier = Modifier
                         .padding(HORIZONTAL_PADDING.dp)
-                        .fillMaxWidth(0.5f),
+                        .width(BUTTON_WIDTH.dp)
+                        .testTag(REGISTER_VIEW_REGISTER_BUTTON_TEST_TAG),
                     text = stringResource(R.string.register),
-                    enable = vm.isValid,
-                    onClick = onRegisterChange
+                    enable = isValid,
+                    onClick = { onRegisterChange(username, password, invitationCode) }
                 )
                 MakeButton(
-                    modifier = Modifier.padding(HORIZONTAL_PADDING.dp),
+                    modifier = Modifier
+                        .width(BUTTON_WIDTH.dp)
+                        .padding(HORIZONTAL_PADDING.dp)
+                        .testTag(REGISTER_VIEW_LOGIN_BUTTON_TEST_TAG),
                     text = stringResource(R.string.login),
-                    onClick = onLoginChange
+                    onClick = { onLoginChange(username, password) }
                 )
             }
         }
@@ -138,19 +160,4 @@ internal fun RegisterView(
 
 @Preview
 @Composable
-private fun PreviewRegisterView() {
-    var vm: Register by remember { mutableStateOf(Register.RegisterHide("", "")) }
-    RegisterView(
-        vm = vm,
-        onUsernameChange = { vm = vm.updateUsername(it) },
-        onPasswordChange = { vm = vm.updatePassword(it) },
-        onRegisterChange = { },
-        onLoginChange = { },
-        isToShowChange = {
-            vm = when (val curr = vm) {
-                is Register.RegisterShow -> curr.hidePassword()
-                is Register.RegisterHide -> curr.showPassword()
-            }
-        },
-    )
-}
+private fun PreviewRegisterView() { RegisterView(Register()) }

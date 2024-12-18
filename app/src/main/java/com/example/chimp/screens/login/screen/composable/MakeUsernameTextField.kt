@@ -15,16 +15,18 @@ private const val USERNAME_INPUT_HORIZONTAL_PADDING = 16
 
 /**
  * Creates a username text field.
+ * @param modifier the modifier to be applied to the Text field.
  * @param value The value of the username text field.
  * @param onUsernameChange The function to call when the username changes.
  */
 @Composable
 internal fun MakeUsernameTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onUsernameChange: (String) -> Unit
 ) {
     MyTextField(
-        modifier = Modifier.padding(USERNAME_INPUT_HORIZONTAL_PADDING.dp),
+        modifier = modifier.padding(USERNAME_INPUT_HORIZONTAL_PADDING.dp),
         label = stringResource(R.string.username),
         value = value,
         onValueChange = onUsernameChange,

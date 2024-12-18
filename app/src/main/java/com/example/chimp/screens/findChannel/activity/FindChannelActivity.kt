@@ -40,13 +40,6 @@ class FindChannelActivity: ComponentActivity() {
             ChIMPTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        MenuBottomBar(
-                            addChannelIsEnable = false,
-                            aboutClick = { startActivity(navigateToAboutIntent) },
-                            onMenuClick = { startActivity(navigateToChatsIntent) },
-                        )
-                    }
                 ) { innerPadding ->
                     ChIMPFindChannelScreen(
                         modifier =
@@ -54,7 +47,8 @@ class FindChannelActivity: ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize(),
                         viewModel = viewModel,
-                        onJoinChannel = { startActivity(navigateToChatsIntent) }
+                        onAboutNavigate = { startActivity(navigateToAboutIntent) },
+                        onChatsNavigate = { startActivity(navigateToChatsIntent) },
                     )
                 }
             }

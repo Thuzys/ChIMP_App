@@ -1,4 +1,4 @@
-package com.example.chimp.screens.findChannel.screen.composable
+package com.example.chimp.screens.ui.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.screens.findChannel.model.FindChannelItem
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.Marquee
 
@@ -39,16 +39,14 @@ private const val TEXT_LENGTH_THRESHOLD = 15
  * @param chatItem the chat item to display.
  */
 @Composable
-internal fun ChatItemRow(
-    chatItem: FindChannelItem,
-    onJoin: () -> Unit,
+fun ChatItemRow(
+    modifier: Modifier = Modifier,
+    chatItem: ChannelBasicInfo,
+    onClick: () -> Unit,
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -90,7 +88,7 @@ internal fun ChatItemRow(
             MakeButton(
                 modifier = Modifier.width(12.dp),
                 text = "Join",
-                onClick = onJoin,
+                onClick = onClick,
             )
 //            MakeJoinButton { onJoin() }
         }
@@ -103,6 +101,6 @@ internal fun ChatItemRow(
 )
 @Composable
 private fun ChatItemRowPreview() {
-    val item = FindChannelItem(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
-    ChatItemRow(item) { }
+    val item = ChannelBasicInfo(1u, ChannelName("One Piece Fansssssssssss"), R.drawable.thuzy_profile_pic)
+    ChatItemRow(chatItem = item) { }
 }

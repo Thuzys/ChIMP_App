@@ -6,12 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,8 +26,8 @@ import com.example.chimp.R
 import com.example.chimp.screens.login.screen.composable.BaseView
 import com.example.chimp.screens.login.screen.composable.MakePasswordTextField
 import com.example.chimp.screens.login.screen.composable.MakeUsernameTextField
-import com.example.chimp.screens.login.viewModel.state.Login
-import com.example.chimp.screens.login.viewModel.state.Visibility
+import com.example.chimp.screens.login.viewModel.state.LoginScreenState
+import com.example.chimp.screens.login.viewModel.state.LoginScreenState.Login.Companion.isValid
 import com.example.chimp.screens.ui.composable.MySpacer
 import com.example.chimp.screens.ui.composable.MakeButton
 
@@ -36,35 +37,50 @@ import com.example.chimp.screens.ui.composable.MakeButton
 const val LOGIN_VIEW_TEST_TAG = "LoginViewTestTag"
 
 /**
+ * The tag used to identify the login view username input text field.
+ */
+const val USERNAME_TEXT_FIELD = "UsernameTextField"
+
+/**
  * The horizontal padding of the text field.
  */
 private const val HORIZONTAL_PADDING = 10
 
 /**
+ * The width of the button.
+ */
+private const val BUTTON_WIDTH = 150
+
+/**
+ * The tag used to identify the login view login button.
+ */
+const val LOGIN_VIEW_LOGIN_BUTTON = "LoginLoginButton"
+
+const val LOGIN_VIEW_REGISTER_BUTTON = "LoginViewRegisterButton"
+
+/**
  * The LoginView composable that displays the login screen.
  *
  * @param modifier the modifier to be applied to the composable
- * @param vm the view model that holds the state of the login screen
- * @param onUsernameChange the callback to be invoked when the username changes
- * @param onPasswordChange the callback to be invoked when the password changes
- * @param isToShowChange the callback to be invoked when the user wants to show/hide the password
  * @param onLoginChange the callback to be invoked when the user wants to login
  * @param onRegisterChange the callback to be invoked when the user wants to register
  */
 @Composable
 internal fun LoginView(
+    state: LoginScreenState.Login,
     modifier: Modifier = Modifier,
-    vm: Login,
-    onUsernameChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {},
-    isToShowChange: () -> Unit = {},
-    onLoginChange: () -> Unit = {},
-    onRegisterChange: () -> Unit = {},
+    onLoginChange: (String, String) -> Unit = {_, _ -> },
+    onRegisterChange: (String, String) -> Unit = {_, _ ->},
 ) {
     BaseView(
         modifier = modifier.testTag(LOGIN_VIEW_TEST_TAG),
-        visibility = vm as Visibility
-    ) { isToShow, imeVisible ->
+    ) { imeVisible ->
+        val (username, setUsername) = rememberSaveable { mutableStateOf(state.username) }
+        val (password, setPassword) = rememberSaveable { mutableStateOf(state.password) }
+        val (isValid, setIsValid) = rememberSaveable {
+            mutableStateOf(isValid(state.username, state.password))
+        }
+        var isToShow by rememberSaveable { mutableStateOf(false) }
         MySpacer()
         Text(
             text = stringResource(R.string.login_message),
@@ -74,15 +90,16 @@ internal fun LoginView(
         )
         MySpacer()
         MakeUsernameTextField(
-            value = vm.username,
-            onUsernameChange = onUsernameChange
+            modifier = Modifier.testTag(USERNAME_TEXT_FIELD),
+            value = username,
+            onUsernameChange = { setUsername(it); setIsValid(isValid(it, password)) },
         )
         MySpacer()
         MakePasswordTextField(
-            value = vm.password,
+            value = password,
             isToShow = isToShow,
-            onPasswordChange = onPasswordChange,
-            isToShowChange = isToShowChange
+            onPasswordChange = { setPassword(it); setIsValid(isValid(username, it)) },
+            isToShowChange = { isToShow = !isToShow }
         )
         val animatedButtonsVisibility by animateFloatAsState(
             targetValue = if (imeVisible) 0f else 1f,
@@ -100,42 +117,28 @@ internal fun LoginView(
                 MakeButton(
                     modifier = Modifier
                         .padding(HORIZONTAL_PADDING.dp)
-                        .fillMaxWidth(0.5f),
+                        .testTag(LOGIN_VIEW_LOGIN_BUTTON)
+                        .width(BUTTON_WIDTH.dp),
                     text = stringResource(R.string.login),
-                    enable = vm.isValid,
-                    onClick = onLoginChange
+                    enable = isValid,
+                    onClick = { onLoginChange(username, password) }
                 )
                 MakeButton(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .padding(HORIZONTAL_PADDING.dp)
+                        .testTag(LOGIN_VIEW_REGISTER_BUTTON)
+                        .width(BUTTON_WIDTH.dp),
                     text = stringResource(R.string.register),
-                    onClick = onRegisterChange
+                    onClick = { onRegisterChange(username, password) }
                 )
             }
         }
     }
 }
 
-
 @Preview(
     showBackground = true,
     showSystemUi = true,
 )
 @Composable
-private fun PreviewLoginView() {
-    var vm: Login by remember {
-        mutableStateOf(Login.LoginHide("dummy", "dummy"))
-    }
-    LoginView(
-        vm = vm,
-        onUsernameChange = { vm = vm.updateUsername(it) },
-        onPasswordChange = { vm = vm.updatePassword(it) },
-        isToShowChange = {
-            vm =
-                when (val curr = vm) {
-                    is Login.LoginShow -> curr.hidePassword()
-                    is Login.LoginHide -> curr.showPassword()
-                }
-        },
-    )
-}
+private fun PreviewLoginView() { LoginView(LoginScreenState.Login()) }

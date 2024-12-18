@@ -1,27 +1,114 @@
 package com.example.chimp.screens.chats.viewModel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chimp.models.either.Failure
+import com.example.chimp.models.either.Success
+import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.users.User
+import com.example.chimp.screens.chats.model.channel.ChannelBasicInfo
 import com.example.chimp.screens.chats.model.channel.ChatsServices
+import com.example.chimp.screens.chats.model.messages.Messages
 import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState
+import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.ChannelInfo
+import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.ChatSelected
+import com.example.chimp.screens.chats.viewModel.state.ChatsScreenState.Idle
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ChatsViewModel(
     private val service: ChatsServices,
-    private val user: com.example.chimp.screens.chats.model.users.User, //TODO: add user to stateMachine.
+    initialState: ChatsScreenState = ChatsScreenState.Initial,
+    private val user: User,
 ): ViewModel() {
-    var state: ChatsScreenState by mutableStateOf(ChatsScreenState.Idle)
-        private set
+    private val _state = MutableStateFlow(initialState)
+    val state = _state.asStateFlow()
 
-    fun toShowChannels() {
-        if (state != ChatsScreenState.Loading) {
-            state = ChatsScreenState.Loading
-            viewModelScope.launch {
-                val channels = service.fetchChannels(user)
-                TODO("ShowChannels(channels)")
+    fun init() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is ChatsScreenState.Initial) return@launch
+            _state.emit(ChatsScreenState.Loading)
+            //TODO: Add dataStore to save user data
+            when(val result = service.fetchChannels(user)) {
+                is Success<List<ChannelBasicInfo>> -> _state.emit(Idle(result.value))
+                is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
+            }
+        }
+    }
+
+    fun toChannelInfo(channel: ChannelBasicInfo) {
+        viewModelScope.launch {
+            if (state.value is ChannelInfo) return@launch
+            _state.emit(ChannelInfo(channel, state.value))
+        }
+    }
+
+    fun sendMessage(message: String) {
+        viewModelScope.launch {
+            TODO()
+        }
+    }
+
+    fun toIdle() {
+        viewModelScope.launch {
+            if (state.value is Idle) return@launch
+            _state.emit(ChatsScreenState.Loading)
+            when(val result = service.fetchChannels(user)) {
+                is Success<List<ChannelBasicInfo>> -> _state.emit(Idle(result.value))
+                is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
+            }
+        }
+    }
+
+    fun deleteChannel(channel: ChannelBasicInfo) {
+        viewModelScope.launch {
+            TODO()
+        }
+    }
+
+    fun sseMessageLoader() {
+        viewModelScope.launch {
+            val curr = state.value
+            while (curr is ChatSelected) {
+                when(val result = service.fetchSSLMessages(curr.channel)) {
+                    is Success<Flow<Messages>> -> {
+                        result
+                            .value
+                            .collect {
+                                curr.addMessage(it)
+                            }
+                    }
+                    is Failure<ResponseErrors> -> _state.emit(ChatsScreenState.Error(result.value))
+                }
+            }
+        }
+    }
+
+    fun toChatInfo(channel: ChannelBasicInfo) {
+        viewModelScope.launch {
+            if (state.value is ChannelInfo) return@launch
+            _state.emit(ChannelInfo(channel, state.value))
+        }
+    }
+
+    fun outChatInfo() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is ChannelInfo) return@launch
+            _state.emit(curr.goBack)
+        }
+    }
+
+    fun toChatSelected(channel: ChannelBasicInfo) {
+        viewModelScope.launch {
+            if (state.value is ChatSelected) return@launch
+            _state.emit(ChatsScreenState.Loading)
+            when(val result =service.fetchChannelMessages(channel)){
+                is Success -> _state.emit(ChatSelected(channel, result.value, user))
+                is Failure -> _state.emit(ChatsScreenState.Error(result.value))
             }
         }
     }
