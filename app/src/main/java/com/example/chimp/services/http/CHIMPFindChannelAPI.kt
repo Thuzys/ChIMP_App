@@ -1,5 +1,6 @@
 package com.example.chimp.services.http
 
+import android.util.Log
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.Either
@@ -11,8 +12,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
 
 /**
@@ -24,41 +29,65 @@ class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String
 ): FindChannelService {
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, Unit> =
-        client.put("$url$CHANNEL_BASE_URL/$channelId")
-            .let { response ->
-                return if (response.status == HttpStatusCode.OK) {
-                    success(Unit)
-                } else {
-                    failure(response.body<ErrorDto>().toResponseErrors())
-                }
-            }
 
-    override suspend fun findChannelByName(channelName: ChannelName): Either<ResponseError, ChannelBasicInfo> =
+    private val unknownError = "Unknown error, please verify internet connection and try again later."
+
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> =
         client
-            .get("$url$CHANNEL_NAME_URL${channelName.encode()}")
+            .put("$url$CHANNEL_BASE_URL") {
+                contentType(ContentType.Application.Json)
+                contentType(ContentType.Application.ProblemJson)
+                setBody(mapOf("cId" to channelId))
+            }
             .let { response ->
-                return if (response.status == HttpStatusCode.OK) {
-                    val channel = response.body<FindChannelDto>().toChannelBasicInfo()
-                    success(channel)
-                } else {
-                    failure(response.body<ErrorDto>().toResponseErrors())
+                try {
+                    return if (response.status == HttpStatusCode.OK) {
+                        success(response.body<ChannelDto>().toChannelBasicInfo())
+                    } else {
+                        failure(response.body<ErrorDto>().toResponseErrors())
+                    }
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
                 }
+
             }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseErrors, Flow<List<ChannelBasicInfo>>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun findChannel(channelName: ChannelName): Either<ResponseError, FindChannelItem> {
-        TODO("Not yet implemented")
+    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
+        client
+            .get("$CHANNEL_PUBLIC_BASE_URL/${channelName.name}")
+            .let { response ->
+                try {
+                    return if (response.status == HttpStatusCode.OK) {
+                        success(flowOf(response.body<List<ChannelDto>>().map { it.toChannelBasicInfo() }))
+                    } else {
+                        failure(response.body<ErrorDto>().toResponseErrors())
+                    }
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
+                }
+            }
     }
 
     override suspend fun getChannels(
         offset: UInt?,
         limit: UInt?,
     ): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
-        TODO("Not yet implemented")
+        client
+            .get("$CHANNEL_PUBLIC_BASE_URL?offset=$offset&limit=$limit")
+            .let { response ->
+                try {
+                    return if (response.status == HttpStatusCode.OK) {
+                        success(flowOf(response.body<List<ChannelDto>>().map { it.toChannelBasicInfo() }))
+                    } else {
+                        failure(response.body<ErrorDto>().toResponseErrors())
+                    }
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
+                }
+            }
     }
 
     @Serializable
@@ -70,13 +99,17 @@ class CHIMPFindChannelAPI(
     }
 
     @Serializable
-    private data class FindChannelDto(
+    private data class ChannelDto(
         val id: UInt,
-        val name: String,
-        val icon: Int,
+        val name: ChannelNameOutputModel,
         val owner: OwnerOutputDto,
+        val description: String? = null,
+        val icon: String? = null,
     ) {
-        fun toChannelBasicInfo() = ChannelBasicInfo(id, ChannelName(name), icon)
+        fun toChannelBasicInfo() = ChannelBasicInfo(
+            cId = id,
+            name = name.toChannelName(),
+        )
     }
 
     @Serializable
@@ -85,19 +118,25 @@ class CHIMPFindChannelAPI(
         val name: String,
     )
 
+    @Serializable
+    private data class ChannelNameOutputModel(
+        val name: String,
+        val displayName: String,
+    ) {
+        fun toChannelName() = ChannelName(name)
+    }
+
     companion object {
         /**
          * the base url for the channels endpoints
          */
-        const val CHANNEL_BASE_URL = "/channels"
+        const val CHANNEL_BASE_URL = "/api/channels"
+
+        const val CHANNEL_PUBLIC_BASE_URL = "$CHANNEL_BASE_URL/public"
 
         /**
-         * the url for the channel with the given name
+         * the tag for the find channel service
          */
-        const val CHANNEL_NAME_URL = "$CHANNEL_BASE_URL/name/"
-
-        /**
-         * the url for the channel with the given partial name
-         */
+        const val FIND_CHANNEL_SERVICE_TAG = "FindChannelService"
     }
 }

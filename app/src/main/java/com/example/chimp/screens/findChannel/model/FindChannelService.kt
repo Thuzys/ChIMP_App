@@ -16,16 +16,7 @@ interface FindChannelService {
      * @return an [Either] with [Unit] if the channel was joined,
      * or a [ResponseError] if it failed.
      */
-    suspend fun joinChannel(channelId: UInt): Either<ResponseError, Unit>
-
-    /**
-     * Find a channel by its name.
-     *
-     * @param channelName the name of the channel to find
-     * @return an [Either] with the [ChannelBasicInfo] if the channel was found,
-     * or a [ResponseError] if it failed.
-     */
-    suspend fun findChannelByName(channelName: ChannelName): Either<ResponseError, ChannelBasicInfo>
+    suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo>
 
     /**
      * Find channels by their partial names.
