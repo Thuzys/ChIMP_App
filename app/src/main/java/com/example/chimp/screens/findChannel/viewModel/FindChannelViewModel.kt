@@ -1,5 +1,9 @@
 package com.example.chimp.screens.findChannel.viewModel
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelName
@@ -104,5 +108,13 @@ class FindChannelViewModel(
            _searchText.emit(searchText)
            _state.emit(curr.copy(searchChannelInput = searchText))
        }
+    }
+
+    fun closeError() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is FindChannelScreenState.Error) return@launch
+            _state.emit(FindChannelScreenState.Init)
+        }
     }
 }
