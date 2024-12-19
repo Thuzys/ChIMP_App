@@ -5,13 +5,17 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.chimp.BuildConfig
+import com.example.chimp.infrastructure.ChannelPreferencesRepository
 import com.example.chimp.infrastructure.UserInfoPreferencesRepository
+import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.services.dummy.DummyFindChannelService
+import com.example.chimp.services.http.ChIMPChannelAPI
 import com.example.chimp.services.http.ChIMPChannelsAPI
 import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
@@ -24,10 +28,12 @@ import kotlinx.serialization.json.Json
 interface DependenciesContainer {
     val loginService: RegisterService
     val channelsService: ChannelsServices
+    val channelService: ChannelService
     val findChannelService: FindChannelService
     val formValidation: FormValidation
-    val preferencesDataStore: DataStore<Preferences>
     val userInfoRepository: UserInfoRepository
+    val channelRepository: ChannelRepository
+    val preferencesDataStore: DataStore<Preferences>
 }
 
 class ChIMPApplication : Application(), DependenciesContainer {
@@ -47,11 +53,9 @@ class ChIMPApplication : Application(), DependenciesContainer {
 
     override val loginService: RegisterService by lazy {
         ChIMPRegisterAPI(client, url)
-//        DummyRegisterService()
     }
     override val channelsService: ChannelsServices by lazy {
         ChIMPChannelsAPI(client, url, userInfoRepository.userInfo)
-//        DummyChannelsService()
     }
 
     override val findChannelService: FindChannelService by lazy {
@@ -62,10 +66,18 @@ class ChIMPApplication : Application(), DependenciesContainer {
         ChIMPFormValidator()
     }
 
+    override val channelService: ChannelService by lazy {
+        ChIMPChannelAPI(client, url, userInfoRepository.userInfo, channelRepository.channelInfo)
+    }
+
     override val preferencesDataStore: DataStore<Preferences> by
     preferencesDataStore(name = "preferences")
 
     override val userInfoRepository: UserInfoRepository by lazy {
         UserInfoPreferencesRepository(preferencesDataStore)
+    }
+
+    override val channelRepository: ChannelRepository by lazy {
+        ChannelPreferencesRepository(preferencesDataStore)
     }
 }

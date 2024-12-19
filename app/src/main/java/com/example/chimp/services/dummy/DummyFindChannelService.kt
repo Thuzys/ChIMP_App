@@ -15,17 +15,17 @@ class DummyFindChannelService: FindChannelService {
     private val channels = mutableListOf(
         ChannelBasicInfo(
             cId = 1u,
-            name = ChannelName("Channel 1"),
+            name = ChannelName("Channel 1", "Channel 1"),
             owner = UserInfo(1u, "Owner 1"),
         ),
         ChannelBasicInfo(
             cId = 2u,
-            name = ChannelName("Channel 2"),
+            name = ChannelName("Channel 2", "Channel 2"),
             owner = UserInfo(2u, "Owner 2"),
         ),
         ChannelBasicInfo(
             cId = 3u,
-            name = ChannelName("Channel 3"),
+            name = ChannelName("Channel 3", "Channel 3"),
             owner = UserInfo(3u, "Owner 3"),
         ),
     )

@@ -58,7 +58,7 @@ internal fun ChatsHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = chat.name.name,
+                    text = chat.name.displayName,
                     style = MaterialTheme.typography.headlineMedium,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
@@ -77,7 +77,10 @@ internal fun ChatsHeader(
 private fun ChatsHeaderPreview() {
     val channel = ChannelBasicInfo(
         cId = 0u,
-        name = ChannelName("Channel name with case of a very long name"),
+        name = ChannelName(
+            "Channel name",
+            "Channel name with case of a very long name"
+        ),
         owner = UserInfo(1u, "Owner name"),
     )
     ChatsHeader(

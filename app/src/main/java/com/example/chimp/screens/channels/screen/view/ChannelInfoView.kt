@@ -143,7 +143,7 @@ fun ChannelInfoView(
                         contentScale = ContentScale.Crop
                     )
                     Text(
-                        text = channel.name.name,
+                        text = channel.name.displayName,
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center
@@ -192,7 +192,10 @@ fun ChannelInfoView(
 private fun ChannelInfoViewPreview() {
     val channel = ChannelInfo(
         cId = 1u,
-        name = ChannelName("Channel 1"),
+        name = ChannelName(
+            "Channel 1",
+            "Channel 1"
+        ),
         description = "Channel 1 description",
         owner = UserInfo(id = 1u, name = "Owner 1")
     )

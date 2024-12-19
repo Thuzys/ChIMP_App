@@ -14,15 +14,17 @@ import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Er
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Info
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ChannelsViewModel(
+internal class ChannelsViewModel(
     private val service: ChannelsServices,
     private val userInfoRepository: UserInfoRepository,
+    private val channelRepository: ChannelRepository,
     initialState: ChannelsScreenState = Initial,
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
@@ -44,6 +46,15 @@ class ChannelsViewModel(
                     else Error(result.value, curr)
                 )
             }
+        }
+    }
+
+    fun onChannelClick(channel: ChannelBasicInfo , navigateToChannel: () -> Unit) {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is Scrolling) return@launch
+            channelRepository.updateChannelInfo(channel)
+            navigateToChannel()
         }
     }
 

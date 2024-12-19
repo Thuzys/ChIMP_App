@@ -25,7 +25,7 @@ class ScrollingViewKtTest {
                 List(nr) {
                     ChannelBasicInfo(
                         cId = nr.toUInt(),
-                        name = ChannelName("${nr}ºChannel"),
+                        name = ChannelName("${nr}ºChannel", "${nr}ºChannel"),
                         owner = UserInfo(nr.toUInt(), "Owner"),
                     )
                 }

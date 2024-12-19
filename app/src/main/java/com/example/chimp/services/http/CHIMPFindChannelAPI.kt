@@ -20,7 +20,6 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
-import java.security.acl.Owner
 
 /**
  * Implementation of the FindChannelsService that fetches channel data from a remote server using HTTP.
@@ -57,7 +56,7 @@ class CHIMPFindChannelAPI(
 
     override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
         client
-            .get("$CHANNEL_PUBLIC_BASE_URL/${channelName.name}")
+            .get("$CHANNEL_PUBLIC_BASE_URL/${channelName.displayName}")
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
@@ -126,7 +125,7 @@ class CHIMPFindChannelAPI(
         val name: String,
         val displayName: String,
     ) {
-        fun toChannelName() = ChannelName(name)
+        fun toChannelName() = ChannelName(name, displayName)
     }
 
     companion object {

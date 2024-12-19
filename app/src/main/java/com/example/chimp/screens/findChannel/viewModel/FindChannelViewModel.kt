@@ -49,7 +49,7 @@ class FindChannelViewModel(
                     val curr = state.value
                     if (curr !is FindChannelScreenState.Idle) return@collect
                     _state.emit(FindChannelScreenState.Loading)
-                    when (val result = service.findChannelsByPartialName(ChannelName(searchChannelInput))) {
+                    when (val result = service.findChannelsByPartialName(ChannelName(searchChannelInput, ""))) {
                         is Success -> _state.emit(FindChannelScreenState.Idle(_searchText.value, result.value))
 
                         is Failure -> _state.emit(FindChannelScreenState.Error(

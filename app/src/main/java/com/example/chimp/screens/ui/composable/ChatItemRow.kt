@@ -67,9 +67,9 @@ fun ChatItemRow(
                     .padding(start = 16.dp)
                     .weight(1f)
             ) {
-                if (chatItem.name.name.length < TEXT_LENGTH_THRESHOLD) {
+                if (chatItem.name.displayName.length < TEXT_LENGTH_THRESHOLD) {
                     Text(
-                        text = chatItem.name.name,
+                        text = chatItem.name.displayName,
                         style = MaterialTheme.typography.headlineSmall,
                         maxLines = 1,
                         modifier = Modifier.wrapContentWidth()
@@ -77,7 +77,7 @@ fun ChatItemRow(
                 } else {
                     Marquee {
                         Text(
-                            text = chatItem.name.name,
+                            text = chatItem.name.displayName,
                             style = MaterialTheme.typography.headlineSmall,
                             maxLines = 1,
                             modifier = Modifier.wrapContentWidth()
@@ -103,7 +103,10 @@ fun ChatItemRow(
 private fun ChatItemRowPreview() {
     val item = ChannelBasicInfo(
         1u,
-        ChannelName("One Piece Fansssssssssss"),
+        ChannelName(
+            "One Piece Fans",
+            "One Piece Fansssssssssss"
+        ),
         UserInfo(1u, "Thuzy"),
         R.drawable.thuzy_profile_pic,
     )

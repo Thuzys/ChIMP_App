@@ -84,7 +84,10 @@ private fun ChatListPreview() {
         publicChannels = flowOf(List(37) {
             ChannelBasicInfo(
                 cId = it.toUInt(),
-                name = ChannelName("Channel $it"),
+                name = ChannelName(
+                    "Channel $it",
+                    "Channel $it"
+                ),
                 icon = R.drawable.github_mark,
                 owner = UserInfo(it.toUInt(), "Owner $it")
             )

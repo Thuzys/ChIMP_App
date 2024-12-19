@@ -92,6 +92,11 @@ const val SWIPEBLE_ROW_TAG = "SwipeableRow"
 const val INFO_ICON_TAG = "InfoIcon"
 
 /**
+ * The height of the channel item.
+ */
+const val CHANNEL_ITEM_HEIGHT = 90
+
+/**
  * The tag for the delete or leave icon.
  */
 const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
@@ -154,18 +159,17 @@ internal fun ScrollingView(
                             Row(
                                 modifier = Modifier
                                     .width(ACTION_LIST_WIDTH.dp)
-                                    .fillParentMaxHeight(),
+                                    .height(LIST_ITEM_HEIGHT.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Column(
-                                    modifier = Modifier
-                                        .fillParentMaxHeight(),
+                                    modifier = Modifier.height(LIST_ITEM_HEIGHT.dp),
                                     verticalArrangement = Arrangement.Center,
                                 ) {
                                     ActionIcon(
                                         modifier = Modifier
-                                            .fillParentMaxHeight()
+                                            .height(LIST_ITEM_HEIGHT.dp)
                                             .weight(1f)
                                             .testTag(DELETE_OR_LEAVE_ICON_TAG)
                                             .width(ACTION_ICON_WIDTH.dp),
@@ -176,13 +180,12 @@ internal fun ScrollingView(
                                     )
                                 }
                                 Column(
-                                    modifier = Modifier
-                                        .fillParentMaxHeight(),
+                                    modifier = Modifier.height(LIST_ITEM_HEIGHT.dp),
                                     verticalArrangement = Arrangement.Center,
                                 ) {
                                     ActionIcon(
                                         modifier = Modifier
-                                            .fillParentMaxHeight()
+                                            .height(LIST_ITEM_HEIGHT.dp)
                                             .width(ACTION_ICON_WIDTH.dp)
                                             .testTag(INFO_ICON_TAG)
                                             .padding(end = ACTION_ICON_PADDING.dp),
@@ -198,7 +201,7 @@ internal fun ScrollingView(
                         ChatItemRow(
                             modifier = Modifier
                                 .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
-                                .fillParentMaxWidth()
+                                .height(LIST_ITEM_HEIGHT.dp)
                                 .background(Color.Transparent),
                             chatItem = channel,
                             buttonModifier = Modifier.testTag(CHANNEL_BUTTON_TAG),
@@ -233,7 +236,10 @@ private fun IdleViewPreview() {
                 List(27) {
                     ChannelBasicInfo(
                         cId = it.toUInt(),
-                        name = ChannelName("Channel $it"),
+                        name = ChannelName(
+                            "Channel $it",
+                            "Channel $it"
+                        ),
                         owner = UserInfo(it.toUInt(), "Owner $it")
                     )
                 }

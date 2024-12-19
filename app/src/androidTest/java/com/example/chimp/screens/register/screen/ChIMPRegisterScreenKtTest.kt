@@ -15,7 +15,7 @@ import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.Su
 import com.example.chimp.screens.ui.views.ERROR_VIEW_TEST_TAG
 import com.example.chimp.screens.ui.views.LOADING_VIEW_TEST_TAG
 import com.example.chimp.services.validation.ChIMPFormValidator
-import com.example.chimp.utils.FakeUserInfoRepositoryRule
+import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
 import org.junit.Rule
 import org.junit.Test
 

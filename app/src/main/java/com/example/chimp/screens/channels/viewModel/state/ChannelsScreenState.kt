@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
  * - Scrolling: The user is scrolling through the channels.
  * - Info: The user is viewing the information of a channel.
  */
-sealed interface ChannelsScreenState {
+internal sealed interface ChannelsScreenState {
     data object Initial : ChannelsScreenState
     data object Loading : ChannelsScreenState
     data object BackToRegistration : ChannelsScreenState

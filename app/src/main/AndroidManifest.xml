@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".screens.channel.activity.ChannelActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ChIMP"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
             android:name=".screens.channels.activity.ChannelsActivity"
             android:exported="true"
             android:launchMode="singleInstance"

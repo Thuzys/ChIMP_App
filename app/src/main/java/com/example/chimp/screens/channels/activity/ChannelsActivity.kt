@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.example.chimp.application.ChIMPApplication
 import com.example.chimp.screens.about.activity.AboutActivity
+import com.example.chimp.screens.channel.activity.ChannelActivity
 import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.channels.screen.ChIMPChannelsScreen
 import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
@@ -27,7 +28,8 @@ class ChannelsActivity : ComponentActivity() {
         factoryProducer = {
             ChannelsViewModelFactory(
                 service = (application as ChIMPApplication).channelsService,
-                userInfoRepository = (application as ChIMPApplication).userInfoRepository
+                userInfoRepository = (application as ChIMPApplication).userInfoRepository,
+                channelRepository = (application as ChIMPApplication).channelRepository
             )
         }
     )
@@ -44,6 +46,10 @@ class ChannelsActivity : ComponentActivity() {
         Intent(this, FindChannelActivity::class.java)
     }
 
+    private val navigateToChannelIntent: Intent by lazy {
+        Intent(this, ChannelActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,12 +58,13 @@ class ChannelsActivity : ComponentActivity() {
                 ChIMPChannelsScreen(
                     onFindChannelNavigate = { startActivity(navigateToFindChannelIntent) },
                     onAboutNavigate = { startActivity(navigateToAboutIntent) },
+                    onChannelNavigate = { startActivity(navigateToChannelIntent) },
+                    vm = viewModel,
                     onRegisterNavigate =
                     {
                         startActivity(navigateToRegisterIntent)
                         finish()
                     },
-                    vm = viewModel
                 )
             }
         }

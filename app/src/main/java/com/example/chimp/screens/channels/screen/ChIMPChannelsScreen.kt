@@ -25,7 +25,8 @@ internal fun ChIMPChannelsScreen(
     vm: ChannelsViewModel,
     onFindChannelNavigate: () -> Unit = {},
     onAboutNavigate: () -> Unit = {},
-    onRegisterNavigate: () -> Unit = {}
+    onRegisterNavigate: () -> Unit = {},
+    onChannelNavigate: () -> Unit = {}
 ) {
 
     val registerNavigate = {
@@ -78,6 +79,7 @@ internal fun ChIMPChannelsScreen(
                         onReload = vm::reset,
                         onDeleteOrLeave = vm::deleteOrLeave,
                         onInfoClick = vm::toChannelInfo,
+                        onChannelClick = { vm.onChannelClick(it, onChannelNavigate) },
                         onLoadMore = vm::loadMore
                     )
                 }

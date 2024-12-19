@@ -19,7 +19,7 @@ internal fun List<ChannelListInputModel>.toChannelInfo(): List<ChannelBasicInfo>
     return map {
         ChannelBasicInfo(
             cId = it.id,
-            name = ChannelName(it.name.displayName),
+            name = ChannelName(it.name.name, it.name.displayName),
             icon = it.icon.toIcon(),
             owner = UserInfo(it.owner.id, it.owner.name),
         )
