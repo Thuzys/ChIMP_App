@@ -15,6 +15,8 @@ import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenSt
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.ui.views.LoadingView
 
+const val FIND_CHANNEL_SCREEN_TAG = "FindChannelScreen"
+
 @Composable
 fun ChIMPFindChannelScreen(
     modifier: Modifier = Modifier,
@@ -23,7 +25,7 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit
 ) {
     when (val curr = viewModel.state.collectAsState().value) {
-        is FindChannelScreenState.Idle -> {
+        is FindChannelScreenState.Scrolling -> {
             FindChannelScreenAux(
                 bottomBar = {
                     MenuBottomBar(

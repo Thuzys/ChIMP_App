@@ -3,12 +3,22 @@ package com.example.chimp.services.http
 import android.util.Log
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.users.User
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.screens.channels.model.FetchChannelsResult
+import com.example.chimp.screens.findChannel.model.FindChannelsResult
+import com.example.chimp.services.http.ChIMPChannelsAPI.Companion.CHANNELS_SERVICE_TAG
+import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
+import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
+import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
+import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
+import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -18,6 +28,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.Serializable
 import java.security.acl.Owner
@@ -29,12 +41,18 @@ import java.security.acl.Owner
  */
 class CHIMPFindChannelAPI(
     private val client: HttpClient,
-    private val url: String
+    private val url: String,
+    private val user: Flow<User?>
 ): FindChannelService {
+    private val _channels = MutableStateFlow<List<ChannelBasicInfo>>(emptyList())
+    private val _hasMore = MutableStateFlow(false)
+    private var idx = 0
+    private val limit = 10
+    private val hasMore = limit + 1
 
     private val unknownError = "Unknown error, please verify internet connection and try again later."
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> =
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> =
         client
             .put("$url$CHANNEL_BASE_URL") {
                 contentType(ContentType.Application.Json)
@@ -44,26 +62,30 @@ class CHIMPFindChannelAPI(
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(response.body<ChannelDto>().toChannelBasicInfo())
+                        success(response.body<ChannelInputModel>().toChannelInfo())
                     } else {
-                        failure(response.body<ErrorDto>().toResponseErrors())
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
                     return failure(ResponseError(cause = e.message ?: unknownError))
                 }
-
             }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
+    override suspend fun getChannels(name: String): Either<ResponseError, Unit>{
+        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         client
-            .get("$CHANNEL_PUBLIC_BASE_URL/${channelName.name}")
+            .get("$CHANNEL_PUBLIC_BASE_URL/$name?limit=$hasMore") { makeHeader(curr) }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(flowOf(response.body<List<ChannelDto>>().map { it.toChannelBasicInfo() }))
+                        val channels = response.body<List<ChannelListInputModel>>()
+                        val hasMore = channels.size == hasMore
+                        _channels.emit(channels.toChannelInfo().take(limit))
+                        _hasMore.emit(hasMore)
+                        success(Unit)
                     } else {
-                        failure(response.body<ErrorDto>().toResponseErrors())
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
@@ -72,18 +94,47 @@ class CHIMPFindChannelAPI(
             }
     }
 
-    override suspend fun getChannels(
-        offset: UInt?,
-        limit: UInt?,
-    ): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
+    override suspend fun getChannels(): Either<ResponseError, FindChannelsResult> {
+        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        idx = 0
         client
-            .get("$CHANNEL_PUBLIC_BASE_URL?offset=$offset&limit=$limit")
+            .get("$CHANNEL_PUBLIC_BASE_URL?limit=$hasMore") { makeHeader(curr) }
+            .let { response ->
+                try {
+                    return when(response.status) {
+                        HttpStatusCode.OK -> {
+                            val channels: List<ChannelListInputModel> = response.body()
+                            val hasMore = channels.size == hasMore
+                            _channels.emit(channels.toChannelInfo().take(limit))
+                            _hasMore.emit(hasMore)
+                            success(FetchChannelsResult(_channels, _hasMore))
+                        }
+                        HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
+                        else -> failure(response.body<ErrorInputModel>().toResponseError())
+                    }
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
+                }
+
+            }
+    }
+
+    override suspend fun fetchMore(): Either<ResponseError, Unit> {
+        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        idx += limit
+        client
+            .get("$CHANNEL_PUBLIC_BASE_URL?offset=$idx&limit=$hasMore") { makeHeader(curr) }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(flowOf(response.body<List<ChannelDto>>().map { it.toChannelBasicInfo() }))
+                        val channels = response.body<List<ChannelListInputModel>>()
+                        val hasMore = channels.size == hasMore
+                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
+                        _hasMore.emit(hasMore)
+                        success(Unit)
                     } else {
-                        failure(response.body<ErrorDto>().toResponseErrors())
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
@@ -92,41 +143,44 @@ class CHIMPFindChannelAPI(
             }
     }
 
-    @Serializable
-    private data class ErrorDto(
-        val title: String,
-        val type: String,
-    ) {
-        fun toResponseErrors() = ResponseError(cause = title, urlInfo = type)
+    override suspend fun fetchMore(name: String): Either<ResponseError, Unit> {
+        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        idx += limit
+        client
+            .get("$CHANNEL_PUBLIC_BASE_URL/$name&offset=$idx&limit=$hasMore") { makeHeader(curr) }
+            .let { response ->
+                try {
+                    return if (response.status == HttpStatusCode.OK) {
+                        val channels = response.body<List<ChannelListInputModel>>()
+                        val hasMore = channels.size == hasMore
+                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
+                        _hasMore.emit(hasMore)
+                        success(Unit)
+                    } else {
+                        failure(response.body<ErrorInputModel>().toResponseError())
+                    }
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
+                }
+            }
     }
 
-    @Serializable
-    private data class ChannelDto(
-        val id: UInt,
-        val name: ChannelNameOutputModel,
-        val owner: OwnerOutputDto,
-        val description: String? = null,
-        val icon: String? = null,
-    ) {
-        fun toChannelBasicInfo() = ChannelBasicInfo(
-            cId = id,
-            name = name.toChannelName(),
-            owner = UserInfo(owner.id, owner.name),
-        )
-    }
-
-    @Serializable
-    private data class OwnerOutputDto(
-        val id: UInt,
-        val name: String,
-    )
-
-    @Serializable
-    private data class ChannelNameOutputModel(
-        val name: String,
-        val displayName: String,
-    ) {
-        fun toChannelName() = ChannelName(name)
+    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
+        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        client
+            .get("$url$CHANNEL_BASE_URL/${channel.cId}") { makeHeader(curr) }
+            .let { response ->
+                try {
+                    return if (response.status == HttpStatusCode.OK)
+                        success(response.body<ChannelInputModel>().toChannelInfo())
+                    else
+                        failure(response.body<ErrorInputModel>().toResponseError())
+                } catch (e: Exception) {
+                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(ResponseError(cause = e.message ?: unknownError))
+                }
+            }
     }
 
     companion object {
@@ -135,6 +189,9 @@ class CHIMPFindChannelAPI(
          */
         const val CHANNEL_BASE_URL = "/api/channels"
 
+        /**
+         * the base url for the public channels endpoints
+         */
         const val CHANNEL_PUBLIC_BASE_URL = "$CHANNEL_BASE_URL/public"
 
         /**

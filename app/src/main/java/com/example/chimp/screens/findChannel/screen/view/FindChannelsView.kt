@@ -31,7 +31,7 @@ import com.example.chimp.models.users.UserInfo
 @Composable
 fun IdleView(
     modifier: Modifier = Modifier,
-    state: FindChannelScreenState.Idle,
+    state: FindChannelScreenState.Scrolling,
     onJoin: (UInt) -> Unit,
     onSearch: (String) -> Unit = {},
     onFetchMore: () -> Unit = {}
@@ -80,7 +80,7 @@ fun IdleView(
 @Preview(showBackground = true)
 @Composable
 private fun ChatListPreview() {
-    val state = FindChannelScreenState.Idle(
+    val state = FindChannelScreenState.Scrolling(
         publicChannels = flowOf(List(37) {
             ChannelBasicInfo(
                 cId = it.toUInt(),
@@ -88,7 +88,7 @@ private fun ChatListPreview() {
                 icon = R.drawable.github_mark,
                 owner = UserInfo(it.toUInt(), "Owner $it")
             )
-        })
+        }),
     )
     IdleView(
         state = state,
