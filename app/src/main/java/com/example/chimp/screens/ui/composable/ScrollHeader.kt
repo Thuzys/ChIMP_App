@@ -1,4 +1,4 @@
-package com.example.chimp.screens.channels.screen.composable
+package com.example.chimp.screens.ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -57,7 +57,7 @@ private const val LOGOUT_ICON_PADDING = 8
  * @param logout The logout action.
  */
 @Composable
-internal fun ChannelsScrollHeader(logout: () -> Unit) {
+internal fun ScrollHeader(logout: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,5 +99,5 @@ internal fun ChannelsScrollHeader(logout: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun ChannelsScrollHeaderPreview() {
-    ChannelsScrollHeader(logout = {})
+    ScrollHeader(logout = {})
 }
