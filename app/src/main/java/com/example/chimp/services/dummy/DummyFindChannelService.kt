@@ -1,12 +1,14 @@
 package com.example.chimp.services.dummy
 
 import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.screens.findChannel.model.FindChannelsResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -30,19 +32,27 @@ class DummyFindChannelService: FindChannelService {
         ),
     )
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> {
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun findChannelsByPartialName(channelName: ChannelName): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
+    override suspend fun getChannels(name: String): Either<ResponseError, FindChannelsResult> {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getChannels(): Either<ResponseError, FindChannelsResult> {
+        TODO("Not yet implemented")
+    }
 
-    override suspend fun getChannels(
-        offset: UInt?,
-        limit: UInt?
-    ): Either<ResponseError, Flow<List<ChannelBasicInfo>>> {
-        return success(flowOf(channels))
+    override suspend fun fetchMore(): Either<ResponseError, Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchMore(name: String): Either<ResponseError, Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
+        TODO("Not yet implemented")
     }
 }

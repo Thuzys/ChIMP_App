@@ -8,7 +8,7 @@ import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.model.ChannelsServices
-import com.example.chimp.screens.channels.model.channel.FetchChannelsResult
+import com.example.chimp.screens.channels.model.FetchChannelsResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -21,7 +21,7 @@ internal class FakeService: ChannelsServices {
     suspend fun unlock() = controller.send(Unit)
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
         controller.receive()
-        return success(Pair(flow, flowOf(true)))
+        return success(FetchChannelsResult(flow, flowOf(true)))
     }
 
     override suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit> {

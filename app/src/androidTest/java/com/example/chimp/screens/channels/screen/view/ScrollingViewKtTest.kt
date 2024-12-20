@@ -8,7 +8,7 @@ import androidx.compose.ui.test.swipeRight
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.screen.composable.LOGOUT_ICON_TAG
+import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.ui.composable.LOAD_MORE_ICON_TAG
 import kotlinx.coroutines.flow.flowOf
@@ -146,7 +146,7 @@ class ScrollingViewKtTest {
 
         rule
             .onNodeWithTag(
-                testTag = SWIPEBLE_ROW_TAG,
+                testTag = SWIPEABLE_ROW_TAG,
                 useUnmergedTree = true
             )
             .performTouchInput { swipeRight() }
@@ -175,7 +175,7 @@ class ScrollingViewKtTest {
 
         rule
             .onNodeWithTag(
-                testTag = SWIPEBLE_ROW_TAG,
+                testTag = SWIPEABLE_ROW_TAG,
                 useUnmergedTree = true
             )
             .performTouchInput { swipeRight() }

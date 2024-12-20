@@ -46,7 +46,7 @@ class AboutActivity: ComponentActivity() {
                     bottomBar = {
                         MenuBottomBar(
                             aboutIsEnable = false,
-                            addChannelClick = { startActivity(navigateToFindChannelIntent) },
+                            findChannelClick = { startActivity(navigateToFindChannelIntent) },
                             onMenuClick = { startActivity(navigateToChatsIntent) }
                         )
                     }
