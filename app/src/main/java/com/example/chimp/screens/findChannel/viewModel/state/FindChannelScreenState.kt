@@ -35,16 +35,39 @@ sealed interface FindChannelScreenState {
     ) : FindChannelScreenState
 
     /**
-     * The screen is idle.
+     * The user is scrolling through the channels.
+     */
+    sealed class Scrolling : FindChannelScreenState {
+        abstract val searchChannelInput: String
+        abstract val publicChannels: Flow<List<ChannelBasicInfo>>
+        abstract val hasMore: Flow<Boolean>
+    }
+
+    /**
+     * The screen is showing the normal scrolling state.
      *
      * @property searchChannelInput the search channel input
-     * @property publicChannels the public channels found
+     * @property publicChannels the public channels
+     * @property hasMore whether there are more channels to fetch
      */
-    data class Scrolling(
-        val searchChannelInput: String = "",
-        val publicChannels: Flow<List<ChannelBasicInfo>>,
-        val hasMore: Flow<Boolean>,
-    ) : FindChannelScreenState
+    data class NormalScrolling(
+        override val publicChannels: Flow<List<ChannelBasicInfo>>,
+        override val hasMore: Flow<Boolean>,
+        override val searchChannelInput: String = ""
+    ) : Scrolling()
+
+    /**
+     * The screen is showing the searching scrolling state.
+     *
+     * @property searchChannelInput the search channel input
+     * @property publicChannels the public channels
+     * @property hasMore whether there are more channels to fetch
+     */
+    data class SearchingScrolling(
+        override val searchChannelInput: String,
+        override val publicChannels: Flow<List<ChannelBasicInfo>>,
+        override val hasMore: Flow<Boolean>
+    ) : Scrolling()
 
     /**
      * The screen is showing the information of a channel.
