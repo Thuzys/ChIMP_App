@@ -90,7 +90,6 @@ fun ChatItemRow(
                 text = buttonString,
                 onClick = onClick,
             )
-//            MakeJoinButton { onJoin() }
         }
     }
 }

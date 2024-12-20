@@ -26,9 +26,7 @@ interface FindChannelService {
      * @param name the partial name of the channel to find
      * @return an [Either] with a [Flow] of [ChannelBasicInfo] if the channels were found,
      */
-    suspend fun getChannels(
-        name: String,
-    ): Either<ResponseError, Unit>
+    suspend fun getChannels(name: String, ): Either<ResponseError, FindChannelsResult>
 
     /**
      * Get a list of public channels.
