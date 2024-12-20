@@ -31,6 +31,7 @@ import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
+import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.LoadMoreIcon
@@ -44,7 +45,6 @@ import kotlinx.coroutines.flow.flowOf
  * The tag for the ChannelScrollView.
  */
 const val CHANNEL_SCROLLING_VIEW = "ChatsIdleView"
-
 
 /**
  * The tag for the header of the IdleView.
@@ -130,6 +130,7 @@ internal fun ScrollingView(
     ) {
         ScrollHeader(R.string.my_chats, onLogout)
         SwipeRefresh(
+            modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = SwipeRefreshState(false),
             onRefresh = {
                 onReload()

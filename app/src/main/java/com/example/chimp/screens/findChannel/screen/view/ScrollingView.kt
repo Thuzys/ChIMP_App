@@ -27,8 +27,6 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.screen.view.CHANNEL_BUTTON_TAG
-import com.example.chimp.screens.channels.screen.view.CHATS_IDLE_VIEW_HEADER_TAG
 import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
 import com.example.chimp.screens.channels.screen.view.SWIPEABLE_ROW_TAG
 import com.example.chimp.screens.findChannel.screen.FIND_CHANNEL_SCREEN_TAG
@@ -42,6 +40,21 @@ import com.example.chimp.screens.ui.composable.SwipeableRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
+
+/**
+ * The tag for the header of the scrolling view.
+ */
+const val FIND_CHANNEL_SCROLLING_VIEW_HEADER_TAG = "FindChannelScrollingViewHeader"
+
+/**
+ * The tag for the join button.
+ */
+const val FIND_CHANNEL_BUTTON_TAG = "FindChannelButton"
+
+/**
+ * The tag for the swipe refresh.
+ */
+const val SWIPE_REFRESH_TAG = "SwipeRefresh"
 
 /**
  * The height of the list item.
@@ -96,6 +109,7 @@ internal fun ScrollingView(
             onValueChange = onSearchChange
         )
         SwipeRefresh(
+            modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = rememberSwipeRefreshState(false),
             onRefresh = {
                 if (publicChannels is FindChannelScreenState.NormalScrolling) {
@@ -149,11 +163,11 @@ internal fun ScrollingView(
                     ) {
                         ChatItemRow(
                             modifier = Modifier
-                                .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
+                                .testTag(FIND_CHANNEL_SCROLLING_VIEW_HEADER_TAG)
                                 .fillParentMaxWidth()
                                 .background(Color.Transparent),
                             chatItem = channel,
-                            buttonModifier = Modifier.testTag(CHANNEL_BUTTON_TAG),
+                            buttonModifier = Modifier.testTag(FIND_CHANNEL_BUTTON_TAG),
                             buttonString = stringResource(R.string.join_channel),
                             onClick = { onJoin(channel.cId) },
                         )
