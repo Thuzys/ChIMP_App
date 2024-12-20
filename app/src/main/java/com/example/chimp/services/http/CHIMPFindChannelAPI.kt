@@ -1,7 +1,6 @@
 package com.example.chimp.services.http
 
 import android.util.Log
-import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
@@ -10,10 +9,7 @@ import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.User
-import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
-import com.example.chimp.services.http.ChIMPChannelsAPI.Companion.CHANNELS_SERVICE_TAG
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
 import com.example.chimp.services.http.dtos.input.channel.toChannelInfo

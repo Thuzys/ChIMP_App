@@ -115,7 +115,7 @@ fun SwipeableHeaderPreview() {
             ChatsHeader(
                 chat = ChannelBasicInfo(
                     cId = 0u,
-                    name = ChannelName("Channel name"),
+                    name = ChannelName("Channel name", "Channel name "),
                     owner = UserInfo(1u, "Owner name"),
                 ),
                 onClick = {}

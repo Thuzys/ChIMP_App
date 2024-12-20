@@ -5,31 +5,42 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.chimp.BuildConfig
+import com.example.chimp.infrastructure.ChannelPreferencesRepository
 import com.example.chimp.infrastructure.UserInfoPreferencesRepository
+import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
-import com.example.chimp.services.dummy.DummyFindChannelService
+import com.example.chimp.services.http.ChIMPChannelAPI
 import com.example.chimp.services.http.CHIMPFindChannelAPI
 import com.example.chimp.services.http.ChIMPChannelsAPI
 import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.sse.SSE
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlin.time.Duration.Companion.minutes
 
 interface DependenciesContainer {
     val loginService: RegisterService
     val channelsService: ChannelsServices
+    val channelService: ChannelService
     val findChannelService: FindChannelService
     val formValidation: FormValidation
-    val preferencesDataStore: DataStore<Preferences>
     val userInfoRepository: UserInfoRepository
+    val channelRepository: ChannelRepository
+    val preferencesDataStore: DataStore<Preferences>
 }
+
+private const val RECONNECTION_TIME_IN_MINUTES = 5
 
 class ChIMPApplication : Application(), DependenciesContainer {
     private val client by lazy {
@@ -41,6 +52,17 @@ class ChIMPApplication : Application(), DependenciesContainer {
                     isLenient = true
                 })
             }
+            install(HttpCookies)
+            install(SSE) {
+                reconnectionTime = RECONNECTION_TIME_IN_MINUTES.minutes
+                showRetryEvents()
+                showCommentEvents()
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 1500000 // 15 minutes //TODO: Change this value only for testing
+                connectTimeoutMillis = 1500000 // 15 minutes
+                socketTimeoutMillis = 1500000 // 15 minutes
+            }
         }
     }
 
@@ -48,11 +70,9 @@ class ChIMPApplication : Application(), DependenciesContainer {
 
     override val loginService: RegisterService by lazy {
         ChIMPRegisterAPI(client, url)
-//        DummyRegisterService()
     }
     override val channelsService: ChannelsServices by lazy {
         ChIMPChannelsAPI(client, url, userInfoRepository.userInfo)
-//        DummyChannelsService()
     }
 
     override val findChannelService: FindChannelService by lazy {
@@ -63,10 +83,18 @@ class ChIMPApplication : Application(), DependenciesContainer {
         ChIMPFormValidator()
     }
 
+    override val channelService: ChannelService by lazy {
+        ChIMPChannelAPI(client, url, userInfoRepository.userInfo, channelRepository.channelInfo)
+    }
+
     override val preferencesDataStore: DataStore<Preferences> by
     preferencesDataStore(name = "preferences")
 
     override val userInfoRepository: UserInfoRepository by lazy {
         UserInfoPreferencesRepository(preferencesDataStore)
+    }
+
+    override val channelRepository: ChannelRepository by lazy {
+        ChannelPreferencesRepository(preferencesDataStore)
     }
 }

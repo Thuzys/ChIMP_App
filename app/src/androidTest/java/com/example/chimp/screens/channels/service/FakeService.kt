@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flowOf
 
 internal class FakeService: ChannelsServices {
     private val controller = Channel<Unit>()
-    private val channelName = ChannelName("test")
+    private val channelName = ChannelName("test", "test")
     private val user = UserInfo(1u, "test")
     private val flow = MutableStateFlow(emptyList<ChannelBasicInfo>())
     suspend fun unlock() = controller.send(Unit)

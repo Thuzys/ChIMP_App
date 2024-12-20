@@ -10,7 +10,7 @@ import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Ba
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
-import com.example.chimp.utils.FakeUserInfoRepositoryRule
+import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
 import com.example.chimp.utils.ReplaceMainDispatcherRule
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -40,7 +40,7 @@ class ChannelsViewModelTest {
         }
 
     @Test
-    fun view_model_loads_channels_goes_to_loading_state() =
+    fun view_model_load_channels_goes_to_loading_state() =
         runTest(dispatcherRule.testDispatcher) {
             val service = FakeService()
             val vm = ChannelsViewModel(
@@ -79,7 +79,7 @@ class ChannelsViewModelTest {
         runTest(dispatcherRule.testDispatcher) {
             val service = FakeService()
             val initialState = Scrolling(flowOf(emptyList()), flowOf(false))
-            val channel = ChannelBasicInfo(1u, ChannelName("test"), UserInfo(1u, "test"))
+            val channel = ChannelBasicInfo(1u, ChannelName("test", "test"), UserInfo(1u, "test"))
             val vm = ChannelsViewModel(
                 service,
                 fakeUserInfoRepo.repo,

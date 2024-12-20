@@ -21,7 +21,7 @@ class DummyChannelsService : ChannelsServices {
     }
 
     override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
-        return success(ChannelInfo(1u, ChannelName("name"), owner = UserInfo(1u, "owner")))
+        return success(ChannelInfo(1u, ChannelName("name", "name"), owner = UserInfo(1u, "owner")))
     }
 
     override suspend fun fetchMore(): Either<ResponseError, Unit> {

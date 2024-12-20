@@ -33,6 +33,7 @@ import kotlinx.serialization.json.Json
  *
  * @property client the HTTP client used to make the requests
  * @property url the base URL for the requests
+ * @property user the flow of the current user
  */
 class ChIMPChannelsAPI(
     private val client: HttpClient,
@@ -47,7 +48,7 @@ class ChIMPChannelsAPI(
     private val api = "$url/api/channels"
 
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         idx = 0
         client
             .get("$api/my?limit=$hasMore") { makeHeader(curr) }
@@ -73,7 +74,7 @@ class ChIMPChannelsAPI(
     }
 
     override suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         client
             .delete("$api/${channel.cId}") { makeHeader(curr) }
             .let { response ->
@@ -94,7 +95,7 @@ class ChIMPChannelsAPI(
 
 
     override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         client
             .get("$api/${channel.cId}") { makeHeader(curr) }
             .let { response ->
@@ -112,7 +113,7 @@ class ChIMPChannelsAPI(
     }
 
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         Log.i(CHANNELS_SERVICE_TAG, "Fetching more channels")
         idx += limit
         client

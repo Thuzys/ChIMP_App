@@ -1,4 +1,4 @@
-package com.example.chimp.screens.channels.screen.composable
+package com.example.chimp.screens.channel.screen.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

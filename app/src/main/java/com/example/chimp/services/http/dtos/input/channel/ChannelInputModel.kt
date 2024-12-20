@@ -17,7 +17,7 @@ internal data class ChannelInputModel(
 ) {
     fun toChannelInfo() = ChannelInfo(
         cId = id,
-        name = ChannelName(name.displayName),
+        name = ChannelName(name.name, name.displayName),
         description = if (description == "") null else description,
         icon = icon.toIcon(),
         owner = UserInfo(owner.id, owner.name)

@@ -1,4 +1,4 @@
-package com.example.chimp.utils
+package com.example.chimp.utils.repository
 
 import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.models.users.User
