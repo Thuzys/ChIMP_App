@@ -1,9 +1,9 @@
 package com.example.chimp.screens.findChannel.model
 
-import com.example.chimp.either.Either
-import com.example.chimp.screens.chats.model.channel.Channel
-import com.example.chimp.screens.chats.model.channel.ChannelName
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.either.Either
+import com.example.chimp.models.errors.ResponseError
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -14,26 +14,30 @@ interface FindChannelService {
      * Join a channel.
      * @param channelId the id of the channel to join
      * @return an [Either] with [Unit] if the channel was joined,
-     * or a [ResponseErrors] if it failed.
+     * or a [ResponseError] if it failed.
      */
-    suspend fun joinChannel(channelId: UInt): Either<ResponseErrors, Unit>
+    suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo>
 
     /**
-     * Find a channel by its name.
+     * Find channels by their partial names.
      *
-     * @param channelName the name of the channel to find
-     * @return an [Either] with the [Channel] if the channel was found,
-     * or a [ResponseErrors] if it failed.
+     * @param channelName the partial name of the channel to find
+     * @return an [Either] with a [Flow] of [ChannelBasicInfo] if the channels were found,
      */
-    suspend fun findChannel(channelName: ChannelName): Either<ResponseErrors, FindChannelItem>
+    suspend fun findChannelsByPartialName(
+        channelName: ChannelName,
+    ): Either<ResponseError, Flow<List<ChannelBasicInfo>>>
 
     /**
      * Get a list of channels.
      *
      * @param offset the offset to start fetching channels from
      * @param limit the maximum number of channels to fetch
-     * @return an [Either] with a [Flow] of [Channel] if the channels were found,
-     * or a [ResponseErrors] if it failed.
+     * @return an [Either] with a [Flow] of [ChannelBasicInfo] if the channels were found,
+     * or a [ResponseError] if it failed.
      */
-    suspend fun getChannels(offset: UInt?, limit: UInt?): Either<ResponseErrors, Flow<FindChannelItem>>
+    suspend fun getChannels(
+        offset: UInt?,
+        limit: UInt?,
+    ): Either<ResponseError, Flow<List<ChannelBasicInfo>>>
 }

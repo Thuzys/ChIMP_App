@@ -10,18 +10,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.application.DependenciesContainer
-import com.example.chimp.screens.chats.activity.ChatsActivity
+import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.findChannel.screen.ChIMPFindChannelScreen
 import com.example.chimp.screens.findChannel.viewModel.FindChannelVMFactory
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel
 import com.example.chimp.screens.about.activity.AboutActivity
 import com.example.chimp.screens.ui.composable.MenuBottomBar
+import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
+/**
+ * The activity that represents the find channel screen.
+ */
 class FindChannelActivity: ComponentActivity() {
     private val viewModel by viewModels<FindChannelViewModel>(
         factoryProducer = {
-            FindChannelVMFactory((application as DependenciesContainer).findChannelService)
+            FindChannelVMFactory(
+                (application as DependenciesContainer).findChannelService,
+                (application as DependenciesContainer).userInfoRepository
+            )
         }
     )
 
@@ -30,7 +37,7 @@ class FindChannelActivity: ComponentActivity() {
     }
 
     private val navigateToChatsIntent by lazy {
-        Intent(this, ChatsActivity::class.java)
+        Intent(this, ChannelsActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,18 +46,15 @@ class FindChannelActivity: ComponentActivity() {
             ChIMPTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        MenuBottomBar(
-                            addChannelIsEnable = false,
-                            aboutClick = { startActivity(navigateToAboutIntent) },
-                            onMenuClick = { startActivity(navigateToChatsIntent) },
-                        )
-                    }
                 ) { innerPadding ->
                     ChIMPFindChannelScreen(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier =
+                        Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
                         viewModel = viewModel,
-                        onJoinChannel = { startActivity(navigateToChatsIntent) }
+                        onAboutNavigate = { startActivity(navigateToAboutIntent) },
+                        onChatsNavigate = { startActivity(navigateToChatsIntent) },
                     )
                 }
             }

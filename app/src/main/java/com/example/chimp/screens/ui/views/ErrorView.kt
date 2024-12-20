@@ -1,6 +1,7 @@
 package com.example.chimp.screens.ui.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,15 +22,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.errors.ResponseErrors
+import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.screens.ui.composable.GradientBox
-import com.example.chimp.screens.ui.composable.HyperlinkText
 import com.example.chimp.screens.ui.composable.MakeButton
 
+/**
+ * The tag for the error view.
+ */
 const val ERROR_VIEW_TEST_TAG = "ErrorView"
+
+/**
+ * The tag for the error button.
+ */
+const val ERROR_BUTTON_TEST_TAG = "ErrorButton"
 
 /**
  * The radius of the rounded corners of the column.
@@ -37,12 +51,16 @@ private const val COLUMN_CONNER_RADIUS = 16
 private const val BUTTON_PADDING = 16
 
 @Composable
-fun ErrorView(
-    modifier: Modifier = Modifier,
-    error: ResponseErrors,
+internal fun ErrorView(
+    modifier: Modifier,
     tryAgain: () -> Unit = {},
+    error: ResponseError
 ) {
     GradientBox(
+        colors = listOf(
+            MaterialTheme.colorScheme.error,
+            MaterialTheme.colorScheme.onError,
+        ),
         modifier = modifier.testTag(ERROR_VIEW_TEST_TAG),
     ) {
         Column(
@@ -55,6 +73,7 @@ fun ErrorView(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxSize(0.33f)
+                    .wrapContentHeight()
                     .clip(
                         shape = RoundedCornerShape(
                             topStart = COLUMN_CONNER_RADIUS.dp,
@@ -70,16 +89,23 @@ fun ErrorView(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .weight(1f)
+                        .wrapContentHeight()
+                        .verticalScroll(rememberScrollState()),
                     contentAlignment = Alignment.Center
                 ) {
-                    HyperlinkText(
+                    Text(
                         text = error.cause,
-                        url = error.urlInfo
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
                     )
                 }
                 MakeButton(
-                    modifier = Modifier.padding(BUTTON_PADDING.dp),
+                    modifier = Modifier
+                        .testTag(ERROR_BUTTON_TEST_TAG)
+                        .padding(BUTTON_PADDING.dp),
+                    color = MaterialTheme.colorScheme.error,
                     text = stringResource(R.string.try_again),
                     onClick = tryAgain,
                 )
@@ -94,6 +120,6 @@ fun ErrorView(
 private fun ErrorViewPreview() {
     ErrorView(
         modifier = Modifier.fillMaxSize(),
-        error = ResponseErrors("Some error", "Some message")
+        error = ResponseError("Error", "https://www.google.com")
     )
 }
