@@ -54,10 +54,11 @@ private const val LOGOUT_ICON_PADDING = 8
 /**
  * The header for the channels scroll.
  *
+ * @param titleResId The string resource ID for the title.
  * @param logout The logout action.
  */
 @Composable
-internal fun ScrollHeader(logout: () -> Unit) {
+fun ScrollHeader(titleResId: Int, logout: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +76,7 @@ internal fun ScrollHeader(logout: () -> Unit) {
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.my_chats),
+            text = stringResource(titleResId),
             color = MaterialTheme.colorScheme.surface,
             style = MaterialTheme.typography.headlineMedium
         )
@@ -99,5 +100,5 @@ internal fun ScrollHeader(logout: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun ChannelsScrollHeaderPreview() {
-    ScrollHeader(logout = {})
+    ScrollHeader(titleResId = R.string.my_chats, logout = {})
 }

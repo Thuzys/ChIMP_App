@@ -29,7 +29,7 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.screen.composable.ChannelsScrollHeader
+import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
@@ -84,7 +84,7 @@ const val CHANNEL_BUTTON_TAG = "ChannelButton"
 /**
  * The tag for the swipeable row.
  */
-const val SWIPEBLE_ROW_TAG = "SwipeableRow"
+const val SWIPEABLE_ROW_TAG = "SwipeableRow"
 
 /**
  * The tag for the info icon.
@@ -128,7 +128,7 @@ internal fun ScrollingView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ChannelsScrollHeader(onLogout)
+        ScrollHeader(R.string.my_chats, onLogout)
         SwipeRefresh(
             state = SwipeRefreshState(false),
             onRefresh = {
@@ -148,7 +148,7 @@ internal fun ScrollingView(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .height(LIST_ITEM_HEIGHT.dp)
-                            .testTag(SWIPEBLE_ROW_TAG)
+                            .testTag(SWIPEABLE_ROW_TAG)
                             .padding(top = LIST_ITEM_PADDING.dp),
                         actions = {
                             Row(
