@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
  *
  * @param modifier Modifier The modifier to be applied to the layout.
  * @param chatsIsEnable Boolean The state of the menu button.
- * @param addChannelIsEnable Boolean The state of the add channel button.
+ * @param findChannelIsEnable Boolean The state of the find channel button.
  * @param aboutIsEnable Boolean The state of the about button.
  * @param onMenuClick () -> Unit The action to be performed when the menu button is clicked.
- * @param addChannelClick () -> Unit The action to be performed
+ * @param findChannelClick () -> Unit The action to be performed when the find channel button is clicked.
  * when the add channel button is clicked.
  * @param aboutClick () -> Unit The action to be performed when the about button is clicked.
  */
@@ -31,10 +31,10 @@ import androidx.compose.ui.unit.dp
 fun MenuBottomBar(
     modifier: Modifier = Modifier,
     chatsIsEnable: Boolean = true,
-    addChannelIsEnable: Boolean = true,
+    findChannelIsEnable: Boolean = true,
     aboutIsEnable: Boolean = true,
     onMenuClick: () -> Unit = {},
-    addChannelClick: () -> Unit = {},
+    findChannelClick: () -> Unit = {},
     aboutClick: () -> Unit = {},
 ) {
     BottomAppBar(
@@ -48,8 +48,8 @@ fun MenuBottomBar(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            onClick = addChannelClick,
-            enabled = addChannelIsEnable
+            onClick = findChannelClick,
+            enabled = findChannelIsEnable
         ) {
             Icon(Icons.Default.AddCircle, contentDescription = "AddChannel")
         }
