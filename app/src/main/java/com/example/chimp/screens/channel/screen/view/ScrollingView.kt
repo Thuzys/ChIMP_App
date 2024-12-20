@@ -1,22 +1,31 @@
 package com.example.chimp.screens.channel.screen.view
 
-import androidx.compose.foundation.background
+import android.view.ViewTreeObserver
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.message.Message
@@ -33,9 +42,13 @@ import java.sql.Timestamp
 
 const val SCROLLING_VIEW = "ScrollingView"
 
-const val LAZY_COLUMN_FILL_MAX_HEIGHT = 0.9f
+private const val LAZY_COLUMN_FILL_MAX_HEIGHT = 0.9f
 
-const val TEXT_INPUT_FILL_MAX_HEIGHT = 1f
+private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.8f
+
+private const val TEXT_INPUT_HEIGHT = 100
+
+private const val TEXT_INPUT_HEIGHT_WITH_KEYBOARD = 200
 
 /**
  * ScrollingView is a composable that displays the scrolling view of the channel.
@@ -57,16 +70,54 @@ internal fun ScrollingView(
     onSendMessage: (String) -> Unit = {},
     loadMore: () -> Unit = {}
 ) {
+    var textInputHeight by remember { mutableStateOf(TEXT_INPUT_HEIGHT.dp) }
+    var lazyColumnMaxHeight by remember { mutableFloatStateOf(LAZY_COLUMN_FILL_MAX_HEIGHT) }
+    val view = LocalView.current
+    val listState = rememberLazyListState()
+
+    DisposableEffect(view) {
+        val listener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = android.graphics.Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.height
+            val keypadHeight = screenHeight - rect.bottom
+            textInputHeight = if (keypadHeight > screenHeight * 0.15) {
+                TEXT_INPUT_HEIGHT_WITH_KEYBOARD.dp
+            } else {
+                TEXT_INPUT_HEIGHT.dp
+            }
+            lazyColumnMaxHeight = if (keypadHeight > screenHeight * 0.15) {
+                LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD
+            } else {
+                LAZY_COLUMN_FILL_MAX_HEIGHT
+            }
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+    }
+
     Column(
-        modifier = modifier.testTag(SCROLLING_VIEW),
+        modifier = modifier
+            .testTag(SCROLLING_VIEW)
+            .windowInsetsPadding(WindowInsets.ime),
     ) {
         val messages by state.messages.collectAsState(emptyList())
         val hasMore by state.hasMore.collectAsState(false)
         var isToShowOptions by remember { mutableStateOf(false) }
+        var firstElem by remember { mutableStateOf(messages.firstOrNull()) }
+        LaunchedEffect(messages) {
+            if (messages.firstOrNull() != firstElem) {
+                firstElem = messages.first()
+                listState.scrollToItem(0)
+            }
+        }
         ChatHeader(onBackClick, state.channel) { isToShowOptions = true }
         LazyColumn(
+            state = listState,
             modifier = Modifier
-                .fillMaxHeight(LAZY_COLUMN_FILL_MAX_HEIGHT)
+                .fillMaxHeight(lazyColumnMaxHeight)
                 .fillMaxWidth(),
             reverseLayout = true
         ) {
@@ -91,7 +142,7 @@ internal fun ScrollingView(
             }
         }
         TextInput(
-            modifier = Modifier.fillMaxHeight(TEXT_INPUT_FILL_MAX_HEIGHT),
+            modifier = Modifier.height(textInputHeight),
             onSendMessage = onSendMessage
         )
     }
@@ -151,7 +202,6 @@ private fun ChatPreview() {
     val flow = MutableStateFlow(list)
     ScrollingView(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.onSecondary)
             .fillMaxSize(),
         state = Scrolling(
             channel = ChannelBasicInfo(

@@ -49,6 +49,14 @@ internal class ChannelsViewModel(
         }
     }
 
+    fun backToRegistration() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is BackToRegistration) return@launch
+            userInfoRepository.clearUserInfo()
+        }
+    }
+
     fun onChannelClick(channel: ChannelBasicInfo , navigateToChannel: () -> Unit) {
         viewModelScope.launch {
             val curr = state.value

@@ -92,6 +92,8 @@ private fun ChatListPreview() {
                 owner = UserInfo(it.toUInt(), "Owner $it")
             )
         }),
+        searchChannelInput = "",
+        hasMore = flowOf(true),
     )
     IdleView(
         state = state,

@@ -70,7 +70,7 @@ internal fun ChannelsScrollHeader(logout: () -> Unit) {
             )
             .background(MaterialTheme.colorScheme.onSurface)
             .padding(HEADER_PADDING.dp),
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.weight(1f))

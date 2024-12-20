@@ -71,8 +71,7 @@ fun ChIMPFindChannelScreen(
                 )
             }
         }
-
-        FindChannelScreenState.Init -> {
+        is FindChannelScreenState.Initial -> {
             FindChannelScreenAux(
                 bottomBar = {
                     MenuBottomBar(
@@ -89,6 +88,8 @@ fun ChIMPFindChannelScreen(
                 )
             }
         }
+        is FindChannelScreenState.BackToRegistration -> TODO()
+        is FindChannelScreenState.Info -> TODO()
     }
 }
 

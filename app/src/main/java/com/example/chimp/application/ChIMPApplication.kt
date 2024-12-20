@@ -21,9 +21,13 @@ import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.sse.SSE
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlin.time.Duration.Companion.minutes
 
 interface DependenciesContainer {
     val loginService: RegisterService
@@ -36,6 +40,8 @@ interface DependenciesContainer {
     val preferencesDataStore: DataStore<Preferences>
 }
 
+private const val RECONNECTION_TIME_IN_MINUTES = 5
+
 class ChIMPApplication : Application(), DependenciesContainer {
     private val client by lazy {
         HttpClient(OkHttp) {
@@ -45,6 +51,17 @@ class ChIMPApplication : Application(), DependenciesContainer {
                     prettyPrint = true
                     isLenient = true
                 })
+            }
+            install(HttpCookies)
+            install(SSE) {
+                reconnectionTime = RECONNECTION_TIME_IN_MINUTES.minutes
+                showRetryEvents()
+                showCommentEvents()
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 1500000 // 15 minutes //TODO: Change this value only for testing
+                connectTimeoutMillis = 1500000 // 15 minutes
+                socketTimeoutMillis = 1500000 // 15 minutes
             }
         }
     }

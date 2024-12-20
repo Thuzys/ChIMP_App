@@ -21,8 +21,8 @@ data class ChannelName(
             val lines = preferences.lines()
             require(lines.size == 2) { "Invalid preferences string" }
             return ChannelName(
-                displayName = lines[0],
-                name = lines[1]
+                name = lines[0],
+                displayName = lines[1],
             )
         }
     }

@@ -101,6 +101,7 @@ internal fun ChIMPChannelsScreen(
                 )
             }
             is ChannelsScreenState.BackToRegistration -> {
+                vm.backToRegistration()
                 registerNavigate()
             }
         }

@@ -34,6 +34,7 @@ internal class ChannelViewModel(
     val channel = channelRepo.channelInfo
 
     fun loadMessages() {
+        viewModelScope.launch { service.initSseOnMessages() }
         viewModelScope.launch {
             val curr = state.value
             val user = userRepo.userInfo.first()
