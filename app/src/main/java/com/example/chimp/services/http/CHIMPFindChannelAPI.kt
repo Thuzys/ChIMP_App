@@ -30,9 +30,6 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.serialization.Serializable
-import java.security.acl.Owner
 
 /**
  * Implementation of the FindChannelsService that fetches channel data from a remote server using HTTP.
@@ -72,10 +69,11 @@ class CHIMPFindChannelAPI(
                 }
             }
 
-    override suspend fun getChannels(name: String): Either<ResponseError, Unit>{
+    private suspend fun fetchChannels(url: String): Either<ResponseError, FindChannelsResult> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        idx = 0
         client
-            .get("$CHANNEL_PUBLIC_BASE_URL/$name?limit=$hasMore") { makeHeader(curr) }
+            .get(url) { makeHeader(curr) }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
@@ -83,7 +81,7 @@ class CHIMPFindChannelAPI(
                         val hasMore = channels.size == hasMore
                         _channels.emit(channels.toChannelInfo().take(limit))
                         _hasMore.emit(hasMore)
-                        success(Unit)
+                        success(Pair(_channels, _hasMore))
                     } else {
                         failure(response.body<ErrorInputModel>().toResponseError())
                     }
@@ -94,76 +92,43 @@ class CHIMPFindChannelAPI(
             }
     }
 
+    override suspend fun getChannels(name: String): Either<ResponseError, FindChannelsResult> {
+        return fetchChannels("$CHANNEL_PUBLIC_BASE_URL/$name?limit=$hasMore")
+    }
+
     override suspend fun getChannels(): Either<ResponseError, FindChannelsResult> {
+        return fetchChannels("$CHANNEL_PUBLIC_BASE_URL?limit=$hasMore")
+    }
+
+    private suspend fun fetchMoreChannels(url: String): Either<ResponseError, Unit> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
-        idx = 0
+        idx += limit
         client
-            .get("$CHANNEL_PUBLIC_BASE_URL?limit=$hasMore") { makeHeader(curr) }
+            .get(url) { makeHeader(curr) }
             .let { response ->
                 try {
-                    return when(response.status) {
-                        HttpStatusCode.OK -> {
-                            val channels: List<ChannelListInputModel> = response.body()
-                            val hasMore = channels.size == hasMore
-                            _channels.emit(channels.toChannelInfo().take(limit))
-                            _hasMore.emit(hasMore)
-                            success(FetchChannelsResult(_channels, _hasMore))
-                        }
-                        HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
-                        else -> failure(response.body<ErrorInputModel>().toResponseError())
+                    return if (response.status == HttpStatusCode.OK) {
+                        val channels = response.body<List<ChannelListInputModel>>()
+                        val hasMore = channels.size == hasMore
+                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
+                        _hasMore.emit(hasMore)
+                        success(Unit)
+                    } else {
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
                     return failure(ResponseError(cause = e.message ?: unknownError))
                 }
-
             }
     }
 
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
-        idx += limit
-        client
-            .get("$CHANNEL_PUBLIC_BASE_URL?offset=$idx&limit=$hasMore") { makeHeader(curr) }
-            .let { response ->
-                try {
-                    return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelListInputModel>>()
-                        val hasMore = channels.size == hasMore
-                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
-                        _hasMore.emit(hasMore)
-                        success(Unit)
-                    } else {
-                        failure(response.body<ErrorInputModel>().toResponseError())
-                    }
-                } catch (e: Exception) {
-                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(ResponseError(cause = e.message ?: unknownError))
-                }
-            }
+        return fetchMoreChannels("$CHANNEL_PUBLIC_BASE_URL?offset=$idx&limit=$hasMore")
     }
 
     override suspend fun fetchMore(name: String): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
-        idx += limit
-        client
-            .get("$CHANNEL_PUBLIC_BASE_URL/$name&offset=$idx&limit=$hasMore") { makeHeader(curr) }
-            .let { response ->
-                try {
-                    return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelListInputModel>>()
-                        val hasMore = channels.size == hasMore
-                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
-                        _hasMore.emit(hasMore)
-                        success(Unit)
-                    } else {
-                        failure(response.body<ErrorInputModel>().toResponseError())
-                    }
-                } catch (e: Exception) {
-                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(ResponseError(cause = e.message ?: unknownError))
-                }
-            }
+        return fetchMoreChannels("$CHANNEL_PUBLIC_BASE_URL/$name&offset=$idx&limit=$hasMore")
     }
 
     override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
