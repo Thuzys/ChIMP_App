@@ -148,7 +148,7 @@ internal fun ScrollingView(
             ) {
                 itemsIndexed(
                     items = channels,
-                    key = { _: Int, channel: ChannelBasicInfo -> channel.cId.toInt() },
+                    key = { index, channel -> "${channel.cId}_$index"  },
                 ) { _, channel ->
                     SwipeableRow(
                         modifier = Modifier

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -27,6 +28,7 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
 import com.example.chimp.screens.channels.screen.view.SWIPEABLE_ROW_TAG
 import com.example.chimp.screens.findChannel.screen.FIND_CHANNEL_SCREEN_TAG
@@ -38,7 +40,7 @@ import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.ui.composable.SwipeableRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
 
 /**
@@ -88,11 +90,10 @@ internal fun ScrollingView(
     onLogout: () -> Unit = {},
     onInfoClick: (ChannelBasicInfo) -> Unit = {},
     onReload: () -> Unit = {},
-    onReloadSearching: (String) -> Unit = {},
     onJoin: (UInt) -> Unit = {},
     onSearchChange: (String) -> Unit = {},
     onLoadMore: () -> Unit = {},
-    onLoadMoreSearching: (String) -> Unit = {}
+    onLoadMoreSearching: (String) -> Unit = {},
 ) {
     val channels by publicChannels.publicChannels.collectAsState(emptyList())
     val hasMore by publicChannels.hasMore.collectAsState(false)
@@ -110,13 +111,9 @@ internal fun ScrollingView(
         )
         SwipeRefresh(
             modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
-            state = rememberSwipeRefreshState(false),
+            state = SwipeRefreshState(false),
             onRefresh = {
-                if (publicChannels is FindChannelScreenState.NormalScrolling) {
-                    onReload()
-                } else {
-                    onReloadSearching(searchChannelInput)
-                }
+                onReload()
             }
         ) {
             LazyColumn(
@@ -125,7 +122,7 @@ internal fun ScrollingView(
             ) {
                 itemsIndexed(
                     items = channels,
-                    key = { _, channel -> channel.cId.toInt() }
+                    key = { index, channel -> "${channel.cId}_$index" }
                 ) { _, channel ->
                     SwipeableRow(
                         modifier = Modifier
@@ -136,20 +133,18 @@ internal fun ScrollingView(
                         actions = {
                             Row(
                                 modifier = Modifier
-                                    .width(ACTION_LIST_WIDTH.dp)
-                                    .fillParentMaxHeight(),
+                                    .width(ACTION_LIST_WIDTH.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Column(
-                                    modifier = Modifier
-                                        .fillParentMaxHeight(),
+                                    modifier = Modifier.height(LIST_ITEM_HEIGHT.dp),
                                     verticalArrangement = Arrangement.Center,
                                 ) {
                                     ActionIcon(
                                         modifier = Modifier
-                                            .fillParentMaxHeight()
                                             .width(ACTION_ICON_WIDTH.dp)
+                                            .weight(1f)
                                             .testTag(INFO_ICON_TAG)
                                             .padding(end = ACTION_ICON_PADDING.dp),
                                         icon = Icons.Default.Info,
@@ -164,7 +159,7 @@ internal fun ScrollingView(
                         ChatItemRow(
                             modifier = Modifier
                                 .testTag(FIND_CHANNEL_SCROLLING_VIEW_HEADER_TAG)
-                                .fillParentMaxWidth()
+                                .height(LIST_ITEM_HEIGHT.dp)
                                 .background(Color.Transparent),
                             chatItem = channel,
                             buttonModifier = Modifier.testTag(FIND_CHANNEL_BUTTON_TAG),
@@ -176,7 +171,9 @@ internal fun ScrollingView(
                 item(key = hasMore) {
                     if (hasMore) {
                         LoadMoreIcon(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(LIST_ITEM_HEIGHT.dp),
                             onVisible = {
                                 if (publicChannels is FindChannelScreenState.NormalScrolling) {
                                     onLoadMore()
@@ -194,21 +191,21 @@ internal fun ScrollingView(
 
 @Preview(showBackground = true)
 @Composable
-private fun IdleViewPreview() {
+private fun ScrollingViewPreview() {
     val publicChannels =
         FindChannelScreenState.NormalScrolling(
             flowOf(
                 List(27) {
                     ChannelBasicInfo(
                         cId = it.toUInt(),
-                        name = ChannelName("Channel $it"),
+                        name = ChannelName("Channel $it", "Channel $it"),
                         owner = UserInfo(it.toUInt(), "Owner $it")
                     )
                 }
             ),
             flowOf(true)
         )
-   ScrollingView(
+    ScrollingView(
         modifier = Modifier.fillMaxSize(),
         publicChannels = publicChannels
     )

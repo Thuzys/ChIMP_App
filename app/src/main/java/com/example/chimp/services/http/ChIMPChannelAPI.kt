@@ -17,6 +17,7 @@ import com.example.chimp.services.http.dtos.input.channel.AccessControlInputMode
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.dtos.input.message.MessageInputModel
+import com.example.chimp.services.http.dtos.output.message.ChannelInvitationOutputModel
 import com.example.chimp.services.http.dtos.output.message.MessageOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
@@ -269,6 +270,48 @@ class ChIMPChannelAPI(
                 ?: ResponseError.Unknown)
         }
         return success(Unit)
+    }
+
+    override suspend fun createChannelInvitation(
+        expirationDate: String,
+        maxUses: UInt,
+        accessControl: AccessControl
+    ): Either<ResponseError, String> {
+        val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        client
+            .post("$channelApi/invitations") {
+                makeHeader(curr)
+                setBody(
+                    ChannelInvitationOutputModel(
+                        currChannel.cId,
+                        expirationDate,
+                        maxUses,
+                        accessControl
+                    )
+                )
+            }.let { response ->
+                try {
+                    return when (response.status) {
+                        HttpStatusCode.OK -> {
+                           success(response.body<String>())
+                        }
+
+                        HttpStatusCode.Unauthorized -> {
+                            failure(ResponseError.Unauthorized)
+                        }
+
+                        else -> {
+                            failure(response.body<ErrorInputModel>().toResponseError())
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(e.message?.let { ResponseError(cause = it) }
+                        ?: ResponseError.Unknown)
+                }
+            }
+
     }
 
     companion object {

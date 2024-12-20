@@ -60,4 +60,16 @@ internal class FakeService: ChannelService {
         controller.receive()
         return success(READ_WRITE)
     }
+
+    override suspend fun initSseOnMessages(): Either<ResponseError, Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createChannelInvitation(
+        expirationDate: String,
+        maxUses: UInt,
+        accessControl: AccessControl
+    ): Either<ResponseError, String> {
+        TODO("Not yet implemented")
+    }
 }

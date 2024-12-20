@@ -10,7 +10,6 @@ import androidx.compose.ui.test.swipeDown
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.screen.view.CHANNEL_BUTTON_TAG
 import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 import com.example.chimp.screens.ui.composable.LOAD_MORE_ICON_TAG
@@ -30,7 +29,7 @@ class ScrollingViewKtTest {
                 List(nr) {
                     ChannelBasicInfo(
                         cId = nr.toUInt(),
-                        name = ChannelName("${nr}ºChannel"),
+                        name = ChannelName("${nr}ºChannel", "${nr}ºChannel"),
                         owner = UserInfo(nr.toUInt(), "Owner"),
                     )
                 }
