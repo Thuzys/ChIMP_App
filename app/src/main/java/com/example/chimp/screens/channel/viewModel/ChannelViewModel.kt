@@ -120,7 +120,8 @@ internal class ChannelViewModel(
             when (val result = service.updateChannelInfo(channel)) {
                 is Success -> {
                     channelRepo.updateChannelInfo(channel)
-                    _state.emit(curr.previous)
+                    if (curr.previous is Scrolling) _state.emit(curr.previous.copy(channel = channel))
+                    else _state.emit(curr.previous)
                 }
                 is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
             }

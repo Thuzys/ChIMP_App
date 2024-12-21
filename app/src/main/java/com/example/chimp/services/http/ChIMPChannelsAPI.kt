@@ -103,9 +103,9 @@ class ChIMPChannelsAPI(
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelListInputModel>>()
+                        val channels = response.body<List<ChannelListInputModel>>().toChannelInfo()
                         val hasMore = channels.size == hasMore
-                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
+                        _channels.emit(_channels.value + channels.take(limit))
                         _hasMore.emit(hasMore)
                         success(Unit)
                     } else {

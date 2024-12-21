@@ -14,7 +14,7 @@ data class EditChannelOutputModel(
     companion object {
         fun fromChannelInfo(channel: ChannelInfo) =
             EditChannelOutputModel(
-                channel.name.name,
+                channel.name.displayName,
                 channel.visibility.name,
                 channel.description ?: "",
                 channel.icon.toStrIcon()
