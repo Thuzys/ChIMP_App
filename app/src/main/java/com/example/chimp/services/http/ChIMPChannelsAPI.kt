@@ -51,7 +51,7 @@ class ChIMPChannelsAPI(
     private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
     private var idx = 0
-    private val limit = 10
+    private val limit = 50
     private val hasMore = limit + 1
     private val api = "$url/api/channels"
     override val connectivity: Flow<Status> = connection

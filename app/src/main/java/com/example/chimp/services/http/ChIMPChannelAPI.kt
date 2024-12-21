@@ -63,7 +63,7 @@ class ChIMPChannelAPI(
 ) : ChannelService {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
-    private val limit = 10
+    private val limit = 50
     private val hasMore = limit + 1
     private val channelApi = "$url/api/channels"
     private val messagesApi = "$url/api/messages"

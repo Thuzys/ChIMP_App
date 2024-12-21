@@ -45,6 +45,12 @@ interface DependenciesContainer {
 
 private const val RECONNECTION_TIME_IN_MINUTES = 5
 
+private const val REQUEST_TIMEOUT_IN_MILLIS = 1500000L
+
+private const val CONNECT_TIMEOUT_IN_MILLIS = 1500000L
+
+private const val SOCKET_TIMEOUT_IN_MILLIS = 1500000L
+
 class ChIMPApplication : Application(), DependenciesContainer {
     private val client by lazy {
         HttpClient(OkHttp) {
@@ -62,9 +68,9 @@ class ChIMPApplication : Application(), DependenciesContainer {
                 showCommentEvents()
             }
             install(HttpTimeout) {
-                requestTimeoutMillis = 1500000 // 15 minutes //TODO: Change this value only for testing
-                connectTimeoutMillis = 1500000 // 15 minutes
-                socketTimeoutMillis = 1500000 // 15 minutes
+                requestTimeoutMillis = REQUEST_TIMEOUT_IN_MILLIS
+                connectTimeoutMillis = CONNECT_TIMEOUT_IN_MILLIS
+                socketTimeoutMillis = SOCKET_TIMEOUT_IN_MILLIS
             }
         }
     }
