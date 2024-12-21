@@ -141,10 +141,12 @@ internal fun ScrollingView(
                 }
             }
         }
-        TextInput(
-            modifier = Modifier.height(textInputHeight),
-            onSendMessage = onSendMessage
-        )
+        if (state.accessControl == READ_WRITE) {
+            TextInput(
+                modifier = Modifier.height(textInputHeight),
+                onSendMessage = onSendMessage
+            )
+        }
     }
 }
 
