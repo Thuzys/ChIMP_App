@@ -1,6 +1,5 @@
 //package com.example.chimp.screens.findChannel.service
 //
-//import com.example.chimp.models.channel.ChannelBasicInfo
 //import com.example.chimp.models.channel.ChannelInfo
 //import com.example.chimp.models.channel.ChannelName
 //import com.example.chimp.models.either.Either
@@ -15,7 +14,7 @@
 //
 //class FakeService: FindChannelService {
 //    private val controller = Channel<Unit>()
-//    private val flow = MutableStateFlow(emptyList<ChannelBasicInfo>())
+//    private val flow = MutableStateFlow(emptyList<ChannelInfo>())
 //    suspend fun unlock() = controller.send(Unit)
 //
 //    private val channelName = ChannelName("test")
@@ -40,25 +39,27 @@
 //
 //    override suspend fun fetchMore(): Either<ResponseError, Unit> {
 //        controller.receive()
-//        flow.emit(flow.value + ChannelBasicInfo(
+//        flow.emit(flow.value + ChannelInfo(
 //            cId,
 //            channelName,
 //            user
-//        ))
+//        )
+//        )
 //        return success(Unit)
 //    }
 //
 //    override suspend fun fetchMore(name: String): Either<ResponseError, Unit> {
 //        controller.receive()
-//        flow.emit(flow.value + ChannelBasicInfo(
+//        flow.emit(flow.value + ChannelInfo(
 //            cId,
 //            ChannelName(name),
 //            user
-//        ))
+//        )
+//        )
 //        return success(Unit)
 //    }
 //
-//    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
+//    override suspend fun fetchChannelInfo(channel: ChannelInfo): Either<ResponseError, ChannelInfo> {
 //        controller.receive()
 //        return success(ChannelInfo(cId, channelName, owner = user))
 //    }

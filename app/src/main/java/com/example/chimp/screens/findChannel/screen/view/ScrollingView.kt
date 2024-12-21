@@ -25,10 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
 import com.example.chimp.screens.channels.screen.view.SWIPEABLE_ROW_TAG
 import com.example.chimp.screens.findChannel.screen.FIND_CHANNEL_SCREEN_TAG
@@ -88,7 +87,7 @@ internal fun ScrollingView(
     modifier: Modifier,
     publicChannels: FindChannelScreenState.Scrolling,
     onLogout: () -> Unit = {},
-    onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onInfoClick: (ChannelInfo) -> Unit = {},
     onReload: () -> Unit = {},
     onJoin: (UInt) -> Unit = {},
     onSearchChange: (String) -> Unit = {},
@@ -196,7 +195,7 @@ private fun ScrollingViewPreview() {
         FindChannelScreenState.NormalScrolling(
             flowOf(
                 List(27) {
-                    ChannelBasicInfo(
+                    ChannelInfo(
                         cId = it.toUInt(),
                         name = ChannelName("Channel $it", "Channel $it"),
                         owner = UserInfo(it.toUInt(), "Owner $it")

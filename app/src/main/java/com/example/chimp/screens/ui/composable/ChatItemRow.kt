@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 
@@ -39,7 +39,7 @@ private const val TEXT_LENGTH_THRESHOLD = 15
 @Composable
 fun ChatItemRow(
     modifier: Modifier = Modifier,
-    chatItem: ChannelBasicInfo,
+    chatItem: ChannelInfo,
     buttonModifier: Modifier = Modifier.minimumInteractiveComponentSize(),
     buttonString: String,
     onClick: () -> Unit,
@@ -100,14 +100,14 @@ fun ChatItemRow(
 )
 @Composable
 private fun ChatItemRowPreview() {
-    val item = ChannelBasicInfo(
+    val item = ChannelInfo(
         1u,
         ChannelName(
             "One Piece Fans",
             "One Piece Fansssssssssss"
         ),
-        UserInfo(1u, "Thuzy"),
-        R.drawable.thuzy_profile_pic,
+        owner = UserInfo(1u, "Thuzy"),
+        icon = R.drawable.thuzy_profile_pic,
     )
     ChatItemRow(chatItem = item, buttonString = "test") { }
 }

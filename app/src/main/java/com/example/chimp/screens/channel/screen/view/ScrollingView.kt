@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.UserInfo
@@ -53,7 +53,7 @@ const val SCROLLING_VIEW = "ScrollingView"
 
 private const val LAZY_COLUMN_FILL_MAX_HEIGHT = 0.9f
 
-private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.8f
+private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.7f
 
 private const val TEXT_INPUT_HEIGHT = 100
 
@@ -75,9 +75,9 @@ internal fun ScrollingView(
     modifier: Modifier = Modifier,
     state: Scrolling,
     onBackClick: () -> Unit = {},
-    onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onInfoClick: () -> Unit = {},
     onDeleteOrLeave: () -> Unit = {},
-    editChannel: (ChannelBasicInfo) -> Unit = {},
+    editChannel: () -> Unit = {},
     onSendMessage: (String) -> Unit = {},
     loadMore: () -> Unit = {},
     onCreateInvite: () -> Unit = {},
@@ -139,7 +139,7 @@ internal fun ScrollingView(
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
-                    onClick = { onInfoClick(state.channel) }
+                    onClick = onInfoClick
                 ) {
                     Text(
                         text = "Channel Info",
@@ -162,7 +162,7 @@ internal fun ScrollingView(
                         shape = RoundedCornerShape(8.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
-                        onClick = { editChannel(state.channel) }
+                        onClick = editChannel
                     ) {
                         Text(
                             text = "Edit Channel",
@@ -212,7 +212,6 @@ internal fun ScrollingView(
         }
         if (state.accessControl == READ_WRITE) {
             TextInput(
-                modifier = Modifier.height(textInputHeight),
                 onSendMessage = onSendMessage
             )
         }
@@ -269,13 +268,96 @@ private fun ChatPreview() {
             mId = 6u,
             cId = 1u
         ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 7u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 8u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 9u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "Hi",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 10u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 11u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 12u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 13u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "Hi",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 14u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 15u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 16u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 17u,
+            cId = 1u
+        ),
     )
     val flow = MutableStateFlow(list)
     ScrollingView(
         modifier = Modifier
             .fillMaxSize(),
         state = Scrolling(
-            channel = ChannelBasicInfo(
+            channel = ChannelInfo(
                 cId = 1u,
                 name = ChannelName("Channel 1", "Channel 1"),
                 owner = user1

@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import com.example.chimp.screens.channels.screen.view.ChannelInfoView
+import com.example.chimp.screens.ui.views.ChannelInfoView
 import com.example.chimp.screens.channels.screen.view.ScrollingView
 import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState

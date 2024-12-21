@@ -17,6 +17,7 @@ import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.CreatingInvitation
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Editing
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Error
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Info
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Initial
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Loading
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Scrolling
@@ -120,7 +121,11 @@ internal class ChannelViewModel(
             val curr = state.value
             if (curr !is Editing) return@launch
             when (val result = service.updateChannelInfo(channel)) {
-                is Success -> _state.emit(curr.previous)
+                is Success -> {
+                    channelRepo.updateChannelInfo(channel)
+                    if (curr.previous is Scrolling) _state.emit(curr.previous.copy(channel = channel))
+                    else _state.emit(curr.previous)
+                }
                 is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
             }
         }
@@ -129,11 +134,9 @@ internal class ChannelViewModel(
     fun toEdit() {
         viewModelScope.launch {
             val curr = state.value
+            val channel = channelRepo.channelInfo.first() ?: return@launch
             if (curr !is Scrolling) return@launch
-            when (val result = service.fetchChannelInfo()) {
-                is Success<ChannelInfo> -> _state.emit(Editing(result.value, curr))
-                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
-            }
+            _state.emit(Editing(channel, curr))
         }
     }
 
@@ -150,6 +153,7 @@ internal class ChannelViewModel(
             val curr = state.value
             if (curr is Editing) _state.emit(curr.previous)
             if (curr is Error) _state.emit(curr.previous)
+            if (curr is Info) _state.emit(curr.previous)
             if (curr is CreatingInvitation) _state.emit(curr.previous)
             if (curr is ShowingInvitation) _state.emit(curr.previous)
         }
@@ -163,6 +167,15 @@ internal class ChannelViewModel(
                 is Success -> { onSuccess() }
                 is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
             }
+        }
+    }
+
+    fun toInfo() {
+        viewModelScope.launch {
+            val curr = state.value
+            val channel = channelRepo.channelInfo.first() ?: return@launch
+            if (curr !is Scrolling) return@launch
+            _state.emit(Info(channel, curr))
         }
     }
 

@@ -7,7 +7,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeRight
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
@@ -26,7 +26,7 @@ class ScrollingViewKtTest {
         Scrolling(
             flowOf(
                 List(nr) {
-                    ChannelBasicInfo(
+                    ChannelInfo(
                         cId = nr.toUInt(),
                         name = ChannelName("${nr}ºChannel", "${nr}ºChannel"),
                         owner = UserInfo(nr.toUInt(), "Owner"),
@@ -40,7 +40,7 @@ class ScrollingViewKtTest {
     fun click_on_enter_button() {
         val idle = makeIdle()
         var success = false
-        val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
+        val testFunc: (ChannelInfo) -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
                 chats = idle,
@@ -139,7 +139,7 @@ class ScrollingViewKtTest {
     fun onInfoClick_is_called_when_info_icon_is_clicked() {
         val idle = makeIdle()
         var success = false
-        val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
+        val testFunc: (ChannelInfo) -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
                 chats = idle,
@@ -168,7 +168,7 @@ class ScrollingViewKtTest {
     fun onDeleteOrLeave_is_called_when_deleteOrLeave_icon_is_clicked() {
         val idle = makeIdle()
         var success = false
-        val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
+        val testFunc: (ChannelInfo) -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
                 chats = idle,

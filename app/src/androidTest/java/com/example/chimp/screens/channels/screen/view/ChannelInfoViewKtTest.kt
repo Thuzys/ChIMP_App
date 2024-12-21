@@ -9,6 +9,10 @@ import androidx.compose.ui.test.performClick
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.screens.ui.views.CHANNEL_DESCRIPTION_TAG
+import com.example.chimp.screens.ui.views.CHANNEL_INFO_BACK_BUTTON
+import com.example.chimp.screens.ui.views.CHANNEL_INFO_SMALL_DESCRIPTION_TAG
+import com.example.chimp.screens.ui.views.ChannelInfoView
 import org.junit.Rule
 import org.junit.Test
 

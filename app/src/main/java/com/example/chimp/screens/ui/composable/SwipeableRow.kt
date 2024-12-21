@@ -32,7 +32,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channels.screen.composable.ChatsHeader
@@ -113,7 +113,7 @@ fun SwipeableHeaderPreview() {
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             ChatsHeader(
-                chat = ChannelBasicInfo(
+                chat = ChannelInfo(
                     cId = 0u,
                     name = ChannelName("Channel name", "Channel name "),
                     owner = UserInfo(1u, "Owner name"),

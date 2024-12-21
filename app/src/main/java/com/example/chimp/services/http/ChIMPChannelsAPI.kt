@@ -1,13 +1,15 @@
 package com.example.chimp.services.http
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.users.User
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
@@ -22,9 +24,12 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
 
@@ -40,17 +45,28 @@ import kotlin.time.Duration.Companion.minutes
 class ChIMPChannelsAPI(
     private val client: HttpClient,
     private val url: String,
-    private val user: Flow<User?>
+    private val user: Flow<User?>,
+    connection: Flow<Status>
 ) : ChannelsServices {
-    private val _channels = MutableStateFlow<List<ChannelBasicInfo>>(emptyList())
+    private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
     private var idx = 0
     private val limit = 10
     private val hasMore = limit + 1
     private val api = "$url/api/channels"
+    override val connectivity: Flow<Status> = connection
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+    init {
+        scope.launch {
+        }
+    }
 
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         idx = 0
         client
             .get("$api/my?limit=$hasMore") { makeHeader(curr) }
@@ -75,8 +91,11 @@ class ChIMPChannelsAPI(
             }
     }
 
-    override suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit> {
+    override suspend fun deleteOrLeave(channel: ChannelInfo): Either<ResponseError, Unit> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .delete("$api/${channel.cId}") { makeHeader(curr) }
             .let { response ->
@@ -95,27 +114,11 @@ class ChIMPChannelsAPI(
             }
     }
 
-
-    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
-        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
-        client
-            .get("$api/${channel.cId}") { makeHeader(curr) }
-            .let { response ->
-                try {
-                    return if (response.status == HttpStatusCode.OK)
-                        success(response.body<ChannelInputModel>().toChannelInfo())
-                    else
-                        failure(response.body<ErrorInputModel>().toResponseError())
-                } catch (e: Exception) {
-                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(e.message?.let { ResponseError(cause = it) }
-                        ?: ResponseError.Unknown)
-                }
-            }
-    }
-
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         Log.i(CHANNELS_SERVICE_TAG, "Fetching more channels")
         idx += limit
         client
@@ -123,9 +126,9 @@ class ChIMPChannelsAPI(
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelListInputModel>>()
+                        val channels = response.body<List<ChannelListInputModel>>().toChannelInfo()
                         val hasMore = channels.size == hasMore
-                        _channels.emit(_channels.value + channels.toChannelInfo().take(limit))
+                        _channels.emit(_channels.value + channels.take(limit))
                         _hasMore.emit(hasMore)
                         success(Unit)
                     } else {
@@ -139,44 +142,56 @@ class ChIMPChannelsAPI(
             }
     }
 
-    override suspend fun initSseOnChannels() {
-        val curr = user.first() ?: return
+    override suspend fun initSseOnChannels(): Either<ResponseError, Unit> {
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         try {
             client.sse(
                 urlString = "$api/sse",
                 request = { makeHeader(curr) },
                 reconnectionTime = RECONNECT_TIME.minutes
             ) {
-                while (true) {
-                    incoming.collect { event ->
-                        Log.i(CHANNELS_SERVICE_TAG, "Event: ${event.data}")
-                        when (event.event) {
-                            JOIN_OR_UPDATE -> {
-                                event.data?.let { data ->
-                                    val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelBasicInfo()
-                                    if (_channels.value.find { it.cId == channel.cId } == null) {
-                                        _channels.emit(_channels.value + channel)
-                                    } else {
-                                        _channels.emit(_channels.value.map { c ->
-                                            if (c.cId == channel.cId) channel else c
-                                        })
+                try {
+                    while (true) {
+                        val c = connectivity.first()
+                        if (c == DISCONNECTED) continue
+                        incoming.collect { event ->
+                            Log.i(CHANNELS_SERVICE_TAG, "Event: ${event.data}")
+                            when (event.event) {
+                                JOIN_OR_UPDATE -> {
+                                    event.data?.let { data ->
+                                        val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelInfo()
+                                        if (_channels.value.find { it.cId == channel.cId } == null) {
+                                            _channels.emit(_channels.value + channel)
+                                        } else {
+                                            _channels.emit(_channels.value.map { c ->
+                                                if (c.cId == channel.cId) channel else c
+                                            })
+                                        }
                                     }
                                 }
-                            }
-                            DELETE_OR_LEAVE -> {
-                                event.data?.let { data ->
-                                    val channel = Json.decodeFromString<UInt>(data)
-                                    if (_channels.value.find { it.cId == channel } != null)
-                                        _channels.emit(_channels.value.filter { it.cId != channel })
+                                DELETE_OR_LEAVE -> {
+                                    event.data?.let { data ->
+                                        val channel = Json.decodeFromString<UInt>(data)
+                                        if (_channels.value.find { it.cId == channel } != null)
+                                            _channels.emit(_channels.value.filter { it.cId != channel })
+                                    }
                                 }
                             }
                         }
                     }
+                } catch (e: Exception) {
+                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
                 }
             }
         } catch (e: Exception) {
             Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
+            return failure(e.message?.let { ResponseError(cause = it) }
+                ?: ResponseError.Unknown)
         }
+        return success(Unit)
     }
 
     companion object {

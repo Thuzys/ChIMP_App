@@ -22,7 +22,6 @@ interface ChannelService {
     suspend fun fetchMessages() : Either<ResponseError, FetchMessagesResult>
     suspend fun fetchMore(): Either<ResponseError, Unit>
     suspend fun sendMessage(message: Message): Either<ResponseError, Unit>
-    suspend fun fetchChannelInfo(): Either<ResponseError, ChannelInfo>
     suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit>
     suspend fun deleteOrLeaveChannel(): Either<ResponseError, Unit>
     suspend fun fetchAccessControl(): Either<ResponseError, AccessControl>

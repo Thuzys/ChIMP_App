@@ -26,4 +26,5 @@
     <string name="select_visibility">Choose Channel Visibility</string>
     <string name="select_accessControl">Choose Channel Access Control</string>
     <string name="duplicate_channel_error">You can´t have two channels with the same name</string>
+    <string name="channel_access_control">Access Control: %1$s</string>
 </resources>

@@ -1,21 +1,18 @@
 package com.example.chimp.screens.findChannel.viewModel
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
-import com.example.chimp.models.channel.toChannelBasicInfo
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState.BackToRegistration
+import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState.Info
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -157,25 +154,18 @@ class FindChannelViewModel(
         }
     }
 
-    fun toChannelInfo(channel: ChannelBasicInfo) {
+    fun toChannelInfo(channel: ChannelInfo) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is FindChannelScreenState.Scrolling) return@launch
-            _state.emit(FindChannelScreenState.Loading)
-            when (val result = service.fetchChannelInfo(channel)) {
-                is Success -> _state.emit(FindChannelScreenState.Info(result.value, curr))
-                is Failure -> _state.emit(
-                    if (result.value == ResponseError.Unauthorized) BackToRegistration
-                    else FindChannelScreenState.Error(result.value, curr)
-                )
-            }
+            _state.emit(Info(channel, curr))
         }
     }
 
     fun goBack() {
         viewModelScope.launch {
             when (val curr = state.value) {
-                is FindChannelScreenState.Info -> _state.emit(curr.goBack)
+                is Info -> _state.emit(curr.goBack)
                 is FindChannelScreenState.Error -> _state.emit(curr.goBack)
                 else -> return@launch
             }

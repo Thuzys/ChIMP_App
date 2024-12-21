@@ -1,6 +1,5 @@
 //package com.example.chimp.screens.findChannel.viewModel
 //
-//import com.example.chimp.models.channel.ChannelBasicInfo
 //import com.example.chimp.models.channel.ChannelInfo
 //import com.example.chimp.models.channel.ChannelName
 //import com.example.chimp.models.errors.ResponseError
@@ -81,7 +80,7 @@
 //                initialState,
 //            )
 //
-//            vm.toChannelInfo(ChannelBasicInfo(1u, ChannelName("test"), UserInfo(1u, "test")))
+//            vm.toChannelInfo(ChannelInfo(1u, ChannelName("test"), UserInfo(1u, "test")))
 //            yield()
 //
 //            assert(vm.state.value is FindChannelScreenState.Loading) {
@@ -100,7 +99,7 @@
 //                initialState,
 //            )
 //
-//            vm.toChannelInfo(ChannelBasicInfo(1u, ChannelName("test"), UserInfo(1u, "test")))
+//            vm.toChannelInfo(ChannelInfo(1u, ChannelName("test"), UserInfo(1u, "test")))
 //            service.unlock()
 //
 //            assert(vm.state.value is FindChannelScreenState.Info) {

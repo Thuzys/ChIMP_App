@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.ScrollHeader
@@ -120,10 +120,10 @@ internal fun ScrollingView(
     modifier: Modifier = Modifier,
     chats: Scrolling,
     onLogout: () -> Unit = {},
-    onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onInfoClick: (ChannelInfo) -> Unit = {},
     onReload: () -> Unit = {},
-    onChannelClick: (ChannelBasicInfo) -> Unit = {},
-    onDeleteOrLeave: (ChannelBasicInfo) -> Unit = {},
+    onChannelClick: (ChannelInfo) -> Unit = {},
+    onDeleteOrLeave: (ChannelInfo) -> Unit = {},
     onLoadMore: () -> Unit = {}
 ) {
     val channels by chats.channels.collectAsState(emptyList())
@@ -235,7 +235,7 @@ private fun IdleViewPreview() {
         Scrolling(
             flowOf(
                 List(27) {
-                    ChannelBasicInfo(
+                    ChannelInfo(
                         cId = it.toUInt(),
                         name = ChannelName(
                             "Channel $it",

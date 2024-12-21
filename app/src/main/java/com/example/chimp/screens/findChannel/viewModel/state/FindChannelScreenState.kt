@@ -1,7 +1,6 @@
 package com.example.chimp.screens.findChannel.viewModel.state
 
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -39,7 +38,7 @@ sealed interface FindChannelScreenState {
      */
     sealed class Scrolling : FindChannelScreenState {
         abstract val searchChannelInput: String
-        abstract val publicChannels: Flow<List<ChannelBasicInfo>>
+        abstract val publicChannels: Flow<List<ChannelInfo>>
         abstract val hasMore: Flow<Boolean>
     }
 
@@ -51,7 +50,7 @@ sealed interface FindChannelScreenState {
      * @property hasMore whether there are more channels to fetch
      */
     data class NormalScrolling(
-        override val publicChannels: Flow<List<ChannelBasicInfo>>,
+        override val publicChannels: Flow<List<ChannelInfo>>,
         override val hasMore: Flow<Boolean>,
         override val searchChannelInput: String = ""
     ) : Scrolling()
@@ -65,7 +64,7 @@ sealed interface FindChannelScreenState {
      */
     data class SearchingScrolling(
         override val searchChannelInput: String,
-        override val publicChannels: Flow<List<ChannelBasicInfo>>,
+        override val publicChannels: Flow<List<ChannelInfo>>,
         override val hasMore: Flow<Boolean>
     ) : Scrolling()
 

@@ -10,9 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.observeConnectivity.ConnectivityObserver
-import com.example.chimp.screens.channels.screen.view.ChannelInfoView
+import com.example.chimp.screens.ui.views.ChannelInfoView
 import com.example.chimp.screens.findChannel.screen.view.DisconnectedView
 import com.example.chimp.screens.findChannel.screen.view.ErrorView
 import com.example.chimp.screens.findChannel.screen.view.ScrollingView
@@ -31,7 +30,7 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit,
     onRegisterNavigate: () -> Unit,
     onJoinNavigate : () -> Unit,
-    status: ConnectivityObserver.Status
+    status: ConnectivityObserver.Status = ConnectivityObserver.Status.CONNECTED
 ) {
 
     val registerNavigate = {

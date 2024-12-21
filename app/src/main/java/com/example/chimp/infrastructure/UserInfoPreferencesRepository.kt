@@ -5,6 +5,9 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.toChannelInfoList
+import com.example.chimp.models.channel.toChannelInfoListString
 import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
@@ -21,9 +24,17 @@ class UserInfoPreferencesRepository(
     private val store: DataStore<Preferences>
 ) : UserInfoRepository {
     override val userInfo: Flow<User?> = store.data.map(Preferences::toUser)
+    override val channelList: Flow<List<ChannelInfo>> =
+        store.data.map(Preferences::toChannelInfo)
 
     override suspend fun updateUserInfo(user: User) {
         store.edit(transform = user::writeToPreferences)
+    }
+
+    override suspend fun updateChannelList(channelList: List<ChannelInfo>) {
+        store.edit { preferences ->
+            preferences[channelListKey] = channelList.toChannelInfoListString()
+        }
     }
 
     override suspend fun clearUserInfo() {
@@ -46,6 +57,7 @@ private val usernameKey = stringPreferencesKey("username")
  */
 private val tokenKey = stringPreferencesKey("token")
 private val tokenTimestampKey = stringPreferencesKey("token_timestamp")
+private val channelListKey = stringPreferencesKey("channel_list")
 
 /**
  * Utility functions for converting between User and Preferences.
@@ -60,6 +72,11 @@ private fun Preferences.toUser(): User? {
     val tokenTimestamp = this[tokenTimestampKey] ?: return null
     val token = Token(tokenValue, Timestamp.valueOf(tokenTimestamp))
     return User(userId, username, token)
+}
+
+private fun Preferences.toChannelInfo(): List<ChannelInfo> {
+    val channelList = this[channelListKey] ?: return emptyList()
+    return channelList.toChannelInfoList()
 }
 
 /**

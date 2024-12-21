@@ -1,6 +1,5 @@
 package com.example.chimp.screens.channel.viewModel.state
 
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.channel.ChannelInfo
@@ -16,7 +15,7 @@ internal interface ChannelScreenState {
     data object Initial : ChannelScreenState
     data object Loading : ChannelScreenState
     data class Scrolling(
-        val channel: ChannelBasicInfo,
+        val channel: ChannelInfo,
         val user: UserInfo,
         val accessControl: AccessControl,
         val messages: Flow<List<Message>>,
@@ -27,6 +26,10 @@ internal interface ChannelScreenState {
         val previous: ChannelScreenState,
     ) : ChannelScreenState
     data class Editing(
+        val channel: ChannelInfo,
+        val previous: ChannelScreenState,
+    ) : ChannelScreenState
+    data class Info(
         val channel: ChannelInfo,
         val previous: ChannelScreenState,
     ) : ChannelScreenState

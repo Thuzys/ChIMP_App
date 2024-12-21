@@ -67,9 +67,6 @@ class FindChannelActivity: ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChIMPTheme {
-                val status by connectivityObserver.observe().collectAsState(
-                    initial = ConnectivityObserver.Status.DISCONNECTED
-                )
                 ChIMPFindChannelScreen(
                     viewModel = viewModel,
                     onAboutNavigate = { startActivity(navigateToAboutIntent) },
@@ -79,7 +76,6 @@ class FindChannelActivity: ComponentActivity() {
                         finish()
                     },
                     onJoinNavigate = {startActivity(navigateToChannelIntent)},
-                    status = status
                 )
             }
         }

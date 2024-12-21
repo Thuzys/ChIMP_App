@@ -36,7 +36,8 @@ internal fun TextInput(
             value = msg,
             onValueChange = { msg = it },
             placeholder = { Text("Type a message...") },
-            maxLines = 2,
+            minLines = 1,
+            maxLines = 5,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.Send,
