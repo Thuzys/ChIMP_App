@@ -19,6 +19,7 @@ import com.example.chimp.models.channel.AccessControl
 import com.example.chimp.models.channel.Visibility
 import com.example.chimp.screens.createChannel.screen.composable.EditingBaseView
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState
+import com.example.chimp.screens.ui.composable.ImageSelector
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.MySpacer
 import com.example.chimp.screens.ui.composable.MyTextField
@@ -97,6 +98,11 @@ internal fun EditingView(
             },
             label = stringResource(R.string.select_accessControl),
             modifier = Modifier.padding(INPUT_FIELD_PADDING.dp)
+        )
+
+        ImageSelector(
+            modifier = Modifier.padding(INPUT_FIELD_PADDING.dp),
+            image = R.drawable.default_icon
         )
         MakeButton(
             modifier = Modifier.padding(INPUT_FIELD_PADDING.dp),
