@@ -24,13 +24,13 @@ data class Message(
     companion object {
         fun fromPreferences(preferences: String): Message {
             try {
-                val params = preferences.split("#", limit = 4)
+                val params = preferences.split("#", limit = 6)
                 return Message(
-                    owner = UserInfo.fromPreferences(params[0]),
-                    message = params[1],
-                    time = Timestamp.valueOf(params[2]),
-                    mId = params[3].toUInt(),
-                    cId = params[4].toUInt()
+                    owner = UserInfo(params[0].toUInt(), params[1]),
+                    message = params[2],
+                    time = Timestamp.valueOf(params[3]),
+                    mId = params[4].toUInt(),
+                    cId = params[5].toUInt()
                 )
             } catch (e: IndexOutOfBoundsException) {
                 throw IllegalArgumentException("Invalid preferences string")

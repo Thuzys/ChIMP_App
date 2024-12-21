@@ -32,10 +32,6 @@ internal class ChannelsViewModel(
     val state = _state.asStateFlow()
     val user = userInfoRepository.userInfo
 
-    init {
-        viewModelScope.launch { service.initSseOnChannels() }
-    }
-
     fun loadChannels() {
         viewModelScope.launch {
             val curr = state.value
@@ -45,7 +41,7 @@ internal class ChannelsViewModel(
                 is Success<FetchChannelsResult> -> {
                     userInfoRepository.updateChannelList(result.value.first.first())
                     _state.emit(
-                        Scrolling(result.value.first, result.value.second)
+                        Scrolling(result.value.first, result.value.second, service.connectivity)
                     )
                 }
 
@@ -57,7 +53,13 @@ internal class ChannelsViewModel(
                         }
 
                         ResponseError.NoInternet -> {
-                            _state.emit(Scrolling(userInfoRepository.channelList, flowOf(false)))
+                            _state.emit(
+                                Scrolling(
+                                    userInfoRepository.channelList,
+                                    flowOf(false),
+                                    service.connectivity
+                                )
+                            )
                         }
 
                         else -> _state.emit(Error(result.value, curr))
@@ -141,7 +143,13 @@ internal class ChannelsViewModel(
                         }
 
                         ResponseError.NoInternet -> {
-                            _state.emit(Scrolling(userInfoRepository.channelList, flowOf(false)))
+                            _state.emit(
+                                Scrolling(
+                                    userInfoRepository.channelList,
+                                    flowOf(false),
+                                    service.connectivity
+                                )
+                            )
                         }
 
                         else -> _state.emit(Error(result.value, curr))
