@@ -32,8 +32,6 @@ class CreateChannelViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
     private val _channelName = MutableStateFlow("")
-    private val _channelVisibility = MutableStateFlow(Visibility.PUBLIC)
-    private val _channelAccessControl = MutableStateFlow(AccessControl.READ_ONLY)
     val state: StateFlow<CreateChannelScreenState> = _state
     val user = userInfoRepository.userInfo
 
@@ -46,7 +44,7 @@ class CreateChannelViewModel(
                     val curr = state.value
                     if (curr !is Editing && _channelName == MutableStateFlow("")) return@collect
                     when (service.fetchChannelByNames(createChannelInput)) {
-                        is Success -> _state.emit(NotValidated)
+                        is Success -> _state.emit(NotValidated(createChannelInput))
 
                         is Failure -> _state.emit(Validated(createChannelInput))
                     }
@@ -57,7 +55,9 @@ class CreateChannelViewModel(
     fun updateChannelName(channelName: String) {
         viewModelScope.launch {
             val curr = state.value
-            if (curr !is Editing) return@launch
+            if (curr !is Editing) {
+                _state.emit(Editing(channelName))
+            }
             _channelName.emit(channelName)
         }
     }
@@ -68,7 +68,7 @@ class CreateChannelViewModel(
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Validated) return@launch
-            _state.emit(CreateChannelScreenState.Submit(curr.channelName))
+            _state.emit(CreateChannelScreenState.Submit)
             when (val result = service.createChannel(channelInput)) {
                 is Success -> _state.emit(Successful)
 
@@ -91,6 +91,15 @@ class CreateChannelViewModel(
             if (curr is BackToRegistration) return@launch
             _state.emit(BackToRegistration)
             userInfoRepository.clearUserInfo()
+        }
+    }
+
+    fun reset() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr is Editing) return@launch
+            _channelName.emit("")
+            _state.emit(Editing(""))
         }
     }
 

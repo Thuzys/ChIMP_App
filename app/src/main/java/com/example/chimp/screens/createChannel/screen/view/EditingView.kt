@@ -1,15 +1,23 @@
 package com.example.chimp.screens.createChannel.screen.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,15 +25,14 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.models.channel.AccessControl
 import com.example.chimp.models.channel.Visibility
-import com.example.chimp.screens.createChannel.screen.composable.EditingBaseView
+import com.example.chimp.screens.createChannel.model.ChannelInput
+import com.example.chimp.screens.createChannel.screen.composable.EDITING_BASE_VIEW_CONTENT_TAG
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState
 import com.example.chimp.screens.ui.composable.ImageSelector
 import com.example.chimp.screens.ui.composable.MakeButton
 import com.example.chimp.screens.ui.composable.MySpacer
 import com.example.chimp.screens.ui.composable.MyTextField
 import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
-
-const val EDITING_VIEW_TAG = "EditingView"
 
 const val ERROR_PADDING = 26
 
@@ -43,23 +50,34 @@ val accessControlOptions = listOf(
 
 @Composable
 internal fun EditingView(
-    state: CreateChannelScreenState.Editing,
+    state: CreateChannelScreenState.EditingState,
     showMessage: Boolean?,
     modifier: Modifier = Modifier,
-    onSubmit: (String, Visibility, AccessControl) -> Unit = { _, _, _ -> },
+    onSubmit: (ChannelInput) -> Unit = { _ -> },
     onChannelNameChange: (String) -> Unit = {},
 ) {
-    val (channelName) = state
+    val channelName = state.channelName
     val visibility = remember { mutableStateOf(Visibility.PUBLIC) }
     val accessControl = remember { mutableStateOf(AccessControl.READ_ONLY) }
+    val description = remember { mutableStateOf("") }
+    var icon by remember { mutableIntStateOf(R.drawable.default_icon) }
 
-    EditingBaseView(
-        modifier = modifier.testTag(EDITING_VIEW_TAG)
-    ){
-
+    Column(
+        modifier = modifier
+            .testTag(EDITING_BASE_VIEW_CONTENT_TAG)
+            .fillMaxSize()
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         MySpacer()
         MyTextField(
-            modifier = Modifier.padding(INPUT_FIELD_PADDING.dp),
+            modifier = Modifier.padding(
+                top = 60.dp,
+                start = INPUT_FIELD_PADDING.dp,
+                bottom = INPUT_FIELD_PADDING.dp,
+                end = INPUT_FIELD_PADDING.dp,
+                ),
             label = stringResource(R.string.channelName),
             value = channelName,
             onValueChange = onChannelNameChange
@@ -99,16 +117,28 @@ internal fun EditingView(
             label = stringResource(R.string.select_accessControl),
             modifier = Modifier.padding(INPUT_FIELD_PADDING.dp)
         )
-
+        MyTextField(
+            value = description.value,
+            onValueChange = {description.value = it},
+            label = stringResource(R.string.channel_description),
+            modifier = Modifier.padding(INPUT_FIELD_PADDING.dp)
+        )
         ImageSelector(
             modifier = Modifier.padding(INPUT_FIELD_PADDING.dp),
-            image = R.drawable.default_icon
+            image = icon,
+            onImageSelected = { icon = it }
         )
         MakeButton(
             modifier = Modifier.padding(INPUT_FIELD_PADDING.dp),
             text = stringResource(R.string.createChannel),
             onClick = {
-                onSubmit(channelName, Visibility.PUBLIC, AccessControl.READ_ONLY)
+                onSubmit(ChannelInput(
+                    channelName = channelName,
+                    visibility = visibility.value,
+                    accessControl = accessControl.value,
+                    description = description.value,
+                    icon = icon
+                ))
             },
             enable = channelName.isNotBlank() && (showMessage == false)
         )
