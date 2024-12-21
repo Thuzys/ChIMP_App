@@ -7,6 +7,7 @@ import com.example.chimp.models.channel.Visibility
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.screens.createChannel.model.ChannelInput
 import com.example.chimp.screens.createChannel.model.CreateChannelService
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState.BackToRegistration
@@ -44,7 +45,7 @@ class CreateChannelViewModel(
                 .collect { createChannelInput ->
                     val curr = state.value
                     if (curr !is Editing && _channelName == MutableStateFlow("")) return@collect
-                    when (service.fetchChannelsByNames(createChannelInput)) {
+                    when (service.fetchChannelByNames(createChannelInput)) {
                         is Success -> _state.emit(NotValidated)
 
                         is Failure -> _state.emit(Validated(createChannelInput))
@@ -61,30 +62,14 @@ class CreateChannelViewModel(
         }
     }
 
-    fun updateChannelVisibility(visibility: Visibility) {
-        viewModelScope.launch {
-            val curr = state.value
-            _channelVisibility.emit(visibility)
-        }
-    }
-
-    fun updateChannelAccessControl(accessControl: AccessControl) {
-        viewModelScope.launch {
-            val curr = state.value
-            _channelAccessControl.emit(accessControl)
-        }
-    }
-
     fun submitChannel(
-        channelName: String,
-        visibility: Visibility,
-        accessControl: AccessControl
+        channelInput: ChannelInput
     ) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Validated) return@launch
             _state.emit(CreateChannelScreenState.Submit(curr.channelName))
-            when (val result = service.createChannel(channelName, visibility, accessControl)) {
+            when (val result = service.createChannel(channelInput)) {
                 is Success -> _state.emit(Successful)
 
                 is Failure -> _state.emit(CreateChannelScreenState.Error(result.value, curr))
