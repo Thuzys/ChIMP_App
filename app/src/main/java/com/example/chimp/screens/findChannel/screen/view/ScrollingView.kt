@@ -132,26 +132,23 @@ internal fun ScrollingView(
                         actions = {
                             Row(
                                 modifier = Modifier
-                                    .width(ACTION_LIST_WIDTH.dp),
+                                    .width(ACTION_ICON_WIDTH.dp)
+                                    .height(LIST_ITEM_HEIGHT.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.height(LIST_ITEM_HEIGHT.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                ) {
-                                    ActionIcon(
-                                        modifier = Modifier
-                                            .width(ACTION_ICON_WIDTH.dp)
-                                            .weight(1f)
-                                            .testTag(INFO_ICON_TAG)
-                                            .padding(end = ACTION_ICON_PADDING.dp),
-                                        icon = Icons.Default.Info,
-                                        backgroundColor = MaterialTheme.colorScheme.primary,
-                                        onClick = { onInfoClick(channel) },
-                                        contentDescription = "Channel info"
-                                    )
-                                }
+                                ActionIcon(
+                                    modifier = Modifier
+                                        .width(ACTION_ICON_WIDTH.dp)
+                                        .weight(1f)
+                                        .testTag(INFO_ICON_TAG)
+                                        .padding(end = ACTION_ICON_PADDING.dp)
+                                        .height(LIST_ITEM_HEIGHT.dp),
+                                    icon = Icons.Default.Info,
+                                    backgroundColor = MaterialTheme.colorScheme.primary,
+                                    onClick = { onInfoClick(channel) },
+                                    contentDescription = "Channel info"
+                                )
                             }
                         }
                     ) {

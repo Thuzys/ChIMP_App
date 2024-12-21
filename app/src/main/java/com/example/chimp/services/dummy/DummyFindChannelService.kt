@@ -6,7 +6,9 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
+import kotlinx.coroutines.flow.Flow
 
 class DummyFindChannelService: FindChannelService {
 
@@ -27,6 +29,8 @@ class DummyFindChannelService: FindChannelService {
             owner = UserInfo(3u, "Owner 3"),
         ),
     )
+    override val connectivity: Flow<ConnectivityObserver.Status>
+        get() = TODO("Not yet implemented")
 
     override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> {
         TODO("Not yet implemented")

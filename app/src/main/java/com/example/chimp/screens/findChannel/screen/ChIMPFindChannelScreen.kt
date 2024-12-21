@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.ui.views.ChannelInfoView
-import com.example.chimp.screens.findChannel.screen.view.DisconnectedView
 import com.example.chimp.screens.findChannel.screen.view.ErrorView
 import com.example.chimp.screens.findChannel.screen.view.ScrollingView
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel
@@ -30,7 +28,6 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit,
     onRegisterNavigate: () -> Unit,
     onJoinNavigate : () -> Unit,
-    status: ConnectivityObserver.Status = ConnectivityObserver.Status.CONNECTED
 ) {
 
     val registerNavigate = {
@@ -52,47 +49,46 @@ fun ChIMPFindChannelScreen(
                 )
             }
         ) { modifier ->
-            if (status == ConnectivityObserver.Status.DISCONNECTED) {
-                DisconnectedView { viewModel.reset() }
-            } else {
-                when(curr) {
-                    FindChannelScreenState.BackToRegistration -> registerNavigate()
-                    is FindChannelScreenState.Error -> {
-                        ErrorView(
-                            state = curr,
-                            modifier = modifier,
-                            close = viewModel::goBack,
-                        )
-                    }
-                    is FindChannelScreenState.Info -> {
-                        ChannelInfoView(
-                            modifier = Modifier.fillMaxSize(),
-                            channel = curr.channel,
-                            onGoBackClick = viewModel::goBack
-                        )
-                    }
-                    FindChannelScreenState.Initial -> viewModel.getChannels()
+            when (curr) {
+                FindChannelScreenState.BackToRegistration -> registerNavigate()
+                is FindChannelScreenState.Error -> {
+                    ErrorView(
+                        state = curr,
+                        modifier = modifier,
+                        close = viewModel::goBack,
+                    )
+                }
 
-                    FindChannelScreenState.Loading -> {
-                        LoadingView(
-                            modifier = modifier
-                                .fillMaxSize()
-                                .wrapContentSize(Alignment.Center),
-                        )
-                    }
-                    is FindChannelScreenState.Scrolling -> {
-                        ScrollingView(
-                            modifier = modifier,
-                            publicChannels = curr,
-                            onLogout = viewModel::logout,
-                            onInfoClick = viewModel::toChannelInfo,
-                            onReload = viewModel::reset,
-                            onJoin = {viewModel.joinChannel(it, onJoinNavigate)},
-                            onSearchChange = viewModel::updateSearchText,
-                            onLoadMore = viewModel::loadMore,
-                            onLoadMoreSearching = viewModel::loadMore,
-                        )
-                    }
+                is FindChannelScreenState.Info -> {
+                    ChannelInfoView(
+                        modifier = Modifier.fillMaxSize(),
+                        channel = curr.channel,
+                        onGoBackClick = viewModel::goBack
+                    )
+                }
+
+                FindChannelScreenState.Initial -> viewModel.getChannels()
+
+                FindChannelScreenState.Loading -> {
+                    LoadingView(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center),
+                    )
+                }
+
+                is FindChannelScreenState.Scrolling -> {
+                    ScrollingView(
+                        modifier = modifier,
+                        publicChannels = curr,
+                        onLogout = viewModel::logout,
+                        onInfoClick = viewModel::toChannelInfo,
+                        onReload = viewModel::reset,
+                        onJoin = { viewModel.joinChannel(it, onJoinNavigate) },
+                        onSearchChange = viewModel::updateSearchText,
+                        onLoadMore = viewModel::loadMore,
+                        onLoadMoreSearching = viewModel::loadMore,
+                    )
                 }
             }
         }

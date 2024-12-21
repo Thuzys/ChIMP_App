@@ -67,7 +67,8 @@ private const val LOGOUT_ICON_PADDING = 8
 fun ScrollHeader(
     titleResId: Int,
     logout: () -> Unit,
-    connectivity: Status = Status.CONNECTED
+    connectivity: Status = Status.CONNECTED,
+    content: @Composable () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -84,7 +85,7 @@ fun ScrollHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var isToSow by remember { mutableStateOf(false) }
+        var isToShow by remember { mutableStateOf(false) }
         if (connectivity == Status.DISCONNECTED) {
             Icon(
                 imageVector = Icons.Default.Warning,
@@ -94,12 +95,12 @@ fun ScrollHeader(
                     .padding(8.dp)
                     .width(24.dp)
                     .height(24.dp)
-                    .clickable { isToSow = true }
+                    .clickable { isToShow = true }
             )
         }
         ShowDialog(
-            showDialog = isToSow,
-            onDismissRequest = { isToSow = false },
+            showDialog = isToShow,
+            onDismissRequest = { isToShow = false },
         ) {
             Text(
                 text = stringResource(R.string.no_internet_connection),
@@ -117,6 +118,8 @@ fun ScrollHeader(
         Spacer(
             modifier = Modifier.weight(0.7f)
         )
+        content()
+        Spacer(modifier = Modifier.weight(0.1f))
         Icon(
             imageVector = Icons.AutoMirrored.TwoTone.ExitToApp,
             contentDescription = "Logout",

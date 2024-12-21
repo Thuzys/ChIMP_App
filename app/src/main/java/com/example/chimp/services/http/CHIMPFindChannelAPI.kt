@@ -8,6 +8,9 @@ import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.User
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
@@ -37,16 +40,21 @@ import kotlinx.serialization.json.Json
 class CHIMPFindChannelAPI(
     private val client: HttpClient,
     private val url: String,
-    private val user: Flow<User?>
+    private val user: Flow<User?>,
+    connection: Flow<Status>
 ): FindChannelService {
     private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
     private var idx = 0
     private val limit = 10
     private val hasMore = limit + 1
+    override val connectivity: Flow<Status> = connection
 
     override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         Log.i(FIND_CHANNEL_SERVICE_TAG, "Joining channel $channelId")
         client
             .put("$url$INVITATION_BASE_URL") {
@@ -73,6 +81,9 @@ class CHIMPFindChannelAPI(
 
     private suspend fun fetchChannels(url: String): Either<ResponseError, FindChannelsResult> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         Log.d(FIND_CHANNEL_SERVICE_TAG, "Fetching channels from $url")
         idx = 0
         client
@@ -106,6 +117,9 @@ class CHIMPFindChannelAPI(
 
     private suspend fun fetchMoreChannels(url: String): Either<ResponseError, Unit> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         idx += limit
         client
             .get(url) { makeHeader(curr) }

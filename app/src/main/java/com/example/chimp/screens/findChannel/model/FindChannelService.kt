@@ -3,6 +3,7 @@ package com.example.chimp.screens.findChannel.model
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
 import kotlinx.coroutines.flow.Flow
 
 typealias FindChannelsResult = Pair<Flow<List<ChannelInfo>>, Flow<Boolean>>
@@ -11,6 +12,10 @@ typealias FindChannelsResult = Pair<Flow<List<ChannelInfo>>, Flow<Boolean>>
  * Interface that defines the service used in FindChannelViewModel.
  */
 interface FindChannelService {
+    /**
+     * The flow of the current user's connectivity status.
+     */
+    val connectivity: Flow<Status>
     /**
      * Join a channel.
      * @param channelId the id of the channel to join
