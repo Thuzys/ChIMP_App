@@ -128,6 +128,6 @@ internal fun ChatBaseView(
 @Composable
 private fun ChatBaseViewPreview() {
     ChatBaseView(
-        channelName = ChannelName("channel")
+        channelName = ChannelName("channel", "channel")
     )
 }
