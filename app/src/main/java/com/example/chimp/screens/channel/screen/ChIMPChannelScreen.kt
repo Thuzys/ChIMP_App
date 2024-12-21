@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import com.example.chimp.screens.channel.screen.view.ChannelInvitationView
 import com.example.chimp.screens.channel.screen.view.ScrollingView
+import com.example.chimp.screens.channel.screen.view.ShowingInvitationView
 import com.example.chimp.screens.channel.viewModel.ChannelViewModel
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
 import com.example.chimp.screens.ui.views.ErrorView
@@ -37,7 +39,9 @@ internal fun ChIMPChannelScreen(
                     state = curr,
                     onBackClick = onBack,
                     onSendMessage = { vm.sendMessage(it) },
-                    loadMore = vm::loadMore
+                    onDeleteOrLeave = { vm.deleteOrLeave(onBack) },
+                    loadMore = vm::loadMore,
+                    onCreateInvite = vm::toCreateInvitation
                 )
             }
             is ChannelScreenState.Editing -> TODO()
@@ -46,6 +50,19 @@ internal fun ChIMPChannelScreen(
                     modifier = Modifier.fillMaxSize(),
                     error = curr.error,
                     tryAgain = vm::goBack
+                )
+            }
+            is ChannelScreenState.CreatingInvitation -> {
+                ChannelInvitationView(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = vm::goBack,
+                    onGenerateClick = { vm.generateInvitation(it) }
+                )
+            }
+            is ChannelScreenState.ShowingInvitation -> {
+                ShowingInvitationView(
+                    inviteCode = curr.invitation,
+                    onDismiss = vm::goBack
                 )
             }
         }

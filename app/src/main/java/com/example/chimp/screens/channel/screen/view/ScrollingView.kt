@@ -1,6 +1,8 @@
 package com.example.chimp.screens.channel.screen.view
 
 import android.view.ViewTreeObserver
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,6 +14,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +28,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
@@ -36,6 +44,7 @@ import com.example.chimp.screens.channel.screen.composable.ChatHeader
 import com.example.chimp.screens.channel.screen.composable.MakeMessage
 import com.example.chimp.screens.channel.screen.composable.TextInput
 import com.example.chimp.screens.ui.composable.LoadMoreIcon
+import com.example.chimp.screens.ui.composable.ShowDialog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import java.sql.Timestamp
@@ -67,8 +76,11 @@ internal fun ScrollingView(
     state: Scrolling,
     onBackClick: () -> Unit = {},
     onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onDeleteOrLeave: () -> Unit = {},
+    editChannel: (ChannelBasicInfo) -> Unit = {},
     onSendMessage: (String) -> Unit = {},
-    loadMore: () -> Unit = {}
+    loadMore: () -> Unit = {},
+    onCreateInvite: () -> Unit = {},
 ) {
     var textInputHeight by remember { mutableStateOf(TEXT_INPUT_HEIGHT.dp) }
     var lazyColumnMaxHeight by remember { mutableFloatStateOf(LAZY_COLUMN_FILL_MAX_HEIGHT) }
@@ -114,6 +126,63 @@ internal fun ScrollingView(
             }
         }
         ChatHeader(onBackClick, state.channel) { isToShowOptions = true }
+        ShowDialog(
+            showDialog = isToShowOptions,
+            onDismissRequest = { isToShowOptions = false },
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
+                    onClick = { onInfoClick(state.channel) }
+                ) {
+                    Text(
+                        text = "Channel Info",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                Button(
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onErrorContainer),
+                    onClick = onDeleteOrLeave
+                ) {
+                    Text(
+                        text = if (state.user.id == state.channel.owner.id) "Delete Channel" else "Leave Channel",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                if (state.user.id == state.channel.owner.id) {
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
+                        onClick = { editChannel(state.channel) }
+                    ) {
+                        Text(
+                            text = "Edit Channel",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
+                        onClick = onCreateInvite
+                    ) {
+                        Text(
+                            text = "Create Invite",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
+        }
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -141,10 +210,12 @@ internal fun ScrollingView(
                 }
             }
         }
-        TextInput(
-            modifier = Modifier.height(textInputHeight),
-            onSendMessage = onSendMessage
-        )
+        if (state.accessControl == READ_WRITE) {
+            TextInput(
+                modifier = Modifier.height(textInputHeight),
+                onSendMessage = onSendMessage
+            )
+        }
     }
 }
 

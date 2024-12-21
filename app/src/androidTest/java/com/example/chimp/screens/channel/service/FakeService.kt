@@ -61,7 +61,7 @@ internal class FakeService: ChannelService {
         return success(READ_WRITE)
     }
 
-    override suspend fun initSseOnMessages(): Either<ResponseError, Unit> {
+    override suspend fun initSseOnMessages() {
         TODO("Not yet implemented")
     }
 

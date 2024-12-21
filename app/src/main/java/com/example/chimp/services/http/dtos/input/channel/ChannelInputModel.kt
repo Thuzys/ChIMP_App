@@ -14,7 +14,9 @@ internal data class ChannelInputModel(
     val description: String?,
     val icon: String,
     val visibility: String,
-    val owner: OwnerInputModel
+    val owner: OwnerInputModel,
+    val accessControl: String,
+    val messages: List<String>,
 ) {
     fun toChannelInfo() = ChannelInfo(
         cId = id,

@@ -17,6 +17,7 @@ import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * ChIMPChannelsAPI is the implementation of the ChannelsServices interface.
@@ -137,7 +139,50 @@ class ChIMPChannelsAPI(
             }
     }
 
+    override suspend fun initSseOnChannels() {
+        val curr = user.first() ?: return
+        try {
+            client.sse(
+                urlString = "$api/sse",
+                request = { makeHeader(curr) },
+                reconnectionTime = RECONNECT_TIME.minutes
+            ) {
+                while (true) {
+                    incoming.collect { event ->
+                        Log.i(CHANNELS_SERVICE_TAG, "Event: ${event.data}")
+                        when (event.event) {
+                            JOIN_OR_UPDATE -> {
+                                event.data?.let { data ->
+                                    val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelBasicInfo()
+                                    if (_channels.value.find { it.cId == channel.cId } == null) {
+                                        _channels.emit(_channels.value + channel)
+                                    } else {
+                                        _channels.emit(_channels.value.map { c ->
+                                            if (c.cId == channel.cId) channel else c
+                                        })
+                                    }
+                                }
+                            }
+                            DELETE_OR_LEAVE -> {
+                                event.data?.let { data ->
+                                    val channel = Json.decodeFromString<UInt>(data)
+                                    if (_channels.value.find { it.cId == channel } != null)
+                                        _channels.emit(_channels.value.filter { it.cId != channel })
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
+        }
+    }
+
     companion object {
         const val CHANNELS_SERVICE_TAG = "ChannelsService"
+        const val RECONNECT_TIME = 5
+        const val JOIN_OR_UPDATE = "joinOrUpdate"
+        const val DELETE_OR_LEAVE = "deleteOrLeave"
     }
 }

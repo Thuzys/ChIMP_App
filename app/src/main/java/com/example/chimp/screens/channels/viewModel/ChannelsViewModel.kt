@@ -32,6 +32,7 @@ internal class ChannelsViewModel(
     val user = userInfoRepository.userInfo
 
     fun loadChannels() {
+        viewModelScope.launch { service.initSseOnChannels() }
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Initial) return@launch

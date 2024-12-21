@@ -1,4 +1,4 @@
-package com.example.chimp.services.http.dtos.output.message
+package com.example.chimp.services.http.dtos.output.channelInvitation
 
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import kotlinx.serialization.Serializable

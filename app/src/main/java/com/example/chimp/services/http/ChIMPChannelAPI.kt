@@ -3,6 +3,7 @@ package com.example.chimp.services.http
 import android.util.Log
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
@@ -15,9 +16,10 @@ import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import com.example.chimp.services.http.ChIMPChannelsAPI.Companion.CHANNELS_SERVICE_TAG
 import com.example.chimp.services.http.dtos.input.channel.AccessControlInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
+import com.example.chimp.services.http.dtos.input.channelInvitation.ChannelInvitationInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.dtos.input.message.MessageInputModel
-import com.example.chimp.services.http.dtos.output.message.ChannelInvitationOutputModel
+import com.example.chimp.services.http.dtos.output.channelInvitation.ChannelInvitationOutputModel
 import com.example.chimp.services.http.dtos.output.message.MessageOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
@@ -238,8 +240,8 @@ class ChIMPChannelAPI(
             }
     }
 
-    override suspend fun initSseOnMessages(): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+    override suspend fun initSseOnMessages() {
+        val curr = user.first() ?: return
         try {
             client.sse(
                 urlString = "$messagesApi/sse",
@@ -266,19 +268,18 @@ class ChIMPChannelAPI(
             }
         } catch (e: Exception) {
             Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-            return failure(e.message?.let { ResponseError(cause = it) }
-                ?: ResponseError.Unknown)
         }
-        return success(Unit)
     }
 
     override suspend fun createChannelInvitation(
-        expirationDate: String,
-        maxUses: UInt,
-        accessControl: AccessControl
+        channelInvitation: ChannelInvitation
     ): Either<ResponseError, String> {
         val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        val expirationDate =
+            channelInvitation.formatTimestamp(channelInvitation.getExpirationTime())
+        val maxUses = channelInvitation.maxUses
+        val accessControl = channelInvitation.permission
         client
             .post("$channelApi/invitations") {
                 makeHeader(curr)
@@ -294,7 +295,7 @@ class ChIMPChannelAPI(
                 try {
                     return when (response.status) {
                         HttpStatusCode.OK -> {
-                           success(response.body<String>())
+                           success(response.body<ChannelInvitationInputModel>().invitationCode)
                         }
 
                         HttpStatusCode.Unauthorized -> {

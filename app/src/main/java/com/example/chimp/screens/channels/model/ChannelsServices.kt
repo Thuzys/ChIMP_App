@@ -19,4 +19,5 @@ interface ChannelsServices {
     suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit>
     suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo>
     suspend fun fetchMore(): Either<ResponseError, Unit>
+    suspend fun initSseOnChannels()
 }
