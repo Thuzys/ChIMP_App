@@ -3,6 +3,7 @@ package com.example.chimp.screens.ui.composable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -33,9 +34,11 @@ fun MenuBottomBar(
     chatsIsEnable: Boolean = true,
     findChannelIsEnable: Boolean = true,
     aboutIsEnable: Boolean = true,
+    createChannelIsEnable: Boolean = true,
     onMenuClick: () -> Unit = {},
     findChannelClick: () -> Unit = {},
     aboutClick: () -> Unit = {},
+    createChannelClick: () -> Unit = {}
 ) {
     BottomAppBar(
         contentPadding = PaddingValues(16.dp),
@@ -59,6 +62,13 @@ fun MenuBottomBar(
             enabled = aboutIsEnable
         ) {
             Icon(Icons.Default.Info, contentDescription = "About")
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = createChannelClick,
+            enabled = createChannelIsEnable
+        ) {
+            Icon(Icons.Default.Add, contentDescription = "CreateChannel")
         }
     }
 }

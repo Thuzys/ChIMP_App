@@ -1,9 +1,7 @@
 package com.example.chimp.services.http
 
 import android.util.Log
-import com.example.chimp.models.channel.AccessControl
-import com.example.chimp.models.channel.ChannelBasicInfo
-import com.example.chimp.models.channel.Visibility
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
@@ -20,7 +18,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 
 class CHIMPCreateChannelAPI(
@@ -29,14 +26,14 @@ class CHIMPCreateChannelAPI(
     private val user: Flow<User?>
 ) : CreateChannelService {
 
-    override suspend fun fetchChannelByNames(channelName: String): Either<ResponseError, ChannelBasicInfo> {
+    override suspend fun fetchChannelByNames(channelName: String): Either<ResponseError, ChannelInfo> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         client
             .get("$url$MY_CHANNELS_URL") { makeHeader(curr) }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelBasicInfo>>()
+                        val channels = response.body<List<ChannelInfo>>()
                         val ownedChannels = channels.filter { it.owner.id == curr.id }
                         val channel = ownedChannels.filter { it.name.name.lowercase() == channelName.lowercase() }
                         if (channel.isNotEmpty()) {

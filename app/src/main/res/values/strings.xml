@@ -23,6 +23,7 @@
     <string name="channelName_message">Channel Name</string>
     <string name="channelName">ChannelName</string>
     <string name="createChannel">Create Channel</string>
+    <string name="channel_description">Channel Description</string>
     <string name="select_visibility">Choose Channel Visibility</string>
     <string name="select_accessControl">Choose Channel Access Control</string>
     <string name="duplicate_channel_error">You can´t have two channels with the same name</string>
