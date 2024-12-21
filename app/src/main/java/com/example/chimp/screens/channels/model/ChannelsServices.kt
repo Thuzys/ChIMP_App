@@ -20,4 +20,5 @@ interface ChannelsServices {
     suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult>
     suspend fun deleteOrLeave(channel: ChannelInfo): Either<ResponseError, Unit>
     suspend fun fetchMore(): Either<ResponseError, Unit>
+    suspend fun createUserInvitation(date: String): Either<ResponseError, String>
 }

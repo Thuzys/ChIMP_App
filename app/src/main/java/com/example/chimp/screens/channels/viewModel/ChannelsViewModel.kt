@@ -15,6 +15,7 @@ import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Sc
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.screens.channels.model.FetchChannelsResult
+import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.CreateUserInvitation
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -124,6 +125,7 @@ internal class ChannelsViewModel(
         viewModelScope.launch {
             when (val curr = state.value) {
                 is Info -> _state.emit(curr.goBack)
+                is CreateUserInvitation -> _state.emit(curr.goBack)
                 is Error -> _state.emit(curr.goBack)
                 else -> return@launch
             }
@@ -175,6 +177,31 @@ internal class ChannelsViewModel(
             val curr = state.value
             if (curr is Initial) return@launch
             _state.emit(Initial)
+        }
+    }
+
+    fun toUserInvitation(date: String) {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is Scrolling) return@launch
+            when(val result = service.createUserInvitation(date)) {
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> {
+                            userInfoRepository.clearUserInfo()
+                            _state.emit(BackToRegistration)
+                        }
+
+                        ResponseError.NoInternet -> {
+                            _state.emit(Error(result.value, Initial))
+                        }
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
+
+                is Success<String> -> _state.emit(CreateUserInvitation(result.value, curr))
+            }
         }
     }
 

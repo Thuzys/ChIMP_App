@@ -1,5 +1,6 @@
 package com.example.chimp.screens.channel.screen.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,33 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chimp.models.channel.ChannelInvitation
+import com.example.chimp.models.time.getMillisFromTimeString
+import com.example.chimp.models.time.toOptionFormat
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
 import java.sql.Timestamp
-
-fun getMillisFromTimeString(timeString: String): Long {
-    return when(timeString) {
-        "30 minutes" -> 30 * 60 * 1000L
-        "1 hour" -> 60 * 60 * 1000L
-        "1 day" -> 24 * 60 * 60 * 1000L
-        "1 week" -> 7 * 24 * 60 * 60 * 1000L
-        else -> 30 * 60 * 1000L
-    }
-}
-
-private fun Timestamp.toOptionFormat(): String {
-    val minutes = time / 60 / 1000
-    val hours = time / 60 / 60 / 1000
-    val days = time / 24 / 60 / 60 / 1000
-    val weeks = time / 7 / 24 / 60 / 60 / 1000
-
-    return when {
-        time < 60 * 60 * 1000 -> "$minutes minute${if (minutes == 1L) "" else "s"}"
-        time < 24 * 60 * 60 * 1000 -> "$hours hour${if (hours == 1L) "" else "s"}"
-        time < 7 * 24 * 60 * 60 * 1000 -> "$days day${if (days == 1L) "" else "s"}"
-        else -> "$weeks week${if (weeks == 1L) "" else "s"}"
-    }
-}
 
 @Composable
 internal fun ChannelInvitationView(
@@ -73,17 +52,11 @@ internal fun ChannelInvitationView(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            Button(
-                onClick = { onBackClick() },
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .heightIn(min = 20.dp, max = 20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Back",
-                )
-            }
+            Icon(
+                modifier = Modifier.clickable(onClick = onBackClick),
+                imageVector = Icons.Default.Close,
+                contentDescription = "Back",
+            )
         }
         SelectOutlinedTextField(
             options = listOf("30 minutes", "1 hour", "1 day", "1 week"),

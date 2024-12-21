@@ -16,6 +16,7 @@ import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.ui.views.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
+import com.example.chimp.screens.ui.views.ShowingInvitationView
 
 const val CHANNELS_SCREEN_TAG = "ChannelsScreen"
 
@@ -80,7 +81,8 @@ internal fun ChIMPChannelsScreen(
                         onDeleteOrLeave = vm::deleteOrLeave,
                         onInfoClick = vm::toChannelInfo,
                         onChannelClick = { vm.onChannelClick(it, onChannelNavigate) },
-                        onLoadMore = vm::loadMore
+                        onLoadMore = vm::loadMore,
+                        onCreateUserInvitation = vm::toUserInvitation
                     )
                 }
             }
@@ -103,6 +105,13 @@ internal fun ChIMPChannelsScreen(
             is ChannelsScreenState.BackToRegistration -> {
                 vm.backToRegistration()
                 registerNavigate()
+            }
+            is ChannelsScreenState.CreateUserInvitation -> {
+                ShowingInvitationView(
+                    modifier = Modifier.fillMaxSize(),
+                    inviteCode = curr.inviteCode,
+                    onDismiss = vm::goBack
+                )
             }
         }
     }

@@ -15,12 +15,16 @@ import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
 import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
+import com.example.chimp.services.http.dtos.input.userInvitation.UserInvitationInputModel
+import com.example.chimp.services.http.dtos.output.userInvitation.UserInvitationOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +57,8 @@ class ChIMPChannelsAPI(
     private var idx = 0
     private val limit = 50
     private val hasMore = limit + 1
-    private val api = "$url/api/channels"
+    private val channelApi = "$url/api/channels"
+    private val userApi = "$url/api/users"
     override val connectivity: Flow<Status> = connection
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -76,7 +81,7 @@ class ChIMPChannelsAPI(
         }
         idx = 0
         client
-            .get("$api/my?limit=$hasMore") { makeHeader(curr) }
+            .get("$channelApi/my?limit=$hasMore") { makeHeader(curr) }
             .let { response ->
                 try {
                     return when(response.status) {
@@ -104,7 +109,7 @@ class ChIMPChannelsAPI(
             if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
         }
         client
-            .delete("$api/${channel.cId}") { makeHeader(curr) }
+            .delete("$channelApi/${channel.cId}") { makeHeader(curr) }
             .let { response ->
                 try {
                     if (response.status == HttpStatusCode.OK) {
@@ -129,7 +134,7 @@ class ChIMPChannelsAPI(
         Log.i(CHANNELS_SERVICE_TAG, "Fetching more channels")
         idx += limit
         client
-            .get("$api/my?offset=$idx&limit=$hasMore") { makeHeader(curr) }
+            .get("$channelApi/my?offset=$idx&limit=$hasMore") { makeHeader(curr) }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
@@ -149,14 +154,43 @@ class ChIMPChannelsAPI(
             }
     }
 
-     private suspend fun initSseOnChannels() {
+    override suspend fun createUserInvitation(date: String): Either<ResponseError, String> {
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
+        client
+            .post("$userApi/invitation")
+            {
+                makeHeader(curr)
+                setBody(UserInvitationOutputModel(date))
+            }
+            .let { response ->
+                try {
+                    return when(response.status) {
+                        HttpStatusCode.OK -> {
+                            val invitation = response.body<UserInvitationInputModel>()
+                            success(invitation.invitationCode)
+                        }
+                        HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
+                        else -> failure(response.body<ErrorInputModel>().toResponseError())
+                    }
+                } catch (e: Exception) {
+                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(e.message?.let { ResponseError(cause = it) }
+                        ?: ResponseError.Unknown)
+                }
+            }
+    }
+
+    private suspend fun initSseOnChannels() {
         val curr = user.first() ?: return
         connectivity.first().let { conn ->
             if (conn == DISCONNECTED) return
         }
         try {
             client.sse(
-                urlString = "$api/sse",
+                urlString = "$channelApi/sse",
                 request = { makeHeader(curr) },
                 reconnectionTime = RECONNECT_TIME.minutes
             ) {

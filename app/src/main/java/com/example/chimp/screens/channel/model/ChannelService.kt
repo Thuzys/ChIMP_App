@@ -22,8 +22,6 @@ typealias FetchMessagesResult = Pair<Flow<List<Message>>, Flow<Boolean>>
  */
 interface ChannelService {
     val connectivity : Flow<Status>
-    val notification: Flow<List<Message>>
-    suspend fun clearNotification()
     suspend fun fetchMessages() : Either<ResponseError, FetchMessagesResult>
     suspend fun fetchMore(): Either<ResponseError, Unit>
     suspend fun sendMessage(message: Message): Either<ResponseError, Unit>

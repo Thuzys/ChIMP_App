@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
  * - Error: An error occurred while loading the screen.
  * - Scrolling: The user is scrolling through the channels.
  * - Info: The user is viewing the information of a channel.
+ * - CreateUserInvitation: The user is creating an invitation for another user.
  */
 internal sealed interface ChannelsScreenState {
     data object Initial : ChannelsScreenState
@@ -33,5 +34,9 @@ internal sealed interface ChannelsScreenState {
     data class Info(
         val channel: ChannelInfo,
         val goBack: ChannelsScreenState,
+    ) : ChannelsScreenState
+    data class CreateUserInvitation(
+        val inviteCode: String,
+        val goBack: ChannelsScreenState
     ) : ChannelsScreenState
 }

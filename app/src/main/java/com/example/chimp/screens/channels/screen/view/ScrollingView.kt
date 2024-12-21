@@ -1,6 +1,7 @@
 package com.example.chimp.screens.channels.screen.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,12 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,20 +34,26 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.time.formatTimestamp
+import com.example.chimp.models.time.getMillisFromTimeString
+import com.example.chimp.models.time.toOptionFormat
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
-import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.LoadMoreIcon
+import com.example.chimp.screens.ui.composable.MakeButton
+import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
+import com.example.chimp.screens.ui.composable.ShowDialog
 import com.example.chimp.screens.ui.composable.SwipeableRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
+import java.sql.Time
+import java.sql.Timestamp
 
 
 /**
@@ -128,17 +139,59 @@ internal fun ScrollingView(
     onReload: () -> Unit = {},
     onChannelClick: (ChannelInfo) -> Unit = {},
     onDeleteOrLeave: (ChannelInfo) -> Unit = {},
-    onLoadMore: () -> Unit = {}
+    onLoadMore: () -> Unit = {},
+    onCreateUserInvitation: (String) -> Unit = {}
 ) {
     val channels by chats.channels.collectAsState(emptyList())
     val hasMore by chats.hasMore.collectAsState(false)
     val connectivity by chats.connectivity.collectAsState(CONNECTED)
+    var isToShow by remember { mutableStateOf(false) }
+    var expiration by remember { mutableStateOf("30 minutes") }
     Column(
         modifier = modifier.testTag(CHANNEL_SCROLLING_VIEW),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ScrollHeader(R.string.my_chats, onLogout, connectivity)
+        ScrollHeader(R.string.my_chats, onLogout, connectivity) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Create a user invite",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { isToShow = true }
+            )
+        }
+
+        ShowDialog(
+            showDialog = isToShow,
+            onDismissRequest = { isToShow = false },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                SelectOutlinedTextField(
+                    options = listOf("30 minutes", "1 hour", "1 day", "1 week"),
+                    selectedOption = expiration,
+                    onOptionSelected =
+                    { expiration = it },
+                    label = "Expire After",
+                    modifier = Modifier.fillMaxWidth()
+                )
+                MakeButton(
+                    text = "Create User Invitation",
+                    onClick = {
+                        onCreateUserInvitation(
+                            formatTimestamp(
+                                Timestamp(getMillisFromTimeString(expiration))
+                            )
+                        )
+                        isToShow = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
         SwipeRefresh(
             modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = SwipeRefreshState(false),
@@ -153,7 +206,7 @@ internal fun ScrollingView(
             ) {
                 itemsIndexed(
                     items = channels,
-                    key = { index, channel -> "${channel.cId}_$index"  },
+                    key = { index, channel -> "${channel.cId}_$index" },
                 ) { _, channel ->
                     SwipeableRow(
                         modifier = Modifier

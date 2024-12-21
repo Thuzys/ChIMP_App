@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.testTag
 import com.example.chimp.screens.channel.screen.view.EditChannelView
 import com.example.chimp.screens.channel.screen.view.ChannelInvitationView
 import com.example.chimp.screens.channel.screen.view.ScrollingView
-import com.example.chimp.screens.channel.screen.view.ShowingInvitationView
+import com.example.chimp.screens.ui.views.ShowingInvitationView
 import com.example.chimp.screens.channel.viewModel.ChannelViewModel
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
 import com.example.chimp.screens.ui.views.ChannelInfoView
@@ -78,6 +78,7 @@ internal fun ChIMPChannelScreen(
             }
             is ChannelScreenState.ShowingInvitation -> {
                 ShowingInvitationView(
+                    modifier = Modifier.fillMaxSize(),
                     inviteCode = curr.invitation,
                     onDismiss = vm::goBack
                 )
