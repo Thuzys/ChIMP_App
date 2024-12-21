@@ -79,7 +79,7 @@ class ChIMPApplication : Application(), DependenciesContainer {
     }
 
     override val findChannelService: FindChannelService by lazy {
-        CHIMPFindChannelAPI(client, url, userInfoRepository.userInfo)
+        CHIMPFindChannelAPI(client, url, userInfoRepository.userInfo, connectivityObserver.connectivity)
     }
 
     override val formValidation: FormValidation by lazy {

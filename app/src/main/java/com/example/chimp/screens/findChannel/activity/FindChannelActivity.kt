@@ -59,11 +59,8 @@ class FindChannelActivity: ComponentActivity() {
         Intent(this, ChannelActivity::class.java)
     }
 
-    private lateinit var connectivityObserver: ConnectivityObserver
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        connectivityObserver = NetworkConnectivityObserver(applicationContext)
         enableEdgeToEdge()
         setContent {
             ChIMPTheme {

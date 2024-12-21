@@ -8,6 +8,7 @@ import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
@@ -39,6 +40,7 @@ class FindChannelViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
     private val _searchText = MutableStateFlow("")
+    private val connection = service.connectivity
     val state: StateFlow<FindChannelScreenState> = _state
     val user = userInfoRepository.userInfo
 
@@ -65,6 +67,16 @@ class FindChannelViewModel(
                         )
                     }
                 }
+        }
+        viewModelScope.launch {
+            connection.collect { status ->
+                if (status == ConnectivityObserver.Status.DISCONNECTED) {
+                    _state.value = FindChannelScreenState.Error(
+                        ResponseError.NoInternet,
+                        _state.value
+                    )
+                }
+            }
         }
     }
 
