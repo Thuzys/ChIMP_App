@@ -10,11 +10,14 @@ import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channels.model.ChannelsServices
+import com.example.chimp.screens.createChannel.model.CreateChannelService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.screens.register.model.RegisterService
 
 class ChIMPApplicationReplacer(override val connectivityObserver: ConnectivityObserver) : Application(), DependenciesContainer {
+    override val createChannelService: CreateChannelService
+        get() = TODO("Not yet implemented")
     override val loginService: RegisterService
         get() = TODO("Not yet implemented")
     override val channelsService: ChannelsServices

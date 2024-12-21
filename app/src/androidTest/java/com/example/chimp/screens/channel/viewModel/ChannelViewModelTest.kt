@@ -91,7 +91,7 @@ class ChannelViewModelTest {
                 fakeChannelRepo.repo,
                 service,
                 fakeUserInfoRepo.repo,
-                Scrolling(flowOf(emptyList()), flowOf(false))
+                //Scrolling(flowOf(emptyList()), flowOf(false))
             )
 
             vm.toEdit()
@@ -129,7 +129,7 @@ class ChannelViewModelTest {
                 fakeChannelRepo.repo,
                 service,
                 fakeUserInfoRepo.repo,
-                Scrolling(flowOf(emptyList()), flowOf(false))
+                //Scrolling(flowOf(emptyList()), flowOf(false))
             )
 
             vm.loadMore()
@@ -153,10 +153,10 @@ class ChannelViewModelTest {
                 fakeChannelRepo.repo,
                 service,
                 fakeUserInfoRepo.repo,
-                Editing(
-                    channel,
-                    Scrolling(flowOf(emptyList()), flowOf(false))
-                )
+                //Editing(
+                    //channel,
+                    //Scrolling(flowOf(emptyList()), flowOf(false))
+                //)
             )
 
             vm.editChannel(channel)
@@ -176,7 +176,7 @@ class ChannelViewModelTest {
                 fakeChannelRepo.repo,
                 service,
                 fakeUserInfoRepo.repo,
-                Scrolling(flowOf(emptyList()), flowOf(false))
+                //Scrolling(flowOf(emptyList()), flowOf(false))
             )
 
             fakeChannelRepo
