@@ -20,4 +20,8 @@
     <string name="no_description">No description available</string>
     <string name="channel_owner">Owner: %1$s</string>
     <string name="search_bar_content">Search</string>
+    <string name="channelName_message">Channel Name</string>
+    <string name="channelName">ChannelName</string>
+    <string name="createChannel">Create Channel</string>
+    <string name="duplicate_channel_error">You can´t have two channels with the same name</string>
 </resources>
