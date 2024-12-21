@@ -53,7 +53,7 @@ const val SCROLLING_VIEW = "ScrollingView"
 
 private const val LAZY_COLUMN_FILL_MAX_HEIGHT = 0.9f
 
-private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.8f
+private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.7f
 
 private const val TEXT_INPUT_HEIGHT = 100
 
@@ -200,7 +200,6 @@ internal fun ScrollingView(
         }
         if (state.accessControl == READ_WRITE) {
             TextInput(
-                modifier = Modifier.height(textInputHeight),
                 onSendMessage = onSendMessage
             )
         }
@@ -255,6 +254,89 @@ private fun ChatPreview() {
             message = "Hi",
             time = Timestamp(System.currentTimeMillis()),
             mId = 6u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 7u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 8u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 9u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "Hi",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 10u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 11u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 12u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 13u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "Hi",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 14u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "How are you?",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 15u,
+            cId = 1u
+        ),
+        Message(
+            owner = user2,
+            message = "I'm fine",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 16u,
+            cId = 1u
+        ),
+        Message(
+            owner = user1,
+            message = "Good to hear with a really long message, " +
+                    "that needs to be wrapped, in order" +
+                    " to test the wrapping of the message",
+            time = Timestamp(System.currentTimeMillis()),
+            mId = 17u,
             cId = 1u
         ),
     )

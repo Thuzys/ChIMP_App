@@ -15,6 +15,7 @@ data class ResponseError(
         val NotFound = ResponseError("Not Found")
         val BadRequest = ResponseError("Bad Request")
         val InternalServerError = ResponseError("Internal Server Error")
+        val NoInternet = ResponseError("No internet connection")
         val Unknown =
             ResponseError("Unknown error, please verify internet connection and try again later.")
     }

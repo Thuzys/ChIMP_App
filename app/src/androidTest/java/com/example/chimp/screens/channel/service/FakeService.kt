@@ -41,11 +41,6 @@ internal class FakeService: ChannelService {
         return success(Unit)
     }
 
-    override suspend fun fetchChannelInfo(): Either<ResponseError, ChannelInfo> {
-        controller.receive()
-        return success(channel)
-    }
-
     override suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit> {
         controller.receive()
         return success(Unit)

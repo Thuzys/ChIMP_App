@@ -23,7 +23,11 @@ class DummyChannelsService : ChannelsServices {
         return success(Unit)
     }
 
-    override suspend fun initSseOnChannels() {
+    override suspend fun initSseOnChannels(): Either<ResponseError, Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun initConnectionObserver() {
         TODO("Not yet implemented")
     }
 }

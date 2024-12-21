@@ -18,6 +18,8 @@ import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 internal class ChannelsViewModel(
@@ -30,21 +32,38 @@ internal class ChannelsViewModel(
     val state = _state.asStateFlow()
     val user = userInfoRepository.userInfo
 
-    fun loadChannels() {
+    init {
+        viewModelScope.launch { service.initConnectionObserver() }
         viewModelScope.launch { service.initSseOnChannels() }
+    }
+
+    fun loadChannels() {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Initial) return@launch
             _state.emit(ChannelsScreenState.Loading)
             when (val result = service.fetchChannels()) {
-                is Success<FetchChannelsResult> -> _state.emit(
-                    Scrolling(result.value.first, result.value.second)
-                )
+                is Success<FetchChannelsResult> -> {
+                    userInfoRepository.updateChannelList(result.value.first.first())
+                    _state.emit(
+                        Scrolling(result.value.first, result.value.second)
+                    )
+                }
 
-                is Failure<ResponseError> -> _state.emit(
-                    if (result.value == ResponseError.Unauthorized) BackToRegistration
-                    else Error(result.value, curr)
-                )
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> {
+                            userInfoRepository.clearUserInfo()
+                            _state.emit(BackToRegistration)
+                        }
+
+                        ResponseError.NoInternet -> {
+                            _state.emit(Scrolling(userInfoRepository.channelList, flowOf(false)))
+                        }
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }
@@ -57,7 +76,7 @@ internal class ChannelsViewModel(
         }
     }
 
-    fun onChannelClick(channel: ChannelInfo , navigateToChannel: () -> Unit) {
+    fun onChannelClick(channel: ChannelInfo, navigateToChannel: () -> Unit) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Scrolling) return@launch
@@ -73,11 +92,21 @@ internal class ChannelsViewModel(
             _state.emit(ChannelsScreenState.Loading)
             when (val result = service.deleteOrLeave(channel)) {
                 is Success<Unit> -> _state.emit(curr)
-                
-                is Failure<ResponseError> -> _state.emit(
-                    if (result.value == ResponseError.Unauthorized) BackToRegistration
-                    else Error(result.value, curr)
-                )
+
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> {
+                            userInfoRepository.clearUserInfo()
+                            _state.emit(BackToRegistration)
+                        }
+
+                        ResponseError.NoInternet -> {
+                            _state.emit(Error(result.value, Initial))
+                        }
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }
@@ -105,9 +134,20 @@ internal class ChannelsViewModel(
             val curr = state.value
             if (curr !is Scrolling) return@launch
             when (val result = service.fetchMore()) {
-                is Failure<ResponseError> ->
-                    if (result.value == ResponseError.Unauthorized) _state.emit(BackToRegistration)
-                    else _state.emit(Error(result.value, curr))
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> {
+                            userInfoRepository.clearUserInfo()
+                            _state.emit(BackToRegistration)
+                        }
+
+                        ResponseError.NoInternet -> {
+                            _state.emit(Scrolling(userInfoRepository.channelList, flowOf(false)))
+                        }
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
 
                 is Success -> return@launch
             }
