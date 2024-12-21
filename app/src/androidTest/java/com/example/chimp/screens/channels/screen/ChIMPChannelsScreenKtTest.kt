@@ -18,7 +18,7 @@ import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Lo
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.ui.views.ERROR_VIEW_TEST_TAG
 import com.example.chimp.screens.ui.views.LOADING_VIEW_TEST_TAG
-import com.example.chimp.utils.FakeUserInfoRepositoryRule
+import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
 import org.junit.Test
@@ -90,7 +90,7 @@ class ChIMPChannelsScreenKtTest {
         val service = FakeService()
         val channel = ChannelInfo(
             cId = 1u,
-            name = ChannelName("name"),
+            name = ChannelName("name", "name"),
             owner = UserInfo(1u, "test")
         )
         val vm = ChannelsViewModel(

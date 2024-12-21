@@ -1,5 +1,6 @@
 package com.example.chimp.services.http.dtos.input.channel
 
+import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.toIcon
 import com.example.chimp.models.users.UserInfo
@@ -17,9 +18,16 @@ internal data class ChannelInputModel(
 ) {
     fun toChannelInfo() = ChannelInfo(
         cId = id,
-        name = ChannelName(name.displayName),
+        name = ChannelName(name.name, name.displayName),
         description = if (description == "") null else description,
         icon = icon.toIcon(),
         owner = UserInfo(owner.id, owner.name)
+    )
+
+    fun toChannelBasicInfo() = ChannelBasicInfo(
+        cId = id,
+        name = ChannelName(name.name, name.displayName),
+        owner = UserInfo(owner.id, owner.name),
+        icon = icon.toIcon()
     )
 }

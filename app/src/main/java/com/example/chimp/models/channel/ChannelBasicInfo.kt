@@ -9,4 +9,13 @@ data class ChannelBasicInfo(
     val name: ChannelName,
     val owner: UserInfo,
     @DrawableRes val icon: Int = R.drawable.github_mark,
-)
+) {
+    fun toPreferences(): Map<String, String> {
+        return mapOf(
+            "channel_id" to cId.toString(),
+            "channel_name" to name.toPreferences(),
+            "channel_owner" to owner.toPreferences(),
+            "channel_icon" to icon.toString()
+        )
+    }
+}

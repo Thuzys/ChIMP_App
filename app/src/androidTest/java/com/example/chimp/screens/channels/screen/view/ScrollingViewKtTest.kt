@@ -1,15 +1,18 @@
 package com.example.chimp.screens.channels.screen.view
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeRight
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
+import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
 import com.example.chimp.screens.ui.composable.LOAD_MORE_ICON_TAG
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
@@ -25,7 +28,7 @@ class ScrollingViewKtTest {
                 List(nr) {
                     ChannelBasicInfo(
                         cId = nr.toUInt(),
-                        name = ChannelName("${nr}ºChannel"),
+                        name = ChannelName("${nr}ºChannel", "${nr}ºChannel"),
                         owner = UserInfo(nr.toUInt(), "Owner"),
                     )
                 }
@@ -209,6 +212,28 @@ class ScrollingViewKtTest {
             )
             .performClick()
 
+        assert(success)
+    }
+
+    @Test
+    fun onReload_is_called_when_swipe_refresh_is_triggered() {
+        val idle = makeIdle()
+        var success = false
+        val testFunc: () -> Unit = { success = true }
+        rule.setContent {
+           ScrollingView(
+                modifier = Modifier,
+                chats = idle,
+                onReload = testFunc
+            )
+        }
+
+        rule
+            .onNodeWithTag(
+                testTag = SWIPE_REFRESH_TAG,
+                useUnmergedTree = true
+            )
+            .performTouchInput { swipeDown() }
         assert(success)
     }
 }

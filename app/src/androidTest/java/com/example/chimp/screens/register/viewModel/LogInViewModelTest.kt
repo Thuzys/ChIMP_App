@@ -3,7 +3,7 @@ package com.example.chimp.screens.register.viewModel
 import com.example.chimp.screens.register.service.FakeService
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState
 import com.example.chimp.services.validation.ChIMPFormValidator
-import com.example.chimp.utils.FakeUserInfoRepositoryRule
+import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
 import com.example.chimp.utils.ReplaceMainDispatcherRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

@@ -3,7 +3,7 @@ package com.example.chimp.models.notification
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.User
-import com.example.chimp.screens.channel.model.Message
+import com.example.chimp.models.message.Message
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationService {

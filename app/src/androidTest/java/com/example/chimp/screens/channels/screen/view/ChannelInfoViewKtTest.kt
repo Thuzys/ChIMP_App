@@ -18,10 +18,11 @@ class ChannelInfoViewKtTest {
     val rule = createComposeRule()
 
     private val name = "Channel Name"
+    private val displayName = "Channel Display Name"
     private val channelInfo =
         ChannelInfo(
             cId = 1u,
-            name = ChannelName(name),
+            name = ChannelName(displayName, name),
             description = "Channel Description",
             owner = UserInfo(1u, "test"),
         )

@@ -13,7 +13,7 @@ import com.example.chimp.application.DependenciesContainer
 import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.register.screen.ChIMPLoginScreen
 import com.example.chimp.screens.register.viewModel.RegisterViewModel
-import com.example.chimp.screens.register.viewModel.LoginViewModelFactory
+import com.example.chimp.screens.register.viewModel.RegisterViewModelFactory
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
 /**
@@ -22,7 +22,7 @@ import com.example.chimp.screens.ui.theme.ChIMPTheme
 class RegisterActivity: ComponentActivity() {
     private val viewModel by viewModels<RegisterViewModel>(
         factoryProducer = {
-            LoginViewModelFactory(
+            RegisterViewModelFactory(
                 (application as DependenciesContainer).loginService,
                 (application as DependenciesContainer).formValidation,
                 (application as DependenciesContainer).userInfoRepository
