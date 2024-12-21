@@ -27,4 +27,8 @@ class DummyChannelsService : ChannelsServices {
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
         return success(Unit)
     }
+
+    override suspend fun joinChannel(invitationCode: String): Either<ResponseError, ChannelInfo> {
+        TODO("Not yet implemented")
+    }
 }

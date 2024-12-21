@@ -71,7 +71,7 @@ internal fun ChIMPChannelScreen(
             }
             is ChannelScreenState.CreatingInvitation -> {
                 ChannelInvitationView(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier,
                     onBackClick = vm::goBack,
                     onGenerateClick = { vm.generateInvitation(it) }
                 )

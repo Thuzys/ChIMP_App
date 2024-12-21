@@ -1,6 +1,7 @@
 package com.example.chimp.screens.channels.screen.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,15 +13,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ArrowForward
+import androidx.compose.material.icons.automirrored.twotone.Send
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -30,9 +37,7 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
-import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
@@ -106,6 +111,21 @@ const val CHANNEL_ITEM_HEIGHT = 90
 const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
 
 /**
+ * The tag for the join channel icon.
+ */
+const val JOIN_CHANNEL_ICON_TAG = "JoinChannelIcon"
+
+/**
+ * The size of the join channel icon.
+ */
+private const val JOIN_CHANNEL_ICON_SIZE = 24
+
+/**
+ * The padding for the join channel icon.
+ */
+private const val JOIN_CHANNEL_ICON_PADDING = 8
+
+/**
  * ScrollView is the view that displays the list of channels.
  *
  * This view is responsible for displaying the list of channels and handling user interactions.
@@ -128,7 +148,8 @@ internal fun ScrollingView(
     onReload: () -> Unit = {},
     onChannelClick: (ChannelInfo) -> Unit = {},
     onDeleteOrLeave: (ChannelInfo) -> Unit = {},
-    onLoadMore: () -> Unit = {}
+    onLoadMore: () -> Unit = {},
+    onJoinClick: () -> Unit = {},
 ) {
     val channels by chats.channels.collectAsState(emptyList())
     val hasMore by chats.hasMore.collectAsState(false)
@@ -138,7 +159,19 @@ internal fun ScrollingView(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ScrollHeader(R.string.my_chats, onLogout, connectivity)
+        ScrollHeader(R.string.my_chats, onLogout, connectivity) {
+            Icon(
+                imageVector = Icons.AutoMirrored.TwoTone.ArrowForward,
+                contentDescription = "Join a channel",
+                tint = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .testTag(JOIN_CHANNEL_ICON_TAG)
+                    .width(JOIN_CHANNEL_ICON_SIZE.dp)
+                    .height(JOIN_CHANNEL_ICON_SIZE.dp)
+                    .clickable(onClick = onJoinClick)
+                    .rotate(90f),
+            )
+        }
         SwipeRefresh(
             modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = SwipeRefreshState(false),

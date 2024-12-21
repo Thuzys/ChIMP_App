@@ -1,6 +1,7 @@
 package com.example.chimp.screens.channels.model
 
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.observeConnectivity.ConnectivityObserver
@@ -20,4 +21,5 @@ interface ChannelsServices {
     suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult>
     suspend fun deleteOrLeave(channel: ChannelInfo): Either<ResponseError, Unit>
     suspend fun fetchMore(): Either<ResponseError, Unit>
+    suspend fun joinChannel(invitationCode: String): Either<ResponseError, ChannelInfo>
 }
