@@ -1,6 +1,6 @@
 package com.example.chimp.screens.channels.viewModel
 
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
@@ -79,7 +79,7 @@ class ChannelsViewModelTest {
         runTest(dispatcherRule.testDispatcher) {
             val service = FakeService()
             val initialState = Scrolling(flowOf(emptyList()), flowOf(false))
-            val channel = ChannelBasicInfo(1u, ChannelName("test", "test"), UserInfo(1u, "test"))
+            val channel = ChannelInfo(1u, ChannelName("test", "test"), UserInfo(1u, "test"))
             val vm = ChannelsViewModel(
                 service,
                 fakeUserInfoRepo.repo,

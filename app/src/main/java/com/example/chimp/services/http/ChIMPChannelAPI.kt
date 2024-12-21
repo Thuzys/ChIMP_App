@@ -1,7 +1,6 @@
 package com.example.chimp.services.http
 
 import android.util.Log
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
@@ -17,7 +16,8 @@ import com.example.chimp.services.http.dtos.input.channel.AccessControlInputMode
 import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.dtos.input.message.MessageInputModel
-import com.example.chimp.services.http.dtos.output.message.ChannelInvitationOutputModel
+import com.example.chimp.services.http.dtos.output.channel.ChannelInvitationOutputModel
+import com.example.chimp.services.http.dtos.output.channel.EditChannelOutputModel
 import com.example.chimp.services.http.dtos.output.message.MessageOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
@@ -26,6 +26,7 @@ import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
@@ -49,7 +50,7 @@ class ChIMPChannelAPI(
     private val client: HttpClient,
     private val url: String,
     private val user: Flow<User?>,
-    private val channel: Flow<ChannelBasicInfo?>
+    private val channel: Flow<ChannelInfo?>
 ) : ChannelService {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
@@ -160,17 +161,19 @@ class ChIMPChannelAPI(
 
     }
 
-    override suspend fun fetchChannelInfo(): Either<ResponseError, ChannelInfo> {
-        val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
+    override suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit> {
+        val currChannel = this.channel.first() ?: return failure(ResponseError.InternalServerError)
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
         client
-            .get("$channelApi/${currChannel.cId}") { makeHeader(currUser) }
+            .put("$channelApi/${currChannel.cId}") {
+                makeHeader(currUser)
+                setBody(EditChannelOutputModel.fromChannelInfo(channel))
+            }
             .let { response ->
                 try {
                     return when (response.status) {
                         HttpStatusCode.OK -> {
-                            val channelInfo = response.body<ChannelInputModel>().toChannelInfo()
-                            success(channelInfo)
+                            success(Unit)
                         }
                         HttpStatusCode.Unauthorized -> {
                             failure(ResponseError.Unauthorized)
@@ -185,10 +188,6 @@ class ChIMPChannelAPI(
                         ?: ResponseError.Unknown)
                 }
             }
-    }
-
-    override suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit> {
-        TODO("Not yet implemented")
     }
 
     override suspend fun deleteOrLeaveChannel(): Either<ResponseError, Unit> {

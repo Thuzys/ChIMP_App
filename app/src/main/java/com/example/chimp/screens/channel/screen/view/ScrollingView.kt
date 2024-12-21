@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.UserInfo
@@ -75,9 +75,9 @@ internal fun ScrollingView(
     modifier: Modifier = Modifier,
     state: Scrolling,
     onBackClick: () -> Unit = {},
-    onInfoClick: (ChannelBasicInfo) -> Unit = {},
+    onInfoClick: () -> Unit = {},
     onDeleteOrLeave: () -> Unit = {},
-    editChannel: (ChannelBasicInfo) -> Unit = {},
+    editChannel: () -> Unit = {},
     onSendMessage: (String) -> Unit = {},
     loadMore: () -> Unit = {}
 ) {
@@ -138,7 +138,7 @@ internal fun ScrollingView(
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
-                    onClick = { onInfoClick(state.channel) }
+                    onClick = onInfoClick
                 ) {
                     Text(
                         text = "Channel Info",
@@ -161,7 +161,7 @@ internal fun ScrollingView(
                         shape = RoundedCornerShape(8.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
-                        onClick = { editChannel(state.channel) }
+                        onClick = editChannel
                     ) {
                         Text(
                             text = "Edit Channel",
@@ -263,7 +263,7 @@ private fun ChatPreview() {
         modifier = Modifier
             .fillMaxSize(),
         state = Scrolling(
-            channel = ChannelBasicInfo(
+            channel = ChannelInfo(
                 cId = 1u,
                 name = ChannelName("Channel 1", "Channel 1"),
                 owner = user1

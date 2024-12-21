@@ -3,7 +3,6 @@ package com.example.chimp.services.http
 import android.util.Log
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.users.User
@@ -42,7 +41,7 @@ class ChIMPChannelsAPI(
     private val url: String,
     private val user: Flow<User?>
 ) : ChannelsServices {
-    private val _channels = MutableStateFlow<List<ChannelBasicInfo>>(emptyList())
+    private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
     private var idx = 0
     private val limit = 10
@@ -75,7 +74,7 @@ class ChIMPChannelsAPI(
             }
     }
 
-    override suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit> {
+    override suspend fun deleteOrLeave(channel: ChannelInfo): Either<ResponseError, Unit> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         client
             .delete("$api/${channel.cId}") { makeHeader(curr) }
@@ -87,25 +86,6 @@ class ChIMPChannelsAPI(
                     } else {
                         return failure(response.body<ErrorInputModel>().toResponseError())
                     }
-                } catch (e: Exception) {
-                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(e.message?.let { ResponseError(cause = it) }
-                        ?: ResponseError.Unknown)
-                }
-            }
-    }
-
-
-    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
-        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
-        client
-            .get("$api/${channel.cId}") { makeHeader(curr) }
-            .let { response ->
-                try {
-                    return if (response.status == HttpStatusCode.OK)
-                        success(response.body<ChannelInputModel>().toChannelInfo())
-                    else
-                        failure(response.body<ErrorInputModel>().toResponseError())
                 } catch (e: Exception) {
                     Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
                     return failure(e.message?.let { ResponseError(cause = it) }
@@ -153,7 +133,7 @@ class ChIMPChannelsAPI(
                         when (event.event) {
                             JOIN_OR_UPDATE -> {
                                 event.data?.let { data ->
-                                    val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelBasicInfo()
+                                    val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelInfo()
                                     if (_channels.value.find { it.cId == channel.cId } == null) {
                                         _channels.emit(_channels.value + channel)
                                     } else {

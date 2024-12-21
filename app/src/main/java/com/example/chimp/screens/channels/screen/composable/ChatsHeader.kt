@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.ui.composable.MakeMark
@@ -29,7 +29,7 @@ const val CHATS_HEADER_TAG = "ChatsHeader"
 @Composable
 internal fun ChatsHeader(
     modifier: Modifier = Modifier,
-    chat: ChannelBasicInfo,
+    chat: ChannelInfo,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -75,7 +75,7 @@ internal fun ChatsHeader(
 )
 @Composable
 private fun ChatsHeaderPreview() {
-    val channel = ChannelBasicInfo(
+    val channel = ChannelInfo(
         cId = 0u,
         name = ChannelName(
             "Channel name",

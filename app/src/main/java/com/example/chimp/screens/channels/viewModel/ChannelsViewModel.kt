@@ -2,7 +2,6 @@ package com.example.chimp.screens.channels.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
@@ -58,7 +57,7 @@ internal class ChannelsViewModel(
         }
     }
 
-    fun onChannelClick(channel: ChannelBasicInfo , navigateToChannel: () -> Unit) {
+    fun onChannelClick(channel: ChannelInfo , navigateToChannel: () -> Unit) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Scrolling) return@launch
@@ -67,7 +66,7 @@ internal class ChannelsViewModel(
         }
     }
 
-    fun deleteOrLeave(channel: ChannelBasicInfo) {
+    fun deleteOrLeave(channel: ChannelInfo) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Scrolling) return@launch
@@ -83,18 +82,11 @@ internal class ChannelsViewModel(
         }
     }
 
-    fun toChannelInfo(channel: ChannelBasicInfo) {
+    fun toChannelInfo(channel: ChannelInfo) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Scrolling) return@launch
-            _state.emit(ChannelsScreenState.Loading)
-            when (val result = service.fetchChannelInfo(channel)) {
-                is Success<ChannelInfo> -> _state.emit(Info(result.value, curr))
-                is Failure<ResponseError> -> _state.emit(
-                    if (result.value == ResponseError.Unauthorized) BackToRegistration
-                    else Error(result.value, curr)
-                )
-            }
+            _state.emit(Info(channel, curr))
         }
     }
 

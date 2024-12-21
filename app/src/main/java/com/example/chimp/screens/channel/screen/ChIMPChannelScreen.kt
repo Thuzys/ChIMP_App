@@ -7,9 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import com.example.chimp.screens.channel.screen.view.EditChannelView
 import com.example.chimp.screens.channel.screen.view.ScrollingView
 import com.example.chimp.screens.channel.viewModel.ChannelViewModel
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
+import com.example.chimp.screens.ui.views.ChannelInfoView
 import com.example.chimp.screens.ui.views.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView
 
@@ -38,15 +40,30 @@ internal fun ChIMPChannelScreen(
                     onBackClick = onBack,
                     onSendMessage = { vm.sendMessage(it) },
                     onDeleteOrLeave = { vm.deleteOrLeave(onBack) },
-                    loadMore = vm::loadMore
+                    editChannel = vm::toEdit,
+                    loadMore = vm::loadMore,
+                    onInfoClick = vm::toInfo
                 )
             }
-            is ChannelScreenState.Editing -> TODO()
+            is ChannelScreenState.Editing -> {
+                EditChannelView(
+                    state = curr,
+                    onSave = vm::editChannel,
+                    goBack = vm::goBack
+                )
+            }
             is ChannelScreenState.Error -> {
                 ErrorView(
                     modifier = Modifier.fillMaxSize(),
                     error = curr.error,
                     tryAgain = vm::goBack
+                )
+            }
+            is ChannelScreenState.Info -> {
+                ChannelInfoView(
+                    modifier = Modifier.fillMaxSize(),
+                    channel = curr.channel,
+                    onGoBackClick = vm::goBack
                 )
             }
         }

@@ -1,7 +1,6 @@
 package com.example.chimp.services.http
 
 import android.util.Log
-import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
@@ -14,7 +13,7 @@ import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
 import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
 import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
-import com.example.chimp.services.http.dtos.output.message.JoinChannelOutputModel
+import com.example.chimp.services.http.dtos.output.channel.JoinChannelOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -40,13 +39,13 @@ class CHIMPFindChannelAPI(
     private val url: String,
     private val user: Flow<User?>
 ): FindChannelService {
-    private val _channels = MutableStateFlow<List<ChannelBasicInfo>>(emptyList())
+    private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
     private var idx = 0
     private val limit = 10
     private val hasMore = limit + 1
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> {
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         Log.i(FIND_CHANNEL_SERVICE_TAG, "Joining channel $channelId")
         client
@@ -60,7 +59,7 @@ class CHIMPFindChannelAPI(
                 try {
                     return if (response.status == HttpStatusCode.OK) {
                         _channels.emit(_channels.value.filter { it.cId != channelId })
-                        success(response.body<ChannelInputModel>().toChannelBasicInfo())
+                        success(response.body<ChannelInputModel>().toChannelInfo())
                     } else {
                         failure(response.body<ErrorInputModel>().toResponseError())
                     }
@@ -137,33 +136,11 @@ class CHIMPFindChannelAPI(
         return fetchMoreChannels("$url$CHANNEL_PUBLIC_BASE_URL/$name?offset=$idx&limit=$hasMore")
     }
 
-    override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
-        val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
-        client
-            .get("$url$CHANNEL_BASE_URL/${channel.cId}") {
-                contentType(ContentType.Application.Json)
-                contentType(ContentType.Application.ProblemJson)
-                makeHeader(curr)
-            }
-            .let { response ->
-                try {
-                    return if (response.status == HttpStatusCode.OK)
-                        success(response.body<ChannelInputModel>().toChannelInfo())
-                    else
-                        failure(response.body<ErrorInputModel>().toResponseError())
-                } catch (e: Exception) {
-                    Log.e(FIND_CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(e.message?.let { ResponseError(cause = it) }
-                        ?: ResponseError.Unknown)
-                }
-            }
-    }
-
     companion object {
         /**
          * the base url for the channels endpoints
          */
-        const val CHANNEL_BASE_URL = "/api/channels"
+        private const val CHANNEL_BASE_URL = "/api/channels"
 
         /**
          * the base url for the public channels endpoints

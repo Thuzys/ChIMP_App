@@ -1,4 +1,4 @@
-package com.example.chimp.screens.channels.screen.view
+package com.example.chimp.screens.ui.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -150,6 +150,12 @@ fun ChannelInfoView(
                     )
                     Text(
                         text = stringResource(R.string.channel_owner, channel.owner.name),
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(R.string.channel_access_control, channel.accessControl.toString()),
                         modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center
