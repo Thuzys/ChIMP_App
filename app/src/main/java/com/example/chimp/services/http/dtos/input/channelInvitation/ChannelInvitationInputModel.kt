@@ -1,4 +1,10 @@
 package com.example.chimp.services.http.dtos.input.channelInvitation
 
-class ChannelInvitationInputModel {
+import kotlinx.serialization.Serializable
+
+@Serializable
+class ChannelInvitationInputModel(
+    val invitationCode: String
+) {
+
 }

@@ -1,6 +1,7 @@
 package com.example.chimp.screens.channel.model
 
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.message.Message
@@ -27,8 +28,6 @@ interface ChannelService {
     suspend fun fetchAccessControl(): Either<ResponseError, AccessControl>
     suspend fun initSseOnMessages()
     suspend fun createChannelInvitation(
-        expirationDate: String,
-        maxUses: UInt,
-        accessControl: AccessControl
+        channelInvitation: ChannelInvitation
     ): Either<ResponseError, String>
 }

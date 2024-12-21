@@ -3,6 +3,7 @@ package com.example.chimp.screens.channel.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
@@ -13,11 +14,13 @@ import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channel.model.FetchMessagesResult
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.CreatingInvitation
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Editing
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Error
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Initial
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Loading
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Scrolling
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.ShowingInvitation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -134,11 +137,21 @@ internal class ChannelViewModel(
         }
     }
 
+    fun toCreateInvitation() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is Scrolling) return@launch
+            _state.emit(CreatingInvitation(ChannelInvitation.createDefault(), curr))
+        }
+    }
+
     fun goBack() {
         viewModelScope.launch {
             val curr = state.value
             if (curr is Editing) _state.emit(curr.previous)
             if (curr is Error) _state.emit(curr.previous)
+            if (curr is CreatingInvitation) _state.emit(curr.previous)
+            if (curr is ShowingInvitation) _state.emit(curr.previous)
         }
     }
 
@@ -148,6 +161,17 @@ internal class ChannelViewModel(
             if (curr !is Scrolling) return@launch
             when (val result = service.deleteOrLeaveChannel()) {
                 is Success -> { onSuccess() }
+                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
+            }
+        }
+    }
+
+    fun generateInvitation(channelInvitation: ChannelInvitation) {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is CreatingInvitation) return@launch
+            when (val result = service.createChannelInvitation(channelInvitation)) {
+                is Success -> _state.emit(ShowingInvitation(result.value, curr.previous))
                 is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
             }
         }
