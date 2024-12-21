@@ -1,6 +1,6 @@
 package com.example.chimp.screens.createChannel.model
 
-import com.example.chimp.models.channel.ChannelBasicInfo
+import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 
@@ -11,12 +11,12 @@ interface CreateChannelService {
     /**
      * Fetch channels by their partial names.
      * @param channelName the partial name of the channel to find
-     * @return an [Either] with the [ChannelBasicInfo] if the channel was found,
+     * @return an [Either] with the [ChannelInfo] if the channel was found,
      * or a [ResponseError] if it failed.
      */
     suspend fun fetchChannelByNames(
         channelName: String
-    ): Either<ResponseError,ChannelBasicInfo>
+    ): Either<ResponseError,ChannelInfo>
 
     /**
      * Create a channel.
