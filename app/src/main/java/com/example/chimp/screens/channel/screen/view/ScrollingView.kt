@@ -79,7 +79,8 @@ internal fun ScrollingView(
     onDeleteOrLeave: () -> Unit = {},
     editChannel: () -> Unit = {},
     onSendMessage: (String) -> Unit = {},
-    loadMore: () -> Unit = {}
+    loadMore: () -> Unit = {},
+    onCreateInvite: () -> Unit = {},
 ) {
     var textInputHeight by remember { mutableStateOf(TEXT_INPUT_HEIGHT.dp) }
     var lazyColumnMaxHeight by remember { mutableFloatStateOf(LAZY_COLUMN_FILL_MAX_HEIGHT) }
@@ -165,6 +166,17 @@ internal fun ScrollingView(
                     ) {
                         Text(
                             text = "Edit Channel",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
+                        onClick = onCreateInvite
+                    ) {
+                        Text(
+                            text = "Create Invite",
                             style = MaterialTheme.typography.labelSmall
                         )
                     }

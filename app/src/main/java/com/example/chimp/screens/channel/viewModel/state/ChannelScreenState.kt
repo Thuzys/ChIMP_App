@@ -3,6 +3,7 @@ package com.example.chimp.screens.channel.viewModel.state
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +31,14 @@ internal interface ChannelScreenState {
     ) : ChannelScreenState
     data class Info(
         val channel: ChannelInfo,
+        val previous: ChannelScreenState,
+    ) : ChannelScreenState
+    data class CreatingInvitation(
+        val channelInvitation: ChannelInvitation = ChannelInvitation.createDefault(),
+        val previous: ChannelScreenState,
+    ) : ChannelScreenState
+    data class ShowingInvitation(
+        val invitation: String,
         val previous: ChannelScreenState,
     ) : ChannelScreenState
 }
