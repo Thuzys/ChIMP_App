@@ -23,45 +23,21 @@ const val EDITING_BASE_VIEW_TAG = "EditingBaseView"
 
 const val EDITING_BASE_VIEW_CONTENT_TAG = "EditingBaseViewContent"
 
-/**
- * The radius of the rounded corners of the box.
- */
-private const val ROUND_CORNER_RADIUS = 40
 
-private const val BOX_HEIGHT = 0.6f
 @Composable
 internal fun EditingBaseView(
     modifier: Modifier = Modifier,
     content: @Composable (ColumnScope.(Boolean) -> Unit),
 ) {
-    GradientBox(
-        modifier = modifier.testTag(EDITING_BASE_VIEW_TAG),
+    Column(
+        modifier = modifier
+            .testTag(EDITING_BASE_VIEW_CONTENT_TAG)
+            .fillMaxSize()
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,verticalArrangement = Arrangement.Center // Center the content vertically
-        ) {}
-        Column(
-            modifier = modifier
-                .testTag(EDITING_BASE_VIEW_CONTENT_TAG)
-                .fillMaxWidth()
-                .fillMaxHeight(BOX_HEIGHT)
-                .clip(
-                    RoundedCornerShape(
-                        topStart = ROUND_CORNER_RADIUS.dp,
-                        topEnd = ROUND_CORNER_RADIUS.dp,
-                        bottomEnd = ROUND_CORNER_RADIUS.dp,
-                        bottomStart = ROUND_CORNER_RADIUS.dp
-                    )
-                )
-                .background(Color.White)
-                .align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            content(true)
-        }
+        content(true)
     }
 }
 
