@@ -21,7 +21,7 @@ internal class FakeService: ChannelsServices {
     suspend fun unlock() = controller.send(Unit)
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
         controller.receive()
-        return success(Pair(flow, flowOf(true)))
+        return success(FetchChannelsResult(flow, flowOf(true)))
     }
 
     override suspend fun deleteOrLeave(channel: ChannelBasicInfo): Either<ResponseError, Unit> {

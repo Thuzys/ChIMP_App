@@ -1,4 +1,4 @@
-package com.example.chimp.screens.channels.screen.view
+package com.example.chimp.screens.findChannel.screen.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -29,27 +28,35 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.ui.composable.ScrollHeader
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
-import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
+import com.example.chimp.screens.channels.screen.view.SWIPEABLE_ROW_TAG
+import com.example.chimp.screens.findChannel.screen.FIND_CHANNEL_SCREEN_TAG
+import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 import com.example.chimp.screens.ui.composable.ActionIcon
 import com.example.chimp.screens.ui.composable.ChatItemRow
 import com.example.chimp.screens.ui.composable.LoadMoreIcon
+import com.example.chimp.screens.ui.composable.ScrollHeader
+import com.example.chimp.screens.ui.composable.SearchBar
 import com.example.chimp.screens.ui.composable.SwipeableRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * The tag for the header of the scrolling view.
+ */
+const val FIND_CHANNEL_SCROLLING_VIEW_HEADER_TAG = "FindChannelScrollingViewHeader"
 
 /**
- * The tag for the ChannelScrollView.
+ * The tag for the join button.
  */
-const val CHANNEL_SCROLLING_VIEW = "ChatsIdleView"
+const val FIND_CHANNEL_BUTTON_TAG = "FindChannelButton"
 
 /**
- * The tag for the header of the IdleView.
+ * The tag for the swipe refresh.
  */
-const val CHATS_IDLE_VIEW_HEADER_TAG = "ChatsIdleViewHeader"
+const val SWIPE_REFRESH_TAG = "SwipeRefresh"
 
 /**
  * The height of the list item.
@@ -76,64 +83,32 @@ private const val ACTION_ICON_WIDTH = 45
  */
 private const val ACTION_ICON_PADDING = 8
 
-/**
- * The tag for the channel button.
- */
-const val CHANNEL_BUTTON_TAG = "ChannelButton"
-
-/**
- * The tag for the swipeable row.
- */
-const val SWIPEABLE_ROW_TAG = "SwipeableRow"
-
-/**
- * The tag for the info icon.
- */
-const val INFO_ICON_TAG = "InfoIcon"
-
-/**
- * The height of the channel item.
- */
-const val CHANNEL_ITEM_HEIGHT = 90
-
-/**
- * The tag for the delete or leave icon.
- */
-const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
-
-/**
- * ScrollView is the view that displays the list of channels.
- *
- * This view is responsible for displaying the list of channels and handling user interactions.
- *
- * @param modifier Modifier The modifier to be applied to the view.
- * @param chats Scrolling The scrolling state of the channels.
- * @param onInfoClick Function(ChannelBasicInfo) The function to be called when the info icon is clicked.
- * @param onLogout Function() The function to be called when the logout icon is clicked.
- * @param onChannelClick Function(ChannelBasicInfo) The function to be called when a channel is clicked.
- * @param onDeleteOrLeave Function(ChannelBasicInfo) The function to be called when the delete icon is clicked.
- * @param onReload Function() The function to be called when the view is gonna be reloaded.
- * @param onLoadMore Function() The function to be called when more channels need to be loaded.
- */
 @Composable
 internal fun ScrollingView(
-    modifier: Modifier = Modifier,
-    chats: Scrolling,
+    modifier: Modifier,
+    publicChannels: FindChannelScreenState.Scrolling,
     onLogout: () -> Unit = {},
     onInfoClick: (ChannelBasicInfo) -> Unit = {},
     onReload: () -> Unit = {},
-    onChannelClick: (ChannelBasicInfo) -> Unit = {},
-    onDeleteOrLeave: (ChannelBasicInfo) -> Unit = {},
-    onLoadMore: () -> Unit = {}
+    onJoin: (UInt) -> Unit = {},
+    onSearchChange: (String) -> Unit = {},
+    onLoadMore: () -> Unit = {},
+    onLoadMoreSearching: (String) -> Unit = {},
 ) {
-    val channels by chats.channels.collectAsState(emptyList())
-    val hasMore by chats.hasMore.collectAsState(false)
+    val channels by publicChannels.publicChannels.collectAsState(emptyList())
+    val hasMore by publicChannels.hasMore.collectAsState(false)
+    val searchChannelInput = publicChannels.searchChannelInput
+
     Column(
-        modifier = modifier.testTag(CHANNEL_SCROLLING_VIEW),
+        modifier = modifier.testTag(FIND_CHANNEL_SCREEN_TAG),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ScrollHeader(R.string.my_chats, onLogout)
+        ScrollHeader(R.string.find_channels, onLogout)
+        SearchBar(
+            value = searchChannelInput,
+            onValueChange = onSearchChange
+        )
         SwipeRefresh(
             modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = SwipeRefreshState(false),
@@ -142,13 +117,12 @@ internal fun ScrollingView(
             }
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 itemsIndexed(
                     items = channels,
-                    key = { index, channel -> "${channel.cId}_$index"  },
+                    key = { index, channel -> "${channel.cId}_$index" }
                 ) { _, channel ->
                     SwipeableRow(
                         modifier = Modifier
@@ -159,8 +133,7 @@ internal fun ScrollingView(
                         actions = {
                             Row(
                                 modifier = Modifier
-                                    .width(ACTION_LIST_WIDTH.dp)
-                                    .height(LIST_ITEM_HEIGHT.dp),
+                                    .width(ACTION_LIST_WIDTH.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
@@ -170,24 +143,8 @@ internal fun ScrollingView(
                                 ) {
                                     ActionIcon(
                                         modifier = Modifier
-                                            .height(LIST_ITEM_HEIGHT.dp)
-                                            .weight(1f)
-                                            .testTag(DELETE_OR_LEAVE_ICON_TAG)
-                                            .width(ACTION_ICON_WIDTH.dp),
-                                        icon = Icons.Default.Delete,
-                                        backgroundColor = MaterialTheme.colorScheme.error,
-                                        onClick = { onDeleteOrLeave(channel) },
-                                        contentDescription = "Delete or leave a channel"
-                                    )
-                                }
-                                Column(
-                                    modifier = Modifier.height(LIST_ITEM_HEIGHT.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                ) {
-                                    ActionIcon(
-                                        modifier = Modifier
-                                            .height(LIST_ITEM_HEIGHT.dp)
                                             .width(ACTION_ICON_WIDTH.dp)
+                                            .weight(1f)
                                             .testTag(INFO_ICON_TAG)
                                             .padding(end = ACTION_ICON_PADDING.dp),
                                         icon = Icons.Default.Info,
@@ -201,25 +158,29 @@ internal fun ScrollingView(
                     ) {
                         ChatItemRow(
                             modifier = Modifier
-                                .testTag(CHATS_IDLE_VIEW_HEADER_TAG)
+                                .testTag(FIND_CHANNEL_SCROLLING_VIEW_HEADER_TAG)
                                 .height(LIST_ITEM_HEIGHT.dp)
                                 .background(Color.Transparent),
                             chatItem = channel,
-                            buttonModifier = Modifier.testTag(CHANNEL_BUTTON_TAG),
-                            buttonString = stringResource(R.string.enter_channels),
-                            onClick = { onChannelClick(channel) }
+                            buttonModifier = Modifier.testTag(FIND_CHANNEL_BUTTON_TAG),
+                            buttonString = stringResource(R.string.join_channel),
+                            onClick = { onJoin(channel.cId) },
                         )
                     }
                 }
-                item(
-                    key = hasMore
-                ) {
+                item(key = hasMore) {
                     if (hasMore) {
                         LoadMoreIcon(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(LIST_ITEM_HEIGHT.dp),
-                            onVisible = onLoadMore
+                            onVisible = {
+                                if (publicChannels is FindChannelScreenState.NormalScrolling) {
+                                    onLoadMore()
+                                } else {
+                                    onLoadMoreSearching(searchChannelInput)
+                                }
+                            }
                         )
                     }
                 }
@@ -230,17 +191,14 @@ internal fun ScrollingView(
 
 @Preview(showBackground = true)
 @Composable
-private fun IdleViewPreview() {
-    val chats =
-        Scrolling(
+private fun ScrollingViewPreview() {
+    val publicChannels =
+        FindChannelScreenState.NormalScrolling(
             flowOf(
                 List(27) {
                     ChannelBasicInfo(
                         cId = it.toUInt(),
-                        name = ChannelName(
-                            "Channel $it",
-                            "Channel $it"
-                        ),
+                        name = ChannelName("Channel $it", "Channel $it"),
                         owner = UserInfo(it.toUInt(), "Owner $it")
                     )
                 }
@@ -249,6 +207,6 @@ private fun IdleViewPreview() {
         )
     ScrollingView(
         modifier = Modifier.fillMaxSize(),
-        chats = chats
+        publicChannels = publicChannels
     )
 }

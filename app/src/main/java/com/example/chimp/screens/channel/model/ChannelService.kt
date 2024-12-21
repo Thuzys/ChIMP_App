@@ -26,4 +26,9 @@ interface ChannelService {
     suspend fun deleteOrLeaveChannel(): Either<ResponseError, Unit>
     suspend fun fetchAccessControl(): Either<ResponseError, AccessControl>
     suspend fun initSseOnMessages(): Either<ResponseError, Unit>
+    suspend fun createChannelInvitation(
+        expirationDate: String,
+        maxUses: UInt,
+        accessControl: AccessControl
+    ): Either<ResponseError, String>
 }

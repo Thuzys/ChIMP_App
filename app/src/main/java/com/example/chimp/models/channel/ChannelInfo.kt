@@ -10,3 +10,7 @@ data class ChannelInfo(
     val owner: UserInfo,
     val icon: Int = R.drawable.default_icon
 )
+
+fun ChannelInfo.toChannelBasicInfo(): ChannelBasicInfo {
+    return ChannelBasicInfo(cId, name, owner, icon)
+}

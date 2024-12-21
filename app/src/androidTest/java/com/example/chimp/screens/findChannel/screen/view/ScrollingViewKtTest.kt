@@ -1,19 +1,20 @@
-package com.example.chimp.screens.channels.screen.view
+package com.example.chimp.screens.findChannel.screen.view
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
-import androidx.compose.ui.test.swipeRight
 import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
-import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
+import com.example.chimp.screens.channels.screen.view.INFO_ICON_TAG
+import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 import com.example.chimp.screens.ui.composable.LOAD_MORE_ICON_TAG
+import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
+import com.example.chimp.screens.ui.composable.SEARCH_BAR_TAG
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +24,7 @@ class ScrollingViewKtTest {
     val rule = createComposeRule()
 
     private fun makeIdle(nr: Int = 1, hasMore: Boolean = false) =
-        Scrolling(
+        FindChannelScreenState.NormalScrolling(
             flowOf(
                 List(nr) {
                     ChannelBasicInfo(
@@ -37,20 +38,21 @@ class ScrollingViewKtTest {
         )
 
     @Test
-    fun click_on_enter_button() {
+    fun click_on_Join_button_calls_onJoin_function() {
         val idle = makeIdle()
         var success = false
-        val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
+        val testFunc: (UInt) -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
-                chats = idle,
-                onChannelClick = testFunc
+                modifier = Modifier,
+                publicChannels = idle,
+                onJoin = testFunc
             )
         }
 
         rule
             .onNodeWithTag(
-                testTag = CHANNEL_BUTTON_TAG,
+                testTag = FIND_CHANNEL_BUTTON_TAG,
                 useUnmergedTree = true
             )
             .performClick()
@@ -62,7 +64,8 @@ class ScrollingViewKtTest {
         val idle = makeIdle(hasMore = true)
         rule.setContent {
             ScrollingView(
-                chats = idle
+                modifier = Modifier,
+                publicChannels = idle
             )
         }
 
@@ -79,7 +82,8 @@ class ScrollingViewKtTest {
         val idle = makeIdle(hasMore = false)
         rule.setContent {
             ScrollingView(
-                chats = idle
+                modifier = Modifier,
+                publicChannels = idle
             )
         }
 
@@ -92,13 +96,14 @@ class ScrollingViewKtTest {
     }
 
     @Test
-    fun loadMore_is_called_when_LoadMoreIcon_is_displayed() {
+    fun load_more_is_called_when_LoadMoreIcon_is_displayed(){
         val idle = makeIdle(hasMore = true)
         var success = false
         val testFunc: () -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
-                chats = idle,
+                modifier = Modifier,
+                publicChannels = idle,
                 onLoadMore = testFunc
             )
         }
@@ -108,19 +113,19 @@ class ScrollingViewKtTest {
                 testTag = LOAD_MORE_ICON_TAG,
                 useUnmergedTree = true
             )
-            .assertExists()
-
+            .performClick()
         assert(success)
     }
 
     @Test
-    fun loadMore_is_not_called_when_LoadMoreIcon_is_not_displayed() {
+    fun load_more_is_not_called_when_LoadMoreIcon_is_not_displayed(){
         val idle = makeIdle(hasMore = false)
-        var success = true
-        val testFunc: () -> Unit = { success = false }
+        var success = false
+        val testFunc: () -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
-                chats = idle,
+                modifier = Modifier,
+                publicChannels = idle,
                 onLoadMore = testFunc
             )
         }
@@ -130,29 +135,22 @@ class ScrollingViewKtTest {
                 testTag = LOAD_MORE_ICON_TAG,
                 useUnmergedTree = true
             )
-            .assertDoesNotExist()
-
-        assert(success)
+            .performClick()
+        assert(!success)
     }
 
     @Test
-    fun onInfoClick_is_called_when_info_icon_is_clicked() {
+    fun onInfoClick_is_called_when_info_button_is_clicked(){
         val idle = makeIdle()
         var success = false
         val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
-                chats = idle,
+                modifier = Modifier,
+                publicChannels = idle,
                 onInfoClick = testFunc
             )
         }
-
-        rule
-            .onNodeWithTag(
-                testTag = SWIPEABLE_ROW_TAG,
-                useUnmergedTree = true
-            )
-            .performTouchInput { swipeRight() }
 
         rule
             .onNodeWithTag(
@@ -160,47 +158,18 @@ class ScrollingViewKtTest {
                 useUnmergedTree = true
             )
             .performClick()
-
         assert(success)
     }
 
     @Test
-    fun onDeleteOrLeave_is_called_when_deleteOrLeave_icon_is_clicked() {
-        val idle = makeIdle()
-        var success = false
-        val testFunc: (ChannelBasicInfo) -> Unit = { success = true }
-        rule.setContent {
-            ScrollingView(
-                chats = idle,
-                onDeleteOrLeave = testFunc
-            )
-        }
-
-        rule
-            .onNodeWithTag(
-                testTag = SWIPEABLE_ROW_TAG,
-                useUnmergedTree = true
-            )
-            .performTouchInput { swipeRight() }
-
-        rule
-            .onNodeWithTag(
-                testTag = DELETE_OR_LEAVE_ICON_TAG,
-                useUnmergedTree = true
-            )
-            .performClick()
-
-        assert(success)
-    }
-
-    @Test
-    fun onLogoutClick_is_called_when_logout_icon_is_clicked() {
+    fun onLogoutClick_is_called_when_logout_button_is_clicked(){
         val idle = makeIdle()
         var success = false
         val testFunc: () -> Unit = { success = true }
         rule.setContent {
             ScrollingView(
-                chats = idle,
+                modifier = Modifier,
+                publicChannels = idle,
                 onLogout = testFunc
             )
         }
@@ -211,7 +180,47 @@ class ScrollingViewKtTest {
                 useUnmergedTree = true
             )
             .performClick()
+        assert(success)
+    }
 
+    @Test
+    fun search_bar_is_displayed(){
+        val idle = makeIdle()
+        rule.setContent {
+            ScrollingView(
+                modifier = Modifier,
+                publicChannels = idle
+            )
+        }
+
+        rule
+            .onNodeWithTag(
+                testTag = SEARCH_BAR_TAG,
+                useUnmergedTree = true
+            )
+            .assertExists()
+    }
+
+    @Test
+    fun onSearchChange_is_called_when_search_bar_is_changed(){
+        val idle = makeIdle()
+        var success = false
+        val testFunc: (String) -> Unit = { success = true }
+        rule.setContent {
+            ScrollingView(
+                modifier = Modifier,
+                publicChannels = idle,
+                onSearchChange = testFunc
+            )
+        }
+
+        rule
+            .onNodeWithTag(
+                testTag = SEARCH_BAR_TAG,
+                useUnmergedTree = true
+            )
+            .performClick()
+            .performTextInput("test")
         assert(success)
     }
 
@@ -221,9 +230,9 @@ class ScrollingViewKtTest {
         var success = false
         val testFunc: () -> Unit = { success = true }
         rule.setContent {
-           ScrollingView(
+            ScrollingView(
                 modifier = Modifier,
-                chats = idle,
+                publicChannels = idle,
                 onReload = testFunc
             )
         }

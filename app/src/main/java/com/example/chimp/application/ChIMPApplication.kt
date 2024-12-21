@@ -9,13 +9,15 @@ import com.example.chimp.infrastructure.ChannelPreferencesRepository
 import com.example.chimp.infrastructure.UserInfoPreferencesRepository
 import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.NetworkConnectivityObserver
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
-import com.example.chimp.services.dummy.DummyFindChannelService
 import com.example.chimp.services.http.ChIMPChannelAPI
+import com.example.chimp.services.http.CHIMPFindChannelAPI
 import com.example.chimp.services.http.ChIMPChannelsAPI
 import com.example.chimp.services.http.ChIMPRegisterAPI
 import com.example.chimp.services.validation.ChIMPFormValidator
@@ -38,6 +40,7 @@ interface DependenciesContainer {
     val userInfoRepository: UserInfoRepository
     val channelRepository: ChannelRepository
     val preferencesDataStore: DataStore<Preferences>
+    val connectivityObserver: ConnectivityObserver
 }
 
 private const val RECONNECTION_TIME_IN_MINUTES = 5
@@ -76,7 +79,7 @@ class ChIMPApplication : Application(), DependenciesContainer {
     }
 
     override val findChannelService: FindChannelService by lazy {
-        DummyFindChannelService()
+        CHIMPFindChannelAPI(client, url, userInfoRepository.userInfo)
     }
 
     override val formValidation: FormValidation by lazy {
@@ -89,6 +92,10 @@ class ChIMPApplication : Application(), DependenciesContainer {
 
     override val preferencesDataStore: DataStore<Preferences> by
     preferencesDataStore(name = "preferences")
+
+    override val connectivityObserver: ConnectivityObserver by lazy {
+        NetworkConnectivityObserver(applicationContext)
+    }
 
     override val userInfoRepository: UserInfoRepository by lazy {
         UserInfoPreferencesRepository(preferencesDataStore)

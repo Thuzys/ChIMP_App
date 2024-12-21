@@ -49,7 +49,7 @@ internal fun ChIMPChannelsScreen(
                     bottomBar = {
                         MenuBottomBar(
                             chatsIsEnable = false,
-                            addChannelClick = onFindChannelNavigate,
+                            findChannelClick = onFindChannelNavigate,
                             aboutClick = onAboutNavigate
                         )
                     }
@@ -67,7 +67,7 @@ internal fun ChIMPChannelsScreen(
                     bottomBar = {
                         MenuBottomBar(
                             chatsIsEnable = false,
-                            addChannelClick = onFindChannelNavigate,
+                            findChannelClick = onFindChannelNavigate,
                             aboutClick = onAboutNavigate
                         )
                     }

@@ -1,13 +1,17 @@
 package com.example.chimp.screens.findChannel.viewModel
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.channel.ChannelBasicInfo
-import com.example.chimp.models.channel.ChannelName
+import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.toChannelBasicInfo
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.models.repository.UserInfoRepository
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
@@ -33,6 +37,7 @@ private const val DEBOUNCE_TIME = 500L
 class FindChannelViewModel(
     private val service: FindChannelService,
     private val userInfoRepository: UserInfoRepository,
+    private val channelRepository: ChannelRepository,
     initialState: FindChannelScreenState = FindChannelScreenState.Initial
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
@@ -47,10 +52,15 @@ class FindChannelViewModel(
                 .map { searchChannelInput -> searchChannelInput }
                 .collect { searchChannelInput ->
                     val curr = state.value
-                    if (curr !is FindChannelScreenState.Scrolling) return@collect
-                    _state.emit(FindChannelScreenState.Loading)
+                    if (curr !is FindChannelScreenState.SearchingScrolling) return@collect
                     when (val result = service.getChannels(searchChannelInput)) {
-                        is Success -> return@collect
+                        is Success -> _state.emit(
+                            FindChannelScreenState.SearchingScrolling(
+                                searchChannelInput,
+                                result.value.first,
+                                result.value.second
+                            )
+                        )
 
                         is Failure -> _state.emit(
                             if (result.value == ResponseError.Unauthorized) BackToRegistration
@@ -61,21 +71,28 @@ class FindChannelViewModel(
         }
     }
 
-    fun joinChannel(channelId: UInt) {
+    fun joinChannel(
+        channelId: UInt,
+        navigateToChannel: () -> Unit
+    ) {
         viewModelScope.launch {
             val curr = state.value
             if (curr !is FindChannelScreenState.Scrolling) return@launch
             _state.emit(FindChannelScreenState.Loading)
-                when (val result = service.joinChannel(channelId)) {
-                    is Success -> TODO()
-                    is Failure -> _state.emit(
-                        if (result.value == ResponseError.Unauthorized) BackToRegistration
-                        else FindChannelScreenState.Error(result.value, curr)
-                    )
+            when (val result = service.joinChannel(channelId)) {
+                is Success -> {
+                    channelRepository.updateChannelInfo(result.value)
+                    navigateToChannel()
+                    _state.emit(curr)
                 }
+
+                is Failure -> _state.emit(
+                    if (result.value == ResponseError.Unauthorized) BackToRegistration
+                    else FindChannelScreenState.Error(result.value, curr)
+                )
+            }
         }
     }
-
 
     fun getChannels() {
         viewModelScope.launch {
@@ -84,10 +101,10 @@ class FindChannelViewModel(
             _state.emit(FindChannelScreenState.Loading)
             when (val result = service.getChannels()) {
                 is Success<FindChannelsResult> -> _state.emit(
-                    FindChannelScreenState.Scrolling(
-                        _searchText.value,
+                    FindChannelScreenState.NormalScrolling(
                         result.value.first,
-                        result.value.second
+                        result.value.second,
+                        _searchText.value
                     ))
 
                 is Failure<ResponseError> -> _state.emit(
@@ -98,14 +115,46 @@ class FindChannelViewModel(
         }
     }
 
+    fun getChannels(name: String) {
+        viewModelScope.launch {
+            if (name.isBlank()) return@launch
+            val curr = state.value
+            if (curr !is FindChannelScreenState.Initial) return@launch
+            _state.emit(FindChannelScreenState.Loading)
+            when (val result = service.getChannels(name)) {
+                is Success<FindChannelsResult> -> _state.emit(
+                    FindChannelScreenState.SearchingScrolling(
+                        name,
+                        result.value.first,
+                        result.value.second
+                    ))
+
+                is Failure<ResponseError> -> _state.emit(
+                    if (result.value == ResponseError.Unauthorized) BackToRegistration
+                    else FindChannelScreenState.Error(result.value, curr)
+                )
+
+            }
+        }
+    }
+
     fun updateSearchText(searchText: String) {
-       viewModelScope.launch {
-           val curr = state.value
-           if (curr !is FindChannelScreenState.Scrolling) return@launch
-           if (curr.searchChannelInput == searchText) return@launch
-           _searchText.emit(searchText)
-           _state.emit(curr.copy(searchChannelInput = searchText))
-       }
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is FindChannelScreenState.Scrolling) return@launch
+            if (searchText.isBlank()) {
+                reset()
+                return@launch
+            }
+            _searchText.emit(searchText)
+            _state.emit(
+                FindChannelScreenState.SearchingScrolling(
+                    searchText,
+                    curr.publicChannels,
+                    curr.hasMore
+                )
+            )
+        }
     }
 
     fun toChannelInfo(channel: ChannelBasicInfo) {
@@ -133,18 +182,10 @@ class FindChannelViewModel(
         }
     }
 
-    fun closeError() {
-        viewModelScope.launch {
-            val curr = state.value
-            if (curr !is FindChannelScreenState.Error) return@launch
-            _state.emit(FindChannelScreenState.Initial)
-        }
-    }
-
     fun loadMore() {
         viewModelScope.launch {
             val curr = state.value
-            if (curr !is FindChannelScreenState.Scrolling) return@launch
+            if (curr !is FindChannelScreenState.NormalScrolling) return@launch
             when (val result = service.fetchMore()) {
                 is Success -> return@launch
 
@@ -152,6 +193,39 @@ class FindChannelViewModel(
                     if (result.value == ResponseError.Unauthorized) _state.emit(BackToRegistration)
                     else _state.emit(FindChannelScreenState.Error(result.value, curr))
             }
+        }
+    }
+
+    fun loadMore(name: String) {
+        viewModelScope.launch {
+            if (name.isBlank()) return@launch
+            val curr = state.value
+            if (curr !is FindChannelScreenState.SearchingScrolling) return@launch
+            when (val result = service.fetchMore(name)) {
+                is Success -> return@launch
+
+                is Failure<ResponseError> ->
+                    if (result.value == ResponseError.Unauthorized) _state.emit(BackToRegistration)
+                    else _state.emit(FindChannelScreenState.Error(result.value, curr))
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr is BackToRegistration) return@launch
+            _state.emit(BackToRegistration)
+            userInfoRepository.clearUserInfo()
+        }
+    }
+
+    fun reset() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr is FindChannelScreenState.Initial) return@launch
+            _searchText.emit("")
+            _state.emit(FindChannelScreenState.Initial)
         }
     }
 }

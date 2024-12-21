@@ -4,13 +4,10 @@ import com.example.chimp.models.channel.ChannelBasicInfo
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
-import com.example.chimp.models.either.success
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.findChannel.model.FindChannelsResult
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 class DummyFindChannelService: FindChannelService {
 
@@ -32,11 +29,11 @@ class DummyFindChannelService: FindChannelService {
         ),
     )
 
-    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelInfo> {
+    override suspend fun joinChannel(channelId: UInt): Either<ResponseError, ChannelBasicInfo> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getChannels(name: String): Either<ResponseError, Unit> {
+    override suspend fun getChannels(name: String): Either<ResponseError, FindChannelsResult> {
         TODO("Not yet implemented")
     }
 
@@ -55,5 +52,4 @@ class DummyFindChannelService: FindChannelService {
     override suspend fun fetchChannelInfo(channel: ChannelBasicInfo): Either<ResponseError, ChannelInfo> {
         TODO("Not yet implemented")
     }
-    
 }
