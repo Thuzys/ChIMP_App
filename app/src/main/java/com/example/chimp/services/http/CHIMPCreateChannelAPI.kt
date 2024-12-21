@@ -9,6 +9,7 @@ import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.User
+import com.example.chimp.screens.createChannel.model.ChannelInput
 import com.example.chimp.screens.createChannel.model.CreateChannelService
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.utlis.makeHeader
@@ -27,9 +28,8 @@ class CHIMPCreateChannelAPI(
     private val url: String,
     private val user: Flow<User?>
 ) : CreateChannelService {
-    private val _channels = MutableStateFlow<List<ChannelBasicInfo>>(emptyList())
 
-    override suspend fun fetchChannelsByNames(channelName: String): Either<ResponseError, List<ChannelBasicInfo>> {
+    override suspend fun fetchChannelByNames(channelName: String): Either<ResponseError, ChannelBasicInfo> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         client
             .get("$url$MY_CHANNELS_URL") { makeHeader(curr) }
@@ -44,7 +44,6 @@ class CHIMPCreateChannelAPI(
                         } else {
                             failure(ResponseError.NotFound)
                         }
-                        TODO("fix to flow")
                     } else {
                         failure(response.body<ErrorInputModel>().toResponseError())
                     }
@@ -57,9 +56,7 @@ class CHIMPCreateChannelAPI(
     }
 
     override suspend fun createChannel(
-        channelName: String,
-        visibility: Visibility,
-        accessControl: AccessControl
+        channelInput: ChannelInput
     ): Either<ResponseError, Unit> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         client
@@ -67,9 +64,12 @@ class CHIMPCreateChannelAPI(
                 makeHeader(curr)
                 setBody(
                     mapOf(
-                        "name" to channelName,
-                        "visibility" to visibility,
-                        "accessControl" to accessControl
+                        "owner" to curr.id,
+                        "name" to channelInput.channelName,
+                        "visibility" to channelInput.visibility,
+                        "accessControl" to channelInput.accessControl,
+                        "description" to channelInput.description,
+                        "icon" to channelInput.icon
                     )
                 )
             }
