@@ -141,4 +141,15 @@ internal class ChannelViewModel(
             if (curr is Error) _state.emit(curr.previous)
         }
     }
+
+    fun deleteOrLeave(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is Scrolling) return@launch
+            when (val result = service.deleteOrLeaveChannel()) {
+                is Success -> { onSuccess() }
+                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
+            }
+        }
+    }
 }

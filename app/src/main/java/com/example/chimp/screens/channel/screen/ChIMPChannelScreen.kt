@@ -37,6 +37,7 @@ internal fun ChIMPChannelScreen(
                     state = curr,
                     onBackClick = onBack,
                     onSendMessage = { vm.sendMessage(it) },
+                    onDeleteOrLeave = { vm.deleteOrLeave(onBack) },
                     loadMore = vm::loadMore
                 )
             }

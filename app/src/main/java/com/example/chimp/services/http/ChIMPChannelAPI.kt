@@ -238,8 +238,8 @@ class ChIMPChannelAPI(
             }
     }
 
-    override suspend fun initSseOnMessages(): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+    override suspend fun initSseOnMessages() {
+        val curr = user.first() ?: return
         try {
             client.sse(
                 urlString = "$messagesApi/sse",
@@ -266,10 +266,7 @@ class ChIMPChannelAPI(
             }
         } catch (e: Exception) {
             Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-            return failure(e.message?.let { ResponseError(cause = it) }
-                ?: ResponseError.Unknown)
         }
-        return success(Unit)
     }
 
     override suspend fun createChannelInvitation(
