@@ -24,9 +24,13 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
 
@@ -43,7 +47,7 @@ class ChIMPChannelsAPI(
     private val client: HttpClient,
     private val url: String,
     private val user: Flow<User?>,
-    private val connection: Flow<Status>
+    connection: Flow<Status>
 ) : ChannelsServices {
     private val _channels = MutableStateFlow<List<ChannelInfo>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
@@ -52,6 +56,13 @@ class ChIMPChannelsAPI(
     private val hasMore = limit + 1
     private val api = "$url/api/channels"
     private val _conn = MutableStateFlow(DISCONNECTED)
+    override val connectivity: Flow<Status> = connection
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+    init {
+        scope.launch {
+        }
+    }
 
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
@@ -87,8 +98,6 @@ class ChIMPChannelsAPI(
         _conn.first().let { conn ->
             if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
         }
-//        val currConn = connection.first()
-//        if (currConn == DISCONNECTED) return failure(ResponseError.NoInternet)
         client
             .delete("$api/${channel.cId}") { makeHeader(curr) }
             .let { response ->
@@ -112,8 +121,6 @@ class ChIMPChannelsAPI(
         _conn.first().let { conn ->
             if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
         }
-//        val currConn = connection.first()
-//        if (currConn == DISCONNECTED) return failure(ResponseError.NoInternet)
         Log.i(CHANNELS_SERVICE_TAG, "Fetching more channels")
         idx += limit
         client
@@ -142,8 +149,6 @@ class ChIMPChannelsAPI(
         _conn.first().let { conn ->
             if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
         }
-//        val currConn = connection.first()
-//        if (currConn == DISCONNECTED) return failure(ResponseError.NoInternet)
         try {
             client.sse(
                 urlString = "$api/sse",
@@ -189,10 +194,6 @@ class ChIMPChannelsAPI(
                 ?: ResponseError.Unknown)
         }
         return success(Unit)
-    }
-
-    override suspend fun initConnectionObserver() {
-        connection.collect { _conn.emit(it) }
     }
 
     companion object {

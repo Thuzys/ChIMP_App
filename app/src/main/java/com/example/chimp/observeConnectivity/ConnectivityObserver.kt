@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ConnectivityObserver {
 
-    fun observe(): Flow<Status>
+    val connectivity: Flow<Status>
 
     enum class Status {
         CONNECTED,

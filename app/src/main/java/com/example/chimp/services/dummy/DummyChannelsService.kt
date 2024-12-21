@@ -6,11 +6,16 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.channels.model.ChannelsServices
 import com.example.chimp.screens.channels.model.FetchChannelsResult
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class DummyChannelsService : ChannelsServices {
+    override val connectivity: Flow<ConnectivityObserver.Status>
+        get() = TODO("Not yet implemented")
+
     override suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult> {
         return success(Pair(flowOf(emptyList()), flowOf(false)))
     }
@@ -24,10 +29,6 @@ class DummyChannelsService : ChannelsServices {
     }
 
     override suspend fun initSseOnChannels(): Either<ResponseError, Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun initConnectionObserver() {
         TODO("Not yet implemented")
     }
 }

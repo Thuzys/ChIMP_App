@@ -30,7 +30,7 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit,
     onRegisterNavigate: () -> Unit,
     onJoinNavigate : () -> Unit,
-    status: ConnectivityObserver.Status
+    status: ConnectivityObserver.Status = ConnectivityObserver.Status.CONNECTED
 ) {
 
     val registerNavigate = {

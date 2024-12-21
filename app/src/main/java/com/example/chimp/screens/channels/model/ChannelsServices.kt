@@ -3,6 +3,8 @@ package com.example.chimp.screens.channels.model
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -14,9 +16,9 @@ import kotlinx.coroutines.flow.Flow
 typealias FetchChannelsResult = Pair<Flow<List<ChannelInfo>>, Flow<Boolean>>
 
 interface ChannelsServices {
+    val connectivity: Flow<Status>
     suspend fun fetchChannels(): Either<ResponseError, FetchChannelsResult>
     suspend fun deleteOrLeave(channel: ChannelInfo): Either<ResponseError, Unit>
     suspend fun fetchMore(): Either<ResponseError, Unit>
     suspend fun initSseOnChannels(): Either<ResponseError, Unit>
-    suspend fun initConnectionObserver()
 }

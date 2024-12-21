@@ -33,7 +33,6 @@ internal class ChannelsViewModel(
     val user = userInfoRepository.userInfo
 
     init {
-        viewModelScope.launch { service.initConnectionObserver() }
         viewModelScope.launch { service.initSseOnChannels() }
     }
 

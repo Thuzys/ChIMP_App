@@ -75,7 +75,7 @@ class ChIMPApplication : Application(), DependenciesContainer {
         ChIMPRegisterAPI(client, url)
     }
     override val channelsService: ChannelsServices by lazy {
-        ChIMPChannelsAPI(client, url, userInfoRepository.userInfo, connectivityObserver.observe())
+        ChIMPChannelsAPI(client, url, userInfoRepository.userInfo, connectivityObserver.connectivity)
     }
 
     override val findChannelService: FindChannelService by lazy {
