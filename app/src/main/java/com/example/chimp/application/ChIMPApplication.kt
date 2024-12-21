@@ -74,8 +74,14 @@ class ChIMPApplication : Application(), DependenciesContainer {
     override val loginService: RegisterService by lazy {
         ChIMPRegisterAPI(client, url)
     }
+
     override val channelsService: ChannelsServices by lazy {
-        ChIMPChannelsAPI(client, url, userInfoRepository.userInfo, connectivityObserver.connectivity)
+        ChIMPChannelsAPI(
+            client,
+            url,
+            userInfoRepository.userInfo,
+            connectivityObserver.connectivity
+        )
     }
 
     override val findChannelService: FindChannelService by lazy {
@@ -87,10 +93,17 @@ class ChIMPApplication : Application(), DependenciesContainer {
     }
 
     override val channelService: ChannelService by lazy {
-        ChIMPChannelAPI(client, url, userInfoRepository.userInfo, channelRepository.channelInfo)
+        ChIMPChannelAPI(
+            client,
+            url,
+            userInfoRepository.userInfo,
+            channelRepository.channelInfo,
+            connectivityObserver.connectivity
+        )
     }
 
-    override val preferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
+    override val preferencesDataStore: DataStore<Preferences> by
+    preferencesDataStore(name = "preferences")
 
     override val connectivityObserver: ConnectivityObserver by lazy {
         NetworkConnectivityObserver(applicationContext)

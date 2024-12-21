@@ -4,19 +4,25 @@ import android.view.ViewTreeObserver
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +38,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.channel.model.accessControl.AccessControl.READ_WRITE
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Scrolling
 import com.example.chimp.screens.channel.screen.composable.ChatHeader
@@ -58,6 +69,12 @@ private const val LAZY_COLUMN_FILL_MAX_HEIGHT_WITH_KEYBOARD = 0.7f
 private const val TEXT_INPUT_HEIGHT = 100
 
 private const val TEXT_INPUT_HEIGHT_WITH_KEYBOARD = 200
+
+private const val NO_INTERNET_PADDING = 8
+
+private const val ROUNDED_CORNER = 8
+
+private const val BORDER_STROKE = 1
 
 /**
  * ScrollingView is a composable that displays the scrolling view of the channel.
@@ -84,6 +101,7 @@ internal fun ScrollingView(
 ) {
     var textInputHeight by remember { mutableStateOf(TEXT_INPUT_HEIGHT.dp) }
     var lazyColumnMaxHeight by remember { mutableFloatStateOf(LAZY_COLUMN_FILL_MAX_HEIGHT) }
+    val connection by state.connection.collectAsState(CONNECTED)
     val view = LocalView.current
     val listState = rememberLazyListState()
 
@@ -147,8 +165,8 @@ internal fun ScrollingView(
                     )
                 }
                 Button(
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                    border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onErrorContainer),
                     onClick = onDeleteOrLeave
                 ) {
@@ -159,8 +177,8 @@ internal fun ScrollingView(
                 }
                 if (state.user.id == state.channel.owner.id) {
                     Button(
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                        shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                        border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
                         onClick = editChannel
                     ) {
@@ -170,8 +188,8 @@ internal fun ScrollingView(
                         )
                     }
                     Button(
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                        shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                        border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
                         onClick = onCreateInvite
                     ) {
@@ -208,6 +226,26 @@ internal fun ScrollingView(
                         onVisible = loadMore
                     )
                 }
+            }
+        }
+        if (connection == DISCONNECTED) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(TEXT_INPUT_HEIGHT.dp),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = stringResource(R.string.no_internet_connection),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer
+                )
+                Spacer(modifier = Modifier.width(NO_INTERNET_PADDING.dp))
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
             }
         }
         if (state.accessControl == READ_WRITE) {
@@ -365,7 +403,8 @@ private fun ChatPreview() {
             user = user1,
             messages = flow,
             hasMore = flowOf(false),
-            accessControl = READ_WRITE
+            accessControl = READ_WRITE,
+            connection = flowOf(DISCONNECTED)
         )
     )
 }

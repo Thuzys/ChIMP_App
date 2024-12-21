@@ -2,6 +2,8 @@ package com.example.chimp.screens.channels.viewModel.state
 
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -25,7 +27,8 @@ internal sealed interface ChannelsScreenState {
     ) : ChannelsScreenState
     data class Scrolling(
         val channels: Flow<List<ChannelInfo>>,
-        val hasMore: Flow<Boolean>
+        val hasMore: Flow<Boolean>,
+        val connectivity: Flow<Status>
     ) : ChannelsScreenState
     data class Info(
         val channel: ChannelInfo,

@@ -9,6 +9,8 @@ import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.User
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channel.model.FetchMessagesResult
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
@@ -31,9 +33,14 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
 
@@ -51,7 +58,8 @@ class ChIMPChannelAPI(
     private val client: HttpClient,
     private val url: String,
     private val user: Flow<User?>,
-    private val channel: Flow<ChannelInfo?>
+    private val channel: Flow<ChannelInfo?>,
+    connection: Flow<Status>
 ) : ChannelService {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     private val _hasMore = MutableStateFlow(false)
@@ -59,10 +67,27 @@ class ChIMPChannelAPI(
     private val hasMore = limit + 1
     private val channelApi = "$url/api/channels"
     private val messagesApi = "$url/api/messages"
+    override val connectivity = connection
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+    init {
+        scope.launch {
+            user.collectLatest { currUser ->
+                if (currUser != null) {
+                    connectivity.collectLatest {
+                        if (it == Status.CONNECTED) initSseOnMessages()
+                    }
+                }
+            }
+        }
+    }
 
     override suspend fun fetchMessages(): Either<ResponseError, FetchMessagesResult> {
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
         val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .get("$messagesApi/channel/${currChannel.cId}/timestamp?limit=$hasMore") {
                 makeHeader(currUser)
@@ -94,6 +119,9 @@ class ChIMPChannelAPI(
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
         val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
+        connectivity.first().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         val lastTimestamp = _messages.value.last().time.toString()
         val uri =
             "$messagesApi/channel/${currChannel.cId}/timestamp?limit=$hasMore&timestamp=$lastTimestamp"
@@ -127,6 +155,9 @@ class ChIMPChannelAPI(
 
     override suspend fun sendMessage(message: Message): Either<ResponseError, Unit> {
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .post(messagesApi)
             {
@@ -165,6 +196,9 @@ class ChIMPChannelAPI(
     override suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit> {
         val currChannel = this.channel.first() ?: return failure(ResponseError.InternalServerError)
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.last().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .put("$channelApi/${currChannel.cId}") {
                 makeHeader(currUser)
@@ -194,6 +228,9 @@ class ChIMPChannelAPI(
     override suspend fun deleteOrLeaveChannel(): Either<ResponseError, Unit> {
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
         val channel = channel.first() ?: return failure(ResponseError.InternalServerError)
+        connectivity.first().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .delete("$channelApi/${channel.cId}") { makeHeader(curr) }
             .let { response ->
@@ -214,6 +251,9 @@ class ChIMPChannelAPI(
     override suspend fun fetchAccessControl(): Either<ResponseError, AccessControl> {
         val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         client
             .get("$channelApi/accessControl/${currChannel.cId}")
             { makeHeader(currUser) }
@@ -238,8 +278,11 @@ class ChIMPChannelAPI(
             }
     }
 
-    override suspend fun initSseOnMessages() {
+    private suspend fun initSseOnMessages() {
         val curr = user.first() ?: return
+        connectivity.first().let {
+            if (it == DISCONNECTED) return
+        }
         try {
             client.sse(
                 urlString = "$messagesApi/sse",
@@ -247,6 +290,8 @@ class ChIMPChannelAPI(
                 reconnectionTime = 5.minutes
             ) {
                 while (true) {
+                    val currConnectivity = connectivity.first()
+                    if (currConnectivity == DISCONNECTED) continue
                     incoming.collect { event ->
                         Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
                         if (event.event == MESSAGE_EVENT) {
@@ -274,6 +319,9 @@ class ChIMPChannelAPI(
     ): Either<ResponseError, String> {
         val currChannel = channel.first() ?: return failure(ResponseError.InternalServerError)
         val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let {
+            if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
         val expirationDate =
             channelInvitation.formatTimestamp(channelInvitation.getExpirationTime())
         val maxUses = channelInvitation.maxUses

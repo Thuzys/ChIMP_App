@@ -32,7 +32,7 @@ class ChannelPreferencesRepository(
     override suspend fun fetchChannelMessages(channel: ChannelInfo): List<Message> {
         val key = stringPreferencesKey(channel.name.name)
         val d = store.data.map { value: Preferences -> value[key] }.first() ?: return emptyList()
-        return d.lines().map { Message.fromPreferences(it) }
+        return d.lines().filter(String::isNotBlank).map { Message.fromPreferences(it) }
     }
 
     override suspend fun saveMessages(messages: List<Message>) {

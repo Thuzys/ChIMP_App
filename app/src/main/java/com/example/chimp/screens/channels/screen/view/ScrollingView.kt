@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +30,9 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.ui.composable.ScrollHeader
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
@@ -128,12 +132,13 @@ internal fun ScrollingView(
 ) {
     val channels by chats.channels.collectAsState(emptyList())
     val hasMore by chats.hasMore.collectAsState(false)
+    val connectivity by chats.connectivity.collectAsState(CONNECTED)
     Column(
         modifier = modifier.testTag(CHANNEL_SCROLLING_VIEW),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        ScrollHeader(R.string.my_chats, onLogout)
+        ScrollHeader(R.string.my_chats, onLogout, connectivity)
         SwipeRefresh(
             modifier = Modifier.testTag(SWIPE_REFRESH_TAG),
             state = SwipeRefreshState(false),
@@ -245,7 +250,8 @@ private fun IdleViewPreview() {
                     )
                 }
             ),
-            flowOf(true)
+            flowOf(true),
+            flowOf(CONNECTED)
         )
     ScrollingView(
         modifier = Modifier.fillMaxSize(),
