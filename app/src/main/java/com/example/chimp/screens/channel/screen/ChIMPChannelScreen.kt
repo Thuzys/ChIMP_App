@@ -40,11 +40,12 @@ internal fun ChIMPChannelScreen(
                     modifier = Modifier.fillMaxSize(),
                     state = curr,
                     onBackClick = onBack,
-                    onSendMessage = { vm.sendMessage(it) },
+                    onSendMessage = vm::sendMessage,
                     onDeleteOrLeave = { vm.deleteOrLeave(onBack) },
                     editChannel = vm::toEdit,
                     loadMore = vm::loadMore,
-                    onInfoClick = vm::toInfo
+                    onInfoClick = vm::toInfo,
+                    onCreateInvite = vm::toCreateInvitation
                 )
             }
             is ChannelScreenState.Editing -> {
@@ -80,6 +81,13 @@ internal fun ChIMPChannelScreen(
                     inviteCode = curr.invitation,
                     onDismiss = vm::goBack
                 )
+            }
+            is ChannelScreenState.BackToRegistration -> {
+                onBack()
+            }
+
+            is ChannelScreenState.BackToChannels -> {
+                onBack()
             }
         }
     }

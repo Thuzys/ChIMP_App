@@ -13,7 +13,11 @@ import com.example.chimp.models.repository.UserInfoRepository
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channel.model.FetchMessagesResult
+import com.example.chimp.screens.channel.model.accessControl.AccessControl
+import com.example.chimp.screens.channel.model.accessControl.AccessControl.READ_ONLY
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.BackToChannels
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.BackToRegistration
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.CreatingInvitation
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Editing
 import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Error
@@ -25,6 +29,7 @@ import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState.Show
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 internal class ChannelViewModel(
@@ -38,16 +43,15 @@ internal class ChannelViewModel(
     val channel = channelRepo.channelInfo
 
     fun loadMessages() {
-        viewModelScope.launch { service.initSseOnMessages() }
         viewModelScope.launch {
             val curr = state.value
             val user = userRepo.userInfo.first()
             val channel = channelRepo.channelInfo.first()
             if (curr !is Initial) return@launch
             if (user == null)
-                return@launch _state.emit(Error(ResponseError.InternalServerError, curr))
+                return@launch _state.emit(Error(ResponseError.NoUserContext, BackToRegistration))
             if (channel == null)
-                return@launch _state.emit(Error(ResponseError.InternalServerError, curr))
+                return@launch _state.emit(Error(ResponseError.NoChannelContext, BackToChannels))
             val userInfo = UserInfo(user.id, user.name)
             _state.emit(Loading)
             when (val result = service.fetchMessages()) {
@@ -61,19 +65,66 @@ internal class ChannelViewModel(
                                     channel = channel,
                                     messages = result.value.first,
                                     hasMore = result.value.second,
-                                    accessControl = accessResponse.value
+                                    accessControl = accessResponse.value,
+                                    connection = service.connectivity
                                 )
                             )
                         }
 
                         is Failure<ResponseError> -> {
-                            _state.emit(Error(accessResponse.value, curr))
+                            when (accessResponse.value) {
+                                ResponseError.Unauthorized -> _state.emit(
+                                    Error(
+                                        accessResponse.value,
+                                        BackToRegistration
+                                    )
+                                )
+
+                                ResponseError.NoInternet -> _state.emit(
+                                    Error(
+                                        accessResponse.value,
+                                        Scrolling(
+                                            user = userInfo,
+                                            channel = channel,
+                                            accessControl = READ_ONLY,
+                                            hasMore = flowOf(false),
+                                            messages = result.value.first,
+                                            connection = service.connectivity
+                                        )
+                                    )
+                                )
+
+                                else -> _state.emit(Error(accessResponse.value, BackToChannels))
+                            }
                         }
                     }
                 }
 
                 is Failure<ResponseError> -> {
-                    _state.emit(Error(result.value, curr))
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                result.value,
+                                BackToRegistration
+                            )
+                        )
+
+                        ResponseError.NoInternet -> _state.emit(
+                            Error(
+                                result.value,
+                                Scrolling(
+                                    user = userInfo,
+                                    channel = channel,
+                                    accessControl = READ_ONLY,
+                                    hasMore = flowOf(false),
+                                    messages = flowOf(channelRepo.fetchChannelMessages(channel)),
+                                    connection = service.connectivity
+                                )
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, BackToChannels))
+                    }
                 }
             }
         }
@@ -85,7 +136,16 @@ internal class ChannelViewModel(
             if (curr !is Scrolling) return@launch
             when (val result = service.fetchMore()) {
                 is Failure<ResponseError> -> {
-                    _state.emit(Error(result.value, curr))
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                ResponseError.Unauthorized,
+                                BackToRegistration
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
                 }
 
                 is Success<Unit> -> return@launch
@@ -99,10 +159,20 @@ internal class ChannelViewModel(
             if (curr !is Scrolling) return@launch
             val channel =
                 channelRepo.channelInfo.first()
-                    ?: return@launch _state.emit(Error(ResponseError.InternalServerError, curr))
+                    ?: return@launch _state.emit(
+                        Error(
+                            ResponseError.NoChannelContext,
+                            BackToChannels
+                        )
+                    )
             val user =
                 userRepo.userInfo.first()
-                    ?: return@launch _state.emit(Error(ResponseError.InternalServerError, curr))
+                    ?: return@launch _state.emit(
+                        Error(
+                            ResponseError.NoUserContext,
+                            BackToRegistration
+                        )
+                    )
             val sendMsg = Message(
                 cId = channel.cId,
                 message = msg,
@@ -110,8 +180,25 @@ internal class ChannelViewModel(
             )
             when (val result = service.sendMessage(sendMsg)) {
                 is Success<Unit> -> return@launch
-                is Failure<ResponseError> ->
-                    _state.emit(Error(result.value, curr))
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                result.value,
+                                BackToRegistration
+                            )
+                        )
+
+                        ResponseError.NoInternet -> _state.emit(
+                            Error(
+                                result.value,
+                                curr.copy(accessControl = READ_ONLY, hasMore = flowOf(false))
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }
@@ -126,7 +213,19 @@ internal class ChannelViewModel(
                     if (curr.previous is Scrolling) _state.emit(curr.previous.copy(channel = channel))
                     else _state.emit(curr.previous)
                 }
-                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
+
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                result.value,
+                                BackToRegistration
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }
@@ -164,8 +263,22 @@ internal class ChannelViewModel(
             val curr = state.value
             if (curr !is Scrolling) return@launch
             when (val result = service.deleteOrLeaveChannel()) {
-                is Success -> { onSuccess() }
-                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
+                is Success -> {
+                    onSuccess()
+                }
+
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                result.value,
+                                BackToRegistration
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }
@@ -185,7 +298,18 @@ internal class ChannelViewModel(
             if (curr !is CreatingInvitation) return@launch
             when (val result = service.createChannelInvitation(channelInvitation)) {
                 is Success -> _state.emit(ShowingInvitation(result.value, curr.previous))
-                is Failure<ResponseError> -> _state.emit(Error(result.value, curr))
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> _state.emit(
+                            Error(
+                                result.value,
+                                BackToRegistration
+                            )
+                        )
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
             }
         }
     }

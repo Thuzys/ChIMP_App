@@ -1,7 +1,6 @@
 package com.example.chimp.services.http
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.either.failure
@@ -28,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -59,6 +59,13 @@ class ChIMPChannelsAPI(
 
     init {
         scope.launch {
+            user.collectLatest { currUser ->
+                if (currUser != null) {
+                    connectivity.collectLatest {
+                        if (it == Status.CONNECTED) initSseOnChannels()
+                    }
+                }
+            }
         }
     }
 
@@ -142,10 +149,10 @@ class ChIMPChannelsAPI(
             }
     }
 
-    override suspend fun initSseOnChannels(): Either<ResponseError, Unit> {
-        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+     private suspend fun initSseOnChannels() {
+        val curr = user.first() ?: return
         connectivity.first().let { conn ->
-            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+            if (conn == DISCONNECTED) return
         }
         try {
             client.sse(
@@ -188,10 +195,7 @@ class ChIMPChannelsAPI(
             }
         } catch (e: Exception) {
             Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
-            return failure(e.message?.let { ResponseError(cause = it) }
-                ?: ResponseError.Unknown)
         }
-        return success(Unit)
     }
 
     companion object {

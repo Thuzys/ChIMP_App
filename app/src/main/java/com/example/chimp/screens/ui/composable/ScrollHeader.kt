@@ -12,10 +12,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ExitToApp
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
 
 /**
  * The tag for the logout icon.
@@ -58,7 +64,11 @@ private const val LOGOUT_ICON_PADDING = 8
  * @param logout The logout action.
  */
 @Composable
-fun ScrollHeader(titleResId: Int, logout: () -> Unit) {
+fun ScrollHeader(
+    titleResId: Int,
+    logout: () -> Unit,
+    connectivity: Status = Status.CONNECTED
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,6 +84,30 @@ fun ScrollHeader(titleResId: Int, logout: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        var isToSow by remember { mutableStateOf(false) }
+        if (connectivity == Status.DISCONNECTED) {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = "No internet connection",
+                tint = MaterialTheme.colorScheme.onError,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .width(24.dp)
+                    .height(24.dp)
+                    .clickable { isToSow = true }
+            )
+        }
+        ShowDialog(
+            showDialog = isToSow,
+            onDismissRequest = { isToSow = false },
+        ) {
+            Text(
+                text = stringResource(R.string.no_internet_connection),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = stringResource(titleResId),
@@ -100,5 +134,5 @@ fun ScrollHeader(titleResId: Int, logout: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun ChannelsScrollHeaderPreview() {
-    ScrollHeader(titleResId = R.string.my_chats, logout = {})
+    ScrollHeader(titleResId = R.string.my_chats, logout = {}, connectivity = Status.DISCONNECTED)
 }

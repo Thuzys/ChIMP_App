@@ -27,8 +27,4 @@ class DummyChannelsService : ChannelsServices {
     override suspend fun fetchMore(): Either<ResponseError, Unit> {
         return success(Unit)
     }
-
-    override suspend fun initSseOnChannels(): Either<ResponseError, Unit> {
-        TODO("Not yet implemented")
-    }
 }
