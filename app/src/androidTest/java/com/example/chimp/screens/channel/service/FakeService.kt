@@ -1,6 +1,7 @@
 package com.example.chimp.screens.channel.service
 
 import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelInvitation
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.success
@@ -65,11 +66,8 @@ internal class FakeService: ChannelService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun createChannelInvitation(
-        expirationDate: String,
-        maxUses: UInt,
-        accessControl: AccessControl
-    ): Either<ResponseError, String> {
+    override suspend fun createChannelInvitation(channelInvitation: ChannelInvitation): Either<ResponseError, String> {
         TODO("Not yet implemented")
     }
+
 }

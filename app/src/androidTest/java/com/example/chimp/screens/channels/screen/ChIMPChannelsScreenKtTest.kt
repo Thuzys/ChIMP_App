@@ -1,27 +1,27 @@
 package com.example.chimp.screens.channels.screen
-
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.users.UserInfo
-import com.example.chimp.models.channel.ChannelInfo
-import com.example.chimp.screens.channels.screen.view.CHANNEL_INFO_VIEW_TAG
-import com.example.chimp.screens.channels.screen.view.CHANNEL_SCROLLING_VIEW
-import com.example.chimp.screens.channels.service.FakeService
-import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Info
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Loading
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
-import com.example.chimp.screens.ui.views.ERROR_VIEW_TEST_TAG
-import com.example.chimp.screens.ui.views.LOADING_VIEW_TEST_TAG
-import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
-import kotlinx.coroutines.flow.flowOf
-import org.junit.Rule
-import org.junit.Test
+//
+//import androidx.compose.ui.test.assertIsDisplayed
+//import androidx.compose.ui.test.junit4.createComposeRule
+//import androidx.compose.ui.test.onNodeWithTag
+//import com.example.chimp.models.channel.ChannelName
+//import com.example.chimp.models.errors.ResponseError
+//import com.example.chimp.models.users.UserInfo
+//import com.example.chimp.models.channel.ChannelInfo
+//import com.example.chimp.screens.channels.screen.view.CHANNEL_INFO_VIEW_TAG
+//import com.example.chimp.screens.channels.screen.view.CHANNEL_SCROLLING_VIEW
+//import com.example.chimp.screens.channels.service.FakeService
+//import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Info
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Loading
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
+//import com.example.chimp.screens.ui.views.ERROR_VIEW_TEST_TAG
+//import com.example.chimp.screens.ui.views.LOADING_VIEW_TEST_TAG
+//import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
+//import kotlinx.coroutines.flow.flowOf
+//import org.junit.Rule
+//import org.junit.Test
 //
 //class ChIMPChannelsScreenKtTest {
 //

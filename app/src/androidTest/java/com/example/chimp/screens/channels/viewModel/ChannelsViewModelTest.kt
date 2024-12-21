@@ -1,22 +1,22 @@
 package com.example.chimp.screens.channels.viewModel
 
-import com.example.chimp.models.channel.ChannelBasicInfo
-import com.example.chimp.models.channel.ChannelName
-import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.models.users.UserInfo
-import com.example.chimp.screens.channels.service.FakeService
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
-import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
-import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
-import com.example.chimp.utils.ReplaceMainDispatcherRule
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.yield
-import org.junit.Rule
-import org.junit.Test
+//import com.example.chimp.models.channel.ChannelBasicInfo
+//import com.example.chimp.models.channel.ChannelName
+//import com.example.chimp.models.errors.ResponseError
+//import com.example.chimp.models.users.UserInfo
+//import com.example.chimp.screens.channels.service.FakeService
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.BackToRegistration
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Error
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
+//import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
+//import com.example.chimp.utils.repository.FakeUserInfoRepositoryRule
+//import com.example.chimp.utils.ReplaceMainDispatcherRule
+//import kotlinx.coroutines.flow.flowOf
+//import kotlinx.coroutines.test.runTest
+//import kotlinx.coroutines.yield
+//import org.junit.Rule
+//import org.junit.Test
 
 //class ChannelsViewModelTest {
 //
