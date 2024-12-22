@@ -1,5 +1,6 @@
 package com.example.chimp.screens.register.model
 
+import com.example.chimp.models.DataInput
 import com.example.chimp.models.either.Success
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.*

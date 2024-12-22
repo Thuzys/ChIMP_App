@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.chimp.application.DependenciesContainer
 import com.example.chimp.screens.about.activity.AboutActivity
+import com.example.chimp.screens.channel.activity.ChannelActivity
 import com.example.chimp.screens.channels.activity.ChannelsActivity
 import com.example.chimp.screens.createChannel.screen.ChIMPCreateChannelScreen
 import com.example.chimp.screens.createChannel.viewModel.CreateChannelVMFactory
@@ -24,7 +25,8 @@ class CreateChannelActivity: ComponentActivity() {
         factoryProducer = {
             CreateChannelVMFactory(
                 (application as DependenciesContainer).createChannelService,
-                (application as DependenciesContainer).userInfoRepository
+                (application as DependenciesContainer).userInfoRepository,
+                (application as DependenciesContainer).channelRepository
             )
         }
     )
@@ -39,6 +41,10 @@ class CreateChannelActivity: ComponentActivity() {
 
     private val navigateToAboutIntent by lazy {
         Intent(this, AboutActivity::class.java)
+    }
+
+    private val navigateToChannelIntent by lazy {
+        Intent(this, ChannelActivity::class.java)
     }
 
     private val navigateToRegisterIntent by lazy {
@@ -58,6 +64,7 @@ class CreateChannelActivity: ComponentActivity() {
                         onAboutNavigate = { startActivity(navigateToAboutIntent) },
                         onChatsNavigate = { startActivity(navigateToChatsIntent) },
                         onFindChannelNavigate = { startActivity(navigateToFindChannelIntent) },
+                        onCreateChannelNavigate = { startActivity(navigateToChannelIntent) },
                         onRegisterNavigate = {
                             startActivity(navigateToRegisterIntent)
                             finish()

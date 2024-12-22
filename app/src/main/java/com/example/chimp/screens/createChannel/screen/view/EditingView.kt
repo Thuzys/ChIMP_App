@@ -1,10 +1,7 @@
 package com.example.chimp.screens.createChannel.screen.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,10 +12,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +20,7 @@ import com.example.chimp.R
 import com.example.chimp.models.channel.AccessControl
 import com.example.chimp.models.channel.Visibility
 import com.example.chimp.screens.createChannel.model.ChannelInput
-import com.example.chimp.screens.createChannel.screen.composable.EDITING_BASE_VIEW_CONTENT_TAG
+import com.example.chimp.screens.createChannel.screen.composable.EditingBaseView
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState
 import com.example.chimp.screens.ui.composable.ImageSelector
 import com.example.chimp.screens.ui.composable.MakeButton
@@ -50,8 +44,7 @@ val accessControlOptions = listOf(
 
 @Composable
 internal fun EditingView(
-    state: CreateChannelScreenState.EditingState,
-    showMessage: Boolean?,
+    state: CreateChannelScreenState.Editing,
     modifier: Modifier = Modifier,
     onSubmit: (ChannelInput) -> Unit = { _ -> },
     onChannelNameChange: (String) -> Unit = {},
@@ -62,14 +55,9 @@ internal fun EditingView(
     val description = remember { mutableStateOf("") }
     var icon by remember { mutableIntStateOf(R.drawable.default_icon) }
 
-    Column(
-        modifier = modifier
-            .testTag(EDITING_BASE_VIEW_CONTENT_TAG)
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+     EditingBaseView(
+         modifier = modifier,
+     ) {
         MySpacer()
         MyTextField(
             modifier = Modifier.padding(
@@ -79,10 +67,10 @@ internal fun EditingView(
                 end = INPUT_FIELD_PADDING.dp,
                 ),
             label = stringResource(R.string.channelName),
-            value = channelName,
+            value = channelName.input,
             onValueChange = onChannelNameChange
         )
-        if (showMessage == true) {
+        if (!channelName.isValid && channelName.input.isNotBlank()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -133,14 +121,14 @@ internal fun EditingView(
             text = stringResource(R.string.createChannel),
             onClick = {
                 onSubmit(ChannelInput(
-                    channelName = channelName,
+                    channelName = channelName.input,
                     visibility = visibility.value,
                     accessControl = accessControl.value,
                     description = description.value,
                     icon = icon
                 ))
             },
-            enable = channelName.isNotBlank() && (showMessage == false)
+            enable = channelName.input.isNotBlank() && channelName.isValid
         )
     }
 
@@ -152,5 +140,5 @@ internal fun EditingView(
 )
 @Composable
 private fun PreviewEditingView() {
-    EditingView(CreateChannelScreenState.Editing(""), false)
+    EditingView(CreateChannelScreenState.Editing())
 }

@@ -58,17 +58,18 @@ fun MenuBottomBar(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            onClick = aboutClick,
-            enabled = aboutIsEnable
-        ) {
-            Icon(Icons.Default.Info, contentDescription = "About")
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        IconButton(
             onClick = createChannelClick,
             enabled = createChannelIsEnable
         ) {
             Icon(Icons.Default.Add, contentDescription = "CreateChannel")
         }
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = aboutClick,
+            enabled = aboutIsEnable
+        ) {
+            Icon(Icons.Default.Info, contentDescription = "About")
+        }
+
     }
 }

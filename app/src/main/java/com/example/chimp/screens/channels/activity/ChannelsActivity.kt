@@ -13,6 +13,7 @@ import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.channels.screen.ChIMPChannelsScreen
 import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
 import com.example.chimp.screens.channels.viewModel.ChannelsViewModelFactory
+import com.example.chimp.screens.createChannel.activity.CreateChannelActivity
 import com.example.chimp.screens.register.activity.RegisterActivity
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
@@ -50,6 +51,10 @@ class ChannelsActivity : ComponentActivity() {
         Intent(this, ChannelActivity::class.java)
     }
 
+    private val navigateToCreateChannelIntent: Intent by lazy {
+        Intent(this, CreateChannelActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,6 +65,7 @@ class ChannelsActivity : ComponentActivity() {
                     onAboutNavigate = { startActivity(navigateToAboutIntent) },
                     onChannelNavigate = { startActivity(navigateToChannelIntent) },
                     vm = viewModel,
+                    onCreateChannelNavigate = { startActivity(navigateToCreateChannelIntent) },
                     onRegisterNavigate =
                     {
                         startActivity(navigateToRegisterIntent)

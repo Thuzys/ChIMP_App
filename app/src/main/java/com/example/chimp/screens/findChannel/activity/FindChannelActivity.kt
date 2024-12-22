@@ -59,6 +59,10 @@ class FindChannelActivity: ComponentActivity() {
         Intent(this, ChannelActivity::class.java)
     }
 
+    private val navigateToCreateChannelIntent by lazy {
+        Intent(this, ChannelActivity::class.java)
+    }
+
     private lateinit var connectivityObserver: ConnectivityObserver
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +79,7 @@ class FindChannelActivity: ComponentActivity() {
                         startActivity(navigateToRegisterIntent)
                         finish()
                     },
+                    onCreateChannelNavigate = { startActivity(navigateToCreateChannelIntent) },
                     onJoinNavigate = {startActivity(navigateToChannelIntent)},
                 )
             }

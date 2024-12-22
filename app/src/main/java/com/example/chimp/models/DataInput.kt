@@ -1,7 +1,8 @@
-package com.example.chimp.screens.register.model
+package com.example.chimp.models
 
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.either.success
+import com.example.chimp.screens.register.model.InputValidation
 
 /**
  * Represents a data input.

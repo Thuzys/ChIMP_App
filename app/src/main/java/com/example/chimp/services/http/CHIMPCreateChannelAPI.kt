@@ -6,19 +6,26 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.models.toStrIcon
 import com.example.chimp.models.users.User
 import com.example.chimp.screens.createChannel.model.ChannelInput
 import com.example.chimp.screens.createChannel.model.CreateChannelService
+import com.example.chimp.services.http.dtos.input.channel.ChannelInputModel
+import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
+import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
+import com.example.chimp.services.http.dtos.output.channel.CreateChannelOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
 
 class CHIMPCreateChannelAPI(
     private val client: HttpClient,
@@ -33,9 +40,9 @@ class CHIMPCreateChannelAPI(
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        val channels = response.body<List<ChannelInfo>>()
+                        val channels = Json.decodeFromString<List<ChannelListInputModel>>(response.bodyAsText()).toChannelInfo()
                         val ownedChannels = channels.filter { it.owner.id == curr.id }
-                        val channel = ownedChannels.filter { it.name.name.lowercase() == channelName.lowercase() }
+                        val channel = ownedChannels.filter { it.name.displayName.lowercase() == channelName.lowercase() }
                         if (channel.isNotEmpty()) {
                             success(channel[0])
                         } else {
@@ -54,26 +61,26 @@ class CHIMPCreateChannelAPI(
 
     override suspend fun createChannel(
         channelInput: ChannelInput
-    ): Either<ResponseError, Unit> {
+    ): Either<ResponseError, ChannelInfo> {
         val curr = user.first() ?: return Either.Left(ResponseError.Unauthorized)
         client
             .post("$url$CHANNEL_BASE_URL") {
                 makeHeader(curr)
                 setBody(
-                    mapOf(
-                        "owner" to curr.id,
-                        "name" to channelInput.channelName,
-                        "visibility" to channelInput.visibility,
-                        "accessControl" to channelInput.accessControl,
-                        "description" to channelInput.description,
-                        "icon" to channelInput.icon
+                    CreateChannelOutputModel(
+                        curr.id,
+                        channelInput.channelName,
+                        channelInput.visibility,
+                        channelInput.accessControl,
+                        channelInput.description,
+                        channelInput.icon.toStrIcon()
                     )
                 )
             }
             .let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
-                        success(Unit)
+                        success(response.body<ChannelInputModel>().toChannelInfo())
                     } else {
                         failure(response.body<ErrorInputModel>().toResponseError())
                     }

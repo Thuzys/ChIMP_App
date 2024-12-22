@@ -53,6 +53,12 @@
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP">
         </activity>
+        <activity
+            android:name=".screens.createChannel.activity.CreateChannelActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.ChIMP">
+        </activity>
     </application>
 
 </manifest>

@@ -30,6 +30,7 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit,
     onRegisterNavigate: () -> Unit,
     onJoinNavigate : () -> Unit,
+    onCreateChannelNavigate: () -> Unit,
     status: ConnectivityObserver.Status = ConnectivityObserver.Status.CONNECTED
 ) {
 
@@ -48,7 +49,8 @@ fun ChIMPFindChannelScreen(
                 MenuBottomBar(
                     findChannelIsEnable = false,
                     onMenuClick = onChatsNavigate,
-                    aboutClick = onAboutNavigate
+                    aboutClick = onAboutNavigate,
+                    createChannelClick = onCreateChannelNavigate
                 )
             }
         ) { modifier ->

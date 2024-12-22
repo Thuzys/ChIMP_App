@@ -1,7 +1,7 @@
 package com.example.chimp.screens.register.viewModel.state
 
 import com.example.chimp.models.errors.ResponseError
-import com.example.chimp.screens.register.model.DataInput
+import com.example.chimp.models.DataInput
 
 /**
  * The state of the Login screen.

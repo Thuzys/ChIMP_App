@@ -26,5 +26,5 @@ interface CreateChannelService {
      */
     suspend fun createChannel(
         channelInput: ChannelInput
-    ): Either<ResponseError, Unit>
+    ): Either<ResponseError, ChannelInfo>
 }

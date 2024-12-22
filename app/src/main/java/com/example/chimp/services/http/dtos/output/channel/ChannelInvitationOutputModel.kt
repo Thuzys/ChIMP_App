@@ -4,7 +4,7 @@ import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ChannelInvitationOutputModel(
+data class ChannelInvitationOutputModel(
     val channelId: UInt,
     val expirationDate: String,
     val maxUses: UInt,

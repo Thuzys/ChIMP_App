@@ -1,5 +1,6 @@
 package com.example.chimp.screens.createChannel.viewModel.state
 
+import com.example.chimp.models.DataInput
 import com.example.chimp.models.errors.ResponseError
 
 interface CreateChannelScreenState {
@@ -11,23 +12,11 @@ interface CreateChannelScreenState {
         val goBack: CreateChannelScreenState
     ) : CreateChannelScreenState
 
-    data object Successful : CreateChannelScreenState
-
     data class Editing(
-        override val channelName: String,
-    ) : EditingState
+        val channelName: DataInput = DataInput.initialState,
+    ) : CreateChannelScreenState
 
-    data class Validated(
-        override val channelName: String,
-    ) : EditingState
-
-    data class NotValidated(
-        override val channelName: String
-    ) : EditingState
 
     data object Submit : CreateChannelScreenState
 
-    interface EditingState : CreateChannelScreenState{
-        val channelName: String
-    }
 }

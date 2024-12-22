@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.Success
 import com.example.chimp.models.repository.UserInfoRepository
-import com.example.chimp.screens.register.model.DataInput
+import com.example.chimp.models.DataInput
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState

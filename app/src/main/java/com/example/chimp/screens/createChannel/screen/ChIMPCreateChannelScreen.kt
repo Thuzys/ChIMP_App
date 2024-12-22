@@ -27,7 +27,8 @@ fun ChIMPCreateChannelScreen(
     onFindChannelNavigate: () -> Unit,
     onAboutNavigate: () -> Unit,
     onChatsNavigate: () -> Unit,
-    onRegisterNavigate: () -> Unit
+    onRegisterNavigate: () -> Unit,
+    onCreateChannelNavigate: () -> Unit
 ) {
 
     val registerNavigate = {
@@ -55,33 +56,10 @@ fun ChIMPCreateChannelScreen(
                 is CreateChannelScreenState.Editing -> {
                     EditingView(
                         state = curr,
-                        showMessage = null,
                         modifier = modifier
                             .fillMaxSize()
                             .wrapContentSize(),
-                        onSubmit = viewModel::submitChannel,
-                        onChannelNameChange = viewModel::updateChannelName
-                    )
-                }
-                is CreateChannelScreenState.Validated -> {
-                    EditingView(
-                        state = curr,
-                        showMessage = false,
-                        modifier = modifier
-                            .fillMaxSize()
-                            .wrapContentSize(),
-                        onSubmit = viewModel::submitChannel,
-                        onChannelNameChange = viewModel::updateChannelName
-                    )
-                }
-                is CreateChannelScreenState.NotValidated -> {
-                    EditingView(
-                        state = curr,
-                        showMessage = true,
-                        modifier = modifier
-                            .fillMaxSize()
-                            .wrapContentSize(),
-                        onSubmit = viewModel::submitChannel,
+                        onSubmit = { viewModel.submitChannel(it, onCreateChannelNavigate) },
                         onChannelNameChange = viewModel::updateChannelName
                     )
                 }
