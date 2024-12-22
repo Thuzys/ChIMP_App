@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.chimp.screens.channels.screen.view.JoiningView
 import com.example.chimp.screens.ui.views.ChannelInfoView
 import com.example.chimp.screens.channels.screen.view.ScrollingView
 import com.example.chimp.screens.channels.viewModel.ChannelsViewModel
@@ -58,7 +60,7 @@ internal fun ChIMPChannelsScreen(
                     LoadingView(
                         modifier = modifier
                             .fillMaxSize()
-                            .wrapContentSize(androidx.compose.ui.Alignment.Center),
+                            .wrapContentSize(Alignment.Center),
                     )
                 }
             }
@@ -82,7 +84,8 @@ internal fun ChIMPChannelsScreen(
                         onInfoClick = vm::toChannelInfo,
                         onChannelClick = { vm.onChannelClick(it, onChannelNavigate) },
                         onLoadMore = vm::loadMore,
-                        onCreateUserInvitation = vm::toUserInvitation
+                        onCreateUserInvitation = vm::toUserInvitation,
+                        onJoinClick = vm::toJoinChannel,
                     )
                 }
             }
@@ -111,6 +114,20 @@ internal fun ChIMPChannelsScreen(
                     modifier = Modifier.fillMaxSize(),
                     inviteCode = curr.inviteCode,
                     onDismiss = vm::goBack
+                )
+            }
+
+            is ChannelsScreenState.JoiningChannel -> {
+                JoiningView(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    onJoinChannel = { invitationCode ->
+                        vm.joinChannel(
+                            invitationCode,
+                            onChannelNavigate
+                        )
+                    },
+                    onBackClick = vm::goBack
                 )
             }
         }

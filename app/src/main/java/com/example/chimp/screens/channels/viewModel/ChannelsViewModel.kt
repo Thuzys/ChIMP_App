@@ -17,6 +17,7 @@ import com.example.chimp.models.repository.ChannelRepository
 import com.example.chimp.screens.channels.model.FetchChannelsResult
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.CreateUserInvitation
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Initial
+import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.JoiningChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -121,12 +122,50 @@ internal class ChannelsViewModel(
         }
     }
 
+    fun toJoinChannel() {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is Scrolling) return@launch
+            _state.emit(JoiningChannel("", curr))
+        }
+    }
+
+    fun joinChannel(invitationCode: String, navigateToChannel: () -> Unit) {
+        viewModelScope.launch {
+            val curr = state.value
+            if (curr !is JoiningChannel) return@launch
+            when (val result = service.joinChannel(invitationCode)) {
+                is Success<ChannelInfo> -> {
+                    channelRepository.updateChannelInfo(result.value)
+                    _state.emit(curr.previous)
+                    navigateToChannel()
+                }
+
+                is Failure<ResponseError> -> {
+                    when (result.value) {
+                        ResponseError.Unauthorized -> {
+                            userInfoRepository.clearUserInfo()
+                            _state.emit(BackToRegistration)
+                        }
+
+                        ResponseError.NoInternet -> {
+                            _state.emit(Error(result.value, curr))
+                        }
+
+                        else -> _state.emit(Error(result.value, curr))
+                    }
+                }
+            }
+        }
+    }
+
     fun goBack() {
         viewModelScope.launch {
             when (val curr = state.value) {
                 is Info -> _state.emit(curr.goBack)
                 is CreateUserInvitation -> _state.emit(curr.goBack)
                 is Error -> _state.emit(curr.goBack)
+                is JoiningChannel -> _state.emit(curr.previous)
                 else -> return@launch
             }
         }

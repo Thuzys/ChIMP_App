@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,9 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ArrowForward
+import androidx.compose.material.icons.automirrored.twotone.Send
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -117,6 +125,21 @@ const val CHANNEL_ITEM_HEIGHT = 90
 const val DELETE_OR_LEAVE_ICON_TAG = "DeleteOrLeaveIcon"
 
 /**
+ * The tag for the join channel icon.
+ */
+const val JOIN_CHANNEL_ICON_TAG = "JoinChannelIcon"
+
+/**
+ * The size of the join channel icon.
+ */
+private const val JOIN_CHANNEL_ICON_SIZE = 24
+
+/**
+ * The padding for the join channel icon.
+ */
+private const val JOIN_CHANNEL_ICON_PADDING = 8
+
+/**
  * ScrollView is the view that displays the list of channels.
  *
  * This view is responsible for displaying the list of channels and handling user interactions.
@@ -140,7 +163,8 @@ internal fun ScrollingView(
     onChannelClick: (ChannelInfo) -> Unit = {},
     onDeleteOrLeave: (ChannelInfo) -> Unit = {},
     onLoadMore: () -> Unit = {},
-    onCreateUserInvitation: (String) -> Unit = {}
+    onCreateUserInvitation: (String) -> Unit = {},
+    onJoinClick: () -> Unit = {},
 ) {
     val channels by chats.channels.collectAsState(emptyList())
     val hasMore by chats.hasMore.collectAsState(false)
@@ -153,12 +177,26 @@ internal fun ScrollingView(
         verticalArrangement = Arrangement.Center
     ) {
         ScrollHeader(R.string.my_chats, onLogout, connectivity) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "Create a user invite",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { isToShow = true }
-            )
+            Row {
+                Icon(
+                    imageVector = Icons.AutoMirrored.TwoTone.ArrowForward,
+                    contentDescription = "Join a channel",
+                    tint = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .testTag(JOIN_CHANNEL_ICON_TAG)
+                        .width(JOIN_CHANNEL_ICON_SIZE.dp)
+                        .height(JOIN_CHANNEL_ICON_SIZE.dp)
+                        .clickable(onClick = onJoinClick)
+                        .rotate(90f),
+                )
+                Spacer(modifier = Modifier.width(JOIN_CHANNEL_ICON_PADDING.dp))
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Create a user invite",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { isToShow = true }
+                )
+            }
         }
 
         ShowDialog(

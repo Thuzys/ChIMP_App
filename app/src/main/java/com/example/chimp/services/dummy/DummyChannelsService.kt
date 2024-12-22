@@ -32,4 +32,8 @@ class DummyChannelsService : ChannelsServices {
         TODO("Not yet implemented")
     }
 
+
+    override suspend fun joinChannel(invitationCode: String): Either<ResponseError, ChannelInfo> {
+        TODO("Not yet implemented")
+    }
 }

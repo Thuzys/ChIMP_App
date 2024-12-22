@@ -4,6 +4,7 @@ import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
+import com.example.chimp.screens.channel.viewModel.state.ChannelScreenState
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -38,5 +39,9 @@ internal sealed interface ChannelsScreenState {
     data class CreateUserInvitation(
         val inviteCode: String,
         val goBack: ChannelsScreenState
+    ) : ChannelsScreenState
+    data class JoiningChannel(
+        val invitationCode: String,
+        val previous: ChannelsScreenState,
     ) : ChannelsScreenState
 }

@@ -17,6 +17,7 @@ import com.example.chimp.services.http.dtos.input.channel.ChannelListInputModel
 import com.example.chimp.services.http.dtos.input.channel.toChannelInfo
 import com.example.chimp.services.http.dtos.input.userInvitation.UserInvitationInputModel
 import com.example.chimp.services.http.dtos.output.userInvitation.UserInvitationOutputModel
+import com.example.chimp.services.http.dtos.output.channel.JoinChannelOutputModel
 import com.example.chimp.services.http.utlis.makeHeader
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -24,6 +25,8 @@ import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
@@ -174,6 +177,33 @@ class ChIMPChannelsAPI(
                         }
                         HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
                         else -> failure(response.body<ErrorInputModel>().toResponseError())
+                    }
+                } catch (e: Exception) {
+                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
+                    return failure(e.message?.let { ResponseError(cause = it) }
+                        ?: ResponseError.Unknown)
+                }
+            }
+    }
+
+    override suspend fun joinChannel(invitationCode: String): Either<ResponseError, ChannelInfo> {
+        val curr = user.first() ?: return failure(ResponseError.Unauthorized)
+        connectivity.first().let { conn ->
+            if (conn == DISCONNECTED) return failure(ResponseError.NoInternet)
+        }
+        client
+            .put("$channelApi/invitations") {
+                makeHeader(curr)
+                setBody(JoinChannelOutputModel(invitationCode = invitationCode))
+            }
+            .let { response ->
+                try {
+                    return if (response.status == HttpStatusCode.OK) {
+                        val channel = response.body<ChannelInputModel>().toChannelInfo()
+                        _channels.emit(_channels.value + channel)
+                        success(channel)
+                    } else {
+                        failure(response.body<ErrorInputModel>().toResponseError())
                     }
                 } catch (e: Exception) {
                     Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
