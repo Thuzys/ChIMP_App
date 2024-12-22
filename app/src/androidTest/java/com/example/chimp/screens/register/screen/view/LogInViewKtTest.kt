@@ -10,7 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.example.chimp.models.either.success
-import com.example.chimp.screens.register.model.DataInput
+import com.example.chimp.models.DataInput
 import com.example.chimp.screens.register.viewModel.state.RegisterScreenState.LogIn
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_INPUT_TAG
 import com.example.chimp.screens.ui.composable.MY_TEXT_FIELD_TRAILING_ICON_TAG

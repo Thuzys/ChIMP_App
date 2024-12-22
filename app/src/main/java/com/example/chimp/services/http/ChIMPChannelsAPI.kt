@@ -67,12 +67,8 @@ class ChIMPChannelsAPI(
 
     init {
         scope.launch {
-            user.collectLatest { currUser ->
-                if (currUser != null) {
-                    connectivity.collectLatest {
-                        if (it == Status.CONNECTED) initSseOnChannels()
-                    }
-                }
+            while (true) {
+                initSseOnChannels()
             }
         }
     }
@@ -87,14 +83,16 @@ class ChIMPChannelsAPI(
             .get("$channelApi/my?limit=$hasMore") { makeHeader(curr) }
             .let { response ->
                 try {
-                    return when(response.status) {
+                    return when (response.status) {
                         HttpStatusCode.OK -> {
-                            val channels: List<ChannelListInputModel> = Json.decodeFromString(response.bodyAsText())
+                            val channels: List<ChannelListInputModel> =
+                                Json.decodeFromString(response.bodyAsText())
                             val hasMore = channels.size == hasMore
                             _channels.emit(channels.toChannelInfo().take(limit))
                             _hasMore.emit(hasMore)
                             success(FetchChannelsResult(_channels, _hasMore))
                         }
+
                         HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
                         else -> failure(response.body<ErrorInputModel>().toResponseError())
                     }
@@ -170,11 +168,12 @@ class ChIMPChannelsAPI(
             }
             .let { response ->
                 try {
-                    return when(response.status) {
+                    return when (response.status) {
                         HttpStatusCode.OK -> {
                             val invitation = response.body<UserInvitationInputModel>()
                             success(invitation.invitationCode)
                         }
+
                         HttpStatusCode.Unauthorized -> failure(ResponseError.Unauthorized)
                         else -> failure(response.body<ErrorInputModel>().toResponseError())
                     }
@@ -233,7 +232,8 @@ class ChIMPChannelsAPI(
                             when (event.event) {
                                 JOIN_OR_UPDATE -> {
                                     event.data?.let { data ->
-                                        val channel = Json.decodeFromString<ChannelInputModel>(data).toChannelInfo()
+                                        val channel = Json.decodeFromString<ChannelInputModel>(data)
+                                            .toChannelInfo()
                                         if (_channels.value.find { it.cId == channel.cId } == null) {
                                             _channels.emit(_channels.value + channel)
                                         } else {
@@ -243,6 +243,7 @@ class ChIMPChannelsAPI(
                                         }
                                     }
                                 }
+
                                 DELETE_OR_LEAVE -> {
                                     event.data?.let { data ->
                                         val channel = Json.decodeFromString<UInt>(data)

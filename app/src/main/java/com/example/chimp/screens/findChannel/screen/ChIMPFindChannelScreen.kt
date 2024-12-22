@@ -28,6 +28,7 @@ fun ChIMPFindChannelScreen(
     onAboutNavigate: () -> Unit,
     onRegisterNavigate: () -> Unit,
     onJoinNavigate : () -> Unit,
+    onCreateChannelNavigate: () -> Unit,
 ) {
 
     val registerNavigate = {
@@ -45,7 +46,8 @@ fun ChIMPFindChannelScreen(
                 MenuBottomBar(
                     findChannelIsEnable = false,
                     onMenuClick = onChatsNavigate,
-                    aboutClick = onAboutNavigate
+                    aboutClick = onAboutNavigate,
+                    createChannelClick = onCreateChannelNavigate
                 )
             }
         ) { modifier ->

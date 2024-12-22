@@ -24,10 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
-import com.example.chimp.models.either.Failure
 import com.example.chimp.models.either.failure
-import com.example.chimp.screens.register.model.DataInput
-import com.example.chimp.screens.register.model.InputValidation
+import com.example.chimp.models.DataInput
 import com.example.chimp.screens.register.screen.composable.BaseView
 import com.example.chimp.screens.register.screen.composable.InputErrorDisplay
 import com.example.chimp.screens.register.screen.composable.MakeInvitationCodeField

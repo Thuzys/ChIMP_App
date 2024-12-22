@@ -29,7 +29,8 @@ internal fun ChIMPChannelsScreen(
     onFindChannelNavigate: () -> Unit = {},
     onAboutNavigate: () -> Unit = {},
     onRegisterNavigate: () -> Unit = {},
-    onChannelNavigate: () -> Unit = {}
+    onChannelNavigate: () -> Unit = {},
+    onCreateChannelNavigate: () -> Unit,
 ) {
 
     val registerNavigate = {
@@ -53,7 +54,8 @@ internal fun ChIMPChannelsScreen(
                         MenuBottomBar(
                             chatsIsEnable = false,
                             findChannelClick = onFindChannelNavigate,
-                            aboutClick = onAboutNavigate
+                            aboutClick = onAboutNavigate,
+                            createChannelClick = onCreateChannelNavigate
                         )
                     }
                 ) { modifier ->
@@ -71,7 +73,8 @@ internal fun ChIMPChannelsScreen(
                         MenuBottomBar(
                             chatsIsEnable = false,
                             findChannelClick = onFindChannelNavigate,
-                            aboutClick = onAboutNavigate
+                            aboutClick = onAboutNavigate,
+                            createChannelClick = onCreateChannelNavigate
                         )
                     }
                 ) { modifier ->

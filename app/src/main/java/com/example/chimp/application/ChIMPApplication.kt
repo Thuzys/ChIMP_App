@@ -13,9 +13,12 @@ import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.NetworkConnectivityObserver
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channels.model.ChannelsServices
+import com.example.chimp.screens.createChannel.model.CreateChannelService
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
+import com.example.chimp.services.dummy.DummyFindChannelService
+import com.example.chimp.services.http.CHIMPCreateChannelAPI
 import com.example.chimp.services.http.ChIMPChannelAPI
 import com.example.chimp.services.http.CHIMPFindChannelAPI
 import com.example.chimp.services.http.ChIMPChannelsAPI
@@ -32,6 +35,7 @@ import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
 
 interface DependenciesContainer {
+    val createChannelService: CreateChannelService
     val loginService: RegisterService
     val channelsService: ChannelsServices
     val channelService: ChannelService
@@ -78,7 +82,11 @@ class ChIMPApplication : Application(), DependenciesContainer {
     private val url: String by lazy { BuildConfig.API_URL }
 
     override val loginService: RegisterService by lazy {
-        ChIMPRegisterAPI(client, url)
+        ChIMPRegisterAPI(
+            client,
+            url,
+            connectivityObserver.connectivity
+        )
     }
 
     override val channelsService: ChannelsServices by lazy {
@@ -92,6 +100,15 @@ class ChIMPApplication : Application(), DependenciesContainer {
 
     override val findChannelService: FindChannelService by lazy {
         CHIMPFindChannelAPI(client, url, userInfoRepository.userInfo, connectivityObserver.connectivity)
+    }
+
+    override val createChannelService: CreateChannelService by lazy {
+        CHIMPCreateChannelAPI(
+            client,
+            url,
+            userInfoRepository.userInfo,
+            connectivityObserver.connectivity
+        )
     }
 
     override val formValidation: FormValidation by lazy {

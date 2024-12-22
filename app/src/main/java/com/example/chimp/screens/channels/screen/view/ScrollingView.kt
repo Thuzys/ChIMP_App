@@ -220,7 +220,7 @@ internal fun ScrollingView(
                     onClick = {
                         onCreateUserInvitation(
                             formatTimestamp(
-                                Timestamp(getMillisFromTimeString(expiration))
+                                Timestamp(getMillisFromTimeString(expiration) + System.currentTimeMillis())
                             )
                         )
                         isToShow = false

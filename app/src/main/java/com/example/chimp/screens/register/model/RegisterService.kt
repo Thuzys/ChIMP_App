@@ -3,11 +3,16 @@ package com.example.chimp.screens.register.model
 import com.example.chimp.models.either.Either
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.User
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
+import kotlinx.coroutines.flow.Flow
 
 /**
  * LoginService is the interface that defines the service used in LoginViewModel.
  */
 interface RegisterService {
+
+    val connection: Flow<Status>
     /**
      * Logs in the user with the given username and password.
      *

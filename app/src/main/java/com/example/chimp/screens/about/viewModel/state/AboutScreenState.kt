@@ -40,6 +40,16 @@ private fun getDevelopers(): Set<Dev> {
             ),
             imageId = R.drawable.brgm_profile_pic
         ),
+        Dev(
+            name = "Mariana Moraes",
+            number = "50560",
+            email = Email("A50560@alunos.isel.pt"),
+            socialMedia = SocialMedia(
+                gitHub = URL("https://github.com/mariana-moraess"),
+                linkedIn = URL("https://www.linkedin.com/in/mariana-moraes-92975b330/")
+            ),
+            imageId = R.drawable.marys_profile_pic
+        )
     )
 }
 

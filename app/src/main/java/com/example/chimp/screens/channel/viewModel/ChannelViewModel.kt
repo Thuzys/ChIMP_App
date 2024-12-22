@@ -207,6 +207,7 @@ internal class ChannelViewModel(
         viewModelScope.launch {
             val curr = state.value
             if (curr !is Editing) return@launch
+            _state.emit(Loading)
             when (val result = service.updateChannelInfo(channel)) {
                 is Success -> {
                     channelRepo.updateChannelInfo(channel)

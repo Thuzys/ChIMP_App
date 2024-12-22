@@ -7,6 +7,7 @@ import com.example.chimp.models.either.Either
 import com.example.chimp.models.either.failure
 import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.services.http.dtos.input.user.AuthUserInputModel
 import com.example.chimp.services.http.dtos.input.error.ErrorInputModel
 import com.example.chimp.services.http.utlis.makeHeader
@@ -15,6 +16,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Implementation of the LoginService that fetches user data from a remote server using HTTP.
@@ -23,7 +25,8 @@ import io.ktor.http.HttpStatusCode
  */
 class ChIMPRegisterAPI(
     private val client: HttpClient,
-    private val url: String
+    private val url: String,
+    override val connection: Flow<ConnectivityObserver.Status>,
 ) : RegisterService {
 
     private val api = "$url/api/users"
@@ -51,7 +54,8 @@ class ChIMPRegisterAPI(
                     }
                 } catch (e: Exception) {
                     Log.e(REGISTER_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(e.message?.let { ResponseError(cause = it) } ?: ResponseError.Unknown)
+                    return failure(e.message?.let { ResponseError(cause = it) }
+                        ?: ResponseError.Unknown)
                 }
             }
 
@@ -63,11 +67,13 @@ class ChIMPRegisterAPI(
         client
             .post("$api/signup") {
                 makeHeader()
-                setBody(mapOf(
-                    "username" to username,
-                    "password" to password,
-                    "invitationCode" to invitationCode
-                ))
+                setBody(
+                    mapOf(
+                        "username" to username,
+                        "password" to password,
+                        "invitationCode" to invitationCode
+                    )
+                )
             }.let { response ->
                 try {
                     return if (response.status == HttpStatusCode.OK) {
@@ -77,7 +83,8 @@ class ChIMPRegisterAPI(
                     }
                 } catch (e: Exception) {
                     Log.e(REGISTER_SERVICE_TAG, "Error: ${e.message}")
-                    return failure(e.message?.let { ResponseError(cause = it) } ?: ResponseError.Unknown)
+                    return failure(e.message?.let { ResponseError(cause = it) }
+                        ?: ResponseError.Unknown)
                 }
             }
     }

@@ -72,12 +72,8 @@ class ChIMPChannelAPI(
 
     init {
         scope.launch {
-            user.collectLatest { currUser ->
-                if (currUser != null) {
-                    connectivity.collectLatest {
-                        if (it == Status.CONNECTED) initSseOnMessages()
-                    }
-                }
+            while (true) {
+                initSseOnMessages()
             }
         }
     }
@@ -196,7 +192,7 @@ class ChIMPChannelAPI(
     override suspend fun updateChannelInfo(channel: ChannelInfo): Either<ResponseError, Unit> {
         val currChannel = this.channel.first() ?: return failure(ResponseError.InternalServerError)
         val currUser = user.first() ?: return failure(ResponseError.Unauthorized)
-        connectivity.last().let {
+        connectivity.first().let {
             if (it == DISCONNECTED) return failure(ResponseError.NoInternet)
         }
         client

@@ -16,6 +16,7 @@ import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.about.screen.ChIMPAboutScreen
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 import com.example.chimp.screens.about.viewModel.AboutViewModel
+import com.example.chimp.screens.createChannel.activity.CreateChannelActivity
 
 const val ABOUT_SCREEN_TAG = "AboutScreen"
 
@@ -36,6 +37,10 @@ class AboutActivity: ComponentActivity() {
         Intent(this, FindChannelActivity::class.java)
     }
 
+    private val navigateToCreateChannelIntent by lazy {
+        Intent(this, CreateChannelActivity::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,7 +52,8 @@ class AboutActivity: ComponentActivity() {
                         MenuBottomBar(
                             aboutIsEnable = false,
                             findChannelClick = { startActivity(navigateToFindChannelIntent) },
-                            onMenuClick = { startActivity(navigateToChatsIntent) }
+                            onMenuClick = { startActivity(navigateToChatsIntent) },
+                            createChannelClick = { startActivity(navigateToCreateChannelIntent) }
                         )
                     }
                 ) { innerPadding ->

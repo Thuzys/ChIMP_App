@@ -7,11 +7,15 @@ import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
 class DummyRegisterService: RegisterService {
 
     private val token = Token("dummy_token")
+    override val connection: Flow<ConnectivityObserver.Status>
+        get() = TODO("Not yet implemented")
 
     override suspend fun login(
         username: String,
