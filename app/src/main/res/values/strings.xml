@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">ChIMP</string>
+
+    <string name="activity_info_no_suitable_app">Could not find a suitable application</string>
+    <string name="welcome_message">Welcome to ChIMP!</string>
+    <string name="login">Login</string>
+    <string name="login_message">Already have an account? Login here!</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="invite_code">Invitation Code</string>
+    <string name="try_again">Try Again</string>
+    <string name="register_message">Don\'t have an account? Register here!</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="my_chats">My Chats</string>
+    <string name="find_channels">Find Channels</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="enter_channels">Enter</string>
+    <string name="join_channel">Join</string>
+    <string name="no_description">No description available</string>
+    <string name="channel_owner">Owner: %1$s</string>
+    <string name="search_bar_content">Search</string>
+    <string name="channelName_message">Channel Name</string>
+    <string name="channelName">ChannelName</string>
+    <string name="createChannel">Create Channel</string>
+    <string name="channel_description">Channel Description</string>
+    <string name="select_visibility">Choose Channel Visibility</string>
+    <string name="select_accessControl">Choose Channel Access Control</string>
+    <string name="duplicate_channel_error">You can´t have two channels with the same name</string>
+    <string name="channel_access_control">Access Control: %1$s</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>
