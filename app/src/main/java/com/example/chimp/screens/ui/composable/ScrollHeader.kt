@@ -36,6 +36,11 @@ import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
  */
 const val LOGOUT_ICON_TAG = "LogoutIcon"
 
+/**
+ * The tag for the warning icon.
+ */
+const val SCROLL_HEADER_WARNING_ICON_TAG = "ScrollHeaderWarningIcon"
+
 
 /**
  * The padding for the header.
@@ -96,6 +101,7 @@ fun ScrollHeader(
                     .width(24.dp)
                     .height(24.dp)
                     .clickable { isToShow = true }
+                    .testTag(SCROLL_HEADER_WARNING_ICON_TAG)
             )
         }
         ShowDialog(
