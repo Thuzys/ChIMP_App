@@ -2,6 +2,7 @@ package com.example.chimp.screens.ui.composable
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -9,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import kotlinx.coroutines.isActive
 
@@ -123,3 +125,11 @@ private data class MarqueeLayoutInfo(
     val width: Int,
     val containerWidth: Int
 )
+
+@Preview(showBackground = true)
+@Composable
+fun MarqueePreview() {
+    Marquee {
+        Text("Marquee Content")
+    }
+}
