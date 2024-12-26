@@ -6,8 +6,10 @@ import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
+import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.screens.register.model.RegisterService
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 
 internal class FakeService : RegisterService {
     private val controller = Channel<Unit>()
@@ -19,6 +21,9 @@ internal class FakeService : RegisterService {
         name = validUsername,
         token = Token("token")
     )
+    override val connection: Flow<ConnectivityObserver.Status>
+        get() = TODO("Not yet implemented")
+
     override suspend fun login(
         username: String,
         password: String
