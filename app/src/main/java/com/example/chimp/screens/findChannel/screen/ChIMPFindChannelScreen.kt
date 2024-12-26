@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.chimp.screens.ui.views.ChannelInfoView
 import com.example.chimp.screens.findChannel.screen.view.ErrorView
 import com.example.chimp.screens.findChannel.screen.view.ScrollingView
@@ -19,6 +20,14 @@ import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.ui.views.LoadingView
 
 const val FIND_CHANNEL_SCREEN_TAG = "FindChannelScreen"
+
+const val FIND_CHANNEL_ERROR_VIEW_TAG = "FindChannelErrorView"
+
+const val FIND_CHANNEL_INFO_VIEW_TAG = "FindChannelInfoView"
+
+const val FIND_CHANNEL_LOADING_VIEW_TEST_TAG = "FindChannelLoadingView"
+
+const val FIND_CHANNEL_SCROLLING_TAG = "FindChannelScrolling"
 
 @Composable
 fun ChIMPFindChannelScreen(
@@ -56,14 +65,17 @@ fun ChIMPFindChannelScreen(
                 is FindChannelScreenState.Error -> {
                     ErrorView(
                         state = curr,
-                        modifier = modifier,
+                        modifier = modifier
+                            .testTag(FIND_CHANNEL_ERROR_VIEW_TAG),
                         close = viewModel::goBack,
                     )
                 }
 
                 is FindChannelScreenState.Info -> {
                     ChannelInfoView(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag(FIND_CHANNEL_INFO_VIEW_TAG),
                         channel = curr.channel,
                         onGoBackClick = viewModel::goBack
                     )
@@ -75,13 +87,15 @@ fun ChIMPFindChannelScreen(
                     LoadingView(
                         modifier = modifier
                             .fillMaxSize()
-                            .wrapContentSize(Alignment.Center),
+                            .wrapContentSize(Alignment.Center)
+                            .testTag(FIND_CHANNEL_LOADING_VIEW_TEST_TAG),
                     )
                 }
 
                 is FindChannelScreenState.Scrolling -> {
                     ScrollingView(
-                        modifier = modifier,
+                        modifier = modifier
+                            .testTag(FIND_CHANNEL_SCROLLING_TAG),
                         publicChannels = curr,
                         onLogout = viewModel::logout,
                         onInfoClick = viewModel::toChannelInfo,
