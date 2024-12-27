@@ -10,6 +10,8 @@ import androidx.compose.ui.test.swipeRight
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
 import com.example.chimp.screens.ui.composable.LOGOUT_ICON_TAG
 import com.example.chimp.screens.channels.viewModel.state.ChannelsScreenState.Scrolling
 import com.example.chimp.screens.findChannel.screen.view.SWIPE_REFRESH_TAG
@@ -33,7 +35,8 @@ class ScrollingViewKtTest {
                     )
                 }
             ),
-            flowOf(hasMore)
+            flowOf(hasMore),
+            connectivity = flowOf(CONNECTED)
         )
 
     @Test

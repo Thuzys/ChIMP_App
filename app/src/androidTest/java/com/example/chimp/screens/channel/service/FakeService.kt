@@ -8,17 +8,24 @@ import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.UserInfo
+import com.example.chimp.observeConnectivity.ConnectivityObserver
+import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
 import com.example.chimp.screens.channel.model.ChannelService
 import com.example.chimp.screens.channel.model.FetchMessagesResult
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import com.example.chimp.screens.channel.model.accessControl.AccessControl.READ_WRITE
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-internal class FakeService: ChannelService {
+internal class FakeService(
+    override val connectivity: Flow<ConnectivityObserver.Status> = flowOf(CONNECTED),
+) :
+    ChannelService {
     private val controller = Channel<Unit>()
     private val flow = MutableStateFlow(emptyList<Message>())
+    val invitation = "test"
     private val channel = ChannelInfo(
         1u,
         ChannelName("test", "test"),
@@ -57,12 +64,11 @@ internal class FakeService: ChannelService {
         return success(READ_WRITE)
     }
 
-    override suspend fun initSseOnMessages() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun createChannelInvitation(channelInvitation: ChannelInvitation): Either<ResponseError, String> {
-        TODO("Not yet implemented")
+    override suspend fun createChannelInvitation(
+        channelInvitation: ChannelInvitation
+    ): Either<ResponseError, String> {
+        controller.receive()
+        return success(invitation)
     }
 
 }

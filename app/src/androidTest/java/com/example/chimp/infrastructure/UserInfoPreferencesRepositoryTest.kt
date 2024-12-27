@@ -1,8 +1,11 @@
 package com.example.chimp.infrastructure
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.chimp.models.channel.ChannelInfo
+import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.Token
 import com.example.chimp.models.users.User
+import com.example.chimp.models.users.UserInfo
 import com.example.chimp.utils.CleanDataStoreRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -42,5 +45,38 @@ class UserInfoPreferencesRepositoryTest {
         sut.clearUserInfo()
         val user = sut.userInfo.first()
         assert(user == null)
+    }
+
+
+    @Test
+    fun when_channel_list_is_null_then_channel_list_emits_empty_list() = runTest {
+        val sut = UserInfoPreferencesRepository(cleanDataStoreRule.dataStore)
+        val channelList = sut.channelList.first()
+        assert(channelList.isEmpty())
+    }
+
+    @Test
+    fun update_channel_list_stores_the_channel_list() = runTest {
+        val sut = UserInfoPreferencesRepository(cleanDataStoreRule.dataStore)
+        var cId = 1u
+        val channelName = ChannelName("@User1/Channel1", "Channel1")
+        val owner = UserInfo(1u, "User1")
+        val channelList = listOf(
+            ChannelInfo(
+                cId = cId++,
+                name = channelName,
+                owner = owner
+            ),
+            ChannelInfo(
+                cId = cId,
+                name = channelName,
+                owner = owner
+            )
+        )
+        sut.updateChannelList(channelList)
+        val storedChannelList = sut.channelList.first()
+        assert(storedChannelList.size == channelList.size) {
+            "Expected: ${channelList.size}, Actual: ${storedChannelList.size}"
+        }
     }
 }

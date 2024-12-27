@@ -17,14 +17,4 @@ class AboutActivityTest {
             .onNodeWithTag(IDLE_ABOUT_DEV_VIEW_TAG, useUnmergedTree = true)
             .assertIsDisplayed()
     }
-//
-//    @Test
-//    fun when_the_back_button_is_clicked_the_activity_is_finished() {
-//        // Arrange
-//        rule.waitUntil { rule.activityRule.scenario.state.isAtLeast(Lifecycle.State.STARTED) }
-//        // Act
-//        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher }
-//        // Assert
-//        rule.activityRule.scenario.onActivity { assert(it.isDestroyed) }
-//    }
 }

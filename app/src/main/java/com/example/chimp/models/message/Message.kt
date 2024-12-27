@@ -28,7 +28,7 @@ data class Message(
                 return Message(
                     owner = UserInfo(params[0].toUInt(), params[1]),
                     message = params[2],
-                    time = Timestamp.valueOf(params[3]),
+                    time = if (params[3] !== "null") Timestamp.valueOf(params[3]) else null,
                     mId = params[4].toUInt(),
                     cId = params[5].toUInt()
                 )
