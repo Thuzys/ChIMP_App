@@ -19,10 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-internal class FakeService(
-    override val connectivity: Flow<ConnectivityObserver.Status> = flowOf(CONNECTED),
-) :
-    ChannelService {
+internal class FakeService: ChannelService {
     private val controller = Channel<Unit>()
     private val flow = MutableStateFlow(emptyList<Message>())
     val invitation = "test"
@@ -33,6 +30,8 @@ internal class FakeService(
     )
 
     suspend fun unlock() = controller.send(Unit)
+    override val connectivity: Flow<ConnectivityObserver.Status>
+        get() = TODO("Not yet implemented")
 
     override suspend fun fetchMessages(): Either<ResponseError, FetchMessagesResult> {
         controller.receive()

@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.chimp.R
 
 const val MAKE_MARK_TAG = "Make Mark"
 
@@ -36,4 +38,14 @@ fun MakeMark(
             modifier = modifier.testTag(MAKE_MARK_TAG)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MakeMarkPreview() {
+    MakeMark(
+        lightMode = R.drawable.github_mark,
+        darkMode = R.drawable.github_mark_white,
+        contentDescription = "GitHub Logo"
+    )
 }

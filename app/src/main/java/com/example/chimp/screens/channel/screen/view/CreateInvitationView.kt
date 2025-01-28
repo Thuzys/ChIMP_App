@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,10 @@ import com.example.chimp.models.time.toOptionFormat
 import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
 import java.sql.Timestamp
+
+const val CREATE_INVITATION_VIEW_BACK_BUTTON_TAG = "CreateInvitationViewBackButton"
+
+const val CREATE_INVITATION_VIEW_GENERATE_BUTTON_TAG = "CreateInvitationViewGenerateButton"
 
 @Composable
 internal fun ChannelInvitationView(
@@ -52,7 +57,9 @@ internal fun ChannelInvitationView(
                 fontWeight = FontWeight.Bold
             )
             Icon(
-                modifier = Modifier.clickable(onClick = onBackClick),
+                modifier = Modifier
+                    .clickable(onClick = onBackClick)
+                    .testTag(CREATE_INVITATION_VIEW_BACK_BUTTON_TAG),
                 imageVector = Icons.Default.Close,
                 contentDescription = "Back",
             )
@@ -99,7 +106,9 @@ internal fun ChannelInvitationView(
         )
         Button(
             onClick = { onGenerateClick(channelInvitation.value) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CREATE_INVITATION_VIEW_GENERATE_BUTTON_TAG)
         ) {
             Text("Generate a New Invitation Code")
         }

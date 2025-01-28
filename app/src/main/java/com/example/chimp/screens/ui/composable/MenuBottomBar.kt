@@ -12,8 +12,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
+const val MENU_HOME_BUTTON_TAG = "HomeButton"
+
+const val MENU_FIND_CHANNEL_BUTTON_TAG = "FindChannelButton"
+
+const val MENU_CREATE_CHANNEL_BUTTON_TAG = "CreateChannelButton"
+
+const val MENU_ABOUT_CHANNEL_BUTTON_TAG = "AboutButton"
 
 /**
  * MenuBottomBar is a composable that represents the bottom bar of the app.
@@ -44,6 +53,7 @@ fun MenuBottomBar(
         contentPadding = PaddingValues(16.dp),
     ) {
         IconButton(
+            modifier = Modifier.testTag(MENU_HOME_BUTTON_TAG),
             onClick = onMenuClick,
             enabled = chatsIsEnable
         ) {
@@ -51,6 +61,7 @@ fun MenuBottomBar(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
+            modifier = Modifier.testTag(MENU_FIND_CHANNEL_BUTTON_TAG),
             onClick = findChannelClick,
             enabled = findChannelIsEnable
         ) {
@@ -58,6 +69,7 @@ fun MenuBottomBar(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
+            modifier = Modifier.testTag(MENU_CREATE_CHANNEL_BUTTON_TAG),
             onClick = createChannelClick,
             enabled = createChannelIsEnable
         ) {
@@ -65,6 +77,7 @@ fun MenuBottomBar(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
+            modifier = Modifier.testTag(MENU_ABOUT_CHANNEL_BUTTON_TAG),
             onClick = aboutClick,
             enabled = aboutIsEnable
         ) {

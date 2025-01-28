@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.chimp.screens.findChannel.viewModel.state.FindChannelScreenState
 
@@ -28,10 +29,12 @@ internal fun ErrorView(
             modifier = modifier.fillMaxSize(0.5f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = error.cause)
+            Text(text = error.cause, modifier = Modifier.testTag("error_message"))
             Button(
                 onClick = close,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .testTag("close_button")
             ) {
                 Text(text = "Close")
             }
