@@ -41,6 +41,11 @@
             android:launchMode="singleInstance"
             android:theme="@style/Theme.ChIMP">
         </activity>
+        <activity android:name=".dummy.MainActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.ChIMP">
+        </activity>
         <activity
             android:name=".screens.about.activity.AboutActivity"
             android:exported="true"

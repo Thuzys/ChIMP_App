@@ -73,7 +73,10 @@ class ChIMPChannelAPI(
     init {
         scope.launch {
             while (true) {
-                initSseOnMessages()
+                connectivity.collectLatest {
+                    if (it == Status.CONNECTED)
+                        initSseOnMessages()
+                }
             }
         }
     }

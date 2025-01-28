@@ -27,7 +27,7 @@ const val TEXT_INPUT_TAG = "TextInputTestTag"
 const val SEND_BUTTON_TAG = "SendButtonTestTag"
 
 @Composable
-internal fun TextInput(
+internal fun    TextInput(
     modifier: Modifier = Modifier,
     onSendMessage: (String) -> Unit
 ) {

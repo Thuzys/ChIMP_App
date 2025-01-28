@@ -30,6 +30,8 @@ import com.example.chimp.screens.channel.model.accessControl.AccessControl
 import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
 import java.sql.Timestamp
 
+const val CREATE_INVITATION_VIEW_TAG = "CreateInvitationView"
+
 const val CREATE_INVITATION_VIEW_BACK_BUTTON_TAG = "CreateInvitationViewBackButton"
 
 const val CREATE_INVITATION_VIEW_GENERATE_BUTTON_TAG = "CreateInvitationViewGenerateButton"
@@ -44,6 +46,7 @@ internal fun ChannelInvitationView(
 
     Column(
         modifier = modifier
+            .testTag(CREATE_INVITATION_VIEW_TAG)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

@@ -35,8 +35,12 @@ import com.example.chimp.screens.ui.composable.ImageSelector
 import com.example.chimp.screens.ui.composable.MyHorizontalDivider
 
 const val EDIT_CHANNEL_VIEW_TAG = "EditChannelView"
+const val EDIT_CHANNEL_GO_BACK_BUTTON_TAG = "EditChannelGoBackButton"
+const val EDIT_CHANNEL_SAVE_BUTTON_TAG = "EditChannelSaveButton"
 
 const val VERTICAL_SPACING = 16
+
+const val ROW_PADDING = 8
 
 @Composable
 internal fun EditChannelView(
@@ -54,7 +58,7 @@ internal fun EditChannelView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(ROW_PADDING.dp)
             ,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -69,6 +73,7 @@ internal fun EditChannelView(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Back",
                 modifier = Modifier
+                    .testTag(EDIT_CHANNEL_GO_BACK_BUTTON_TAG)
                     .clickable(onClick = goBack)
                     .padding(8.dp),
                 tint = MaterialTheme.colorScheme.error
@@ -102,7 +107,9 @@ internal fun EditChannelView(
 
         Button(
             onClick = { onSave(state.channel.copy(description = description, icon = icon)) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EDIT_CHANNEL_SAVE_BUTTON_TAG),
             shape = MaterialTheme.shapes.medium,
         ) {
             Text("Save")

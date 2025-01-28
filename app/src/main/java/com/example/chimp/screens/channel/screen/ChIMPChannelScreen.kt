@@ -42,7 +42,7 @@ internal fun ChIMPChannelScreen(
                     onBackClick = onBack,
                     onSendMessage = vm::sendMessage,
                     onDeleteOrLeave = { vm.deleteOrLeave(onBack) },
-                    editChannel = vm::toEdit,
+                    onEditChannel = vm::toEdit,
                     loadMore = vm::loadMore,
                     onInfoClick = vm::toInfo,
                     onCreateInvite = vm::toCreateInvitation

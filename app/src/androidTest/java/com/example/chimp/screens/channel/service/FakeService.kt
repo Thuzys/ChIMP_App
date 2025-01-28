@@ -31,7 +31,7 @@ internal class FakeService: ChannelService {
 
     suspend fun unlock() = controller.send(Unit)
     override val connectivity: Flow<ConnectivityObserver.Status>
-        get() = TODO("Not yet implemented")
+        get() = TODO("Not needed for testing")
 
     override suspend fun fetchMessages(): Either<ResponseError, FetchMessagesResult> {
         controller.receive()
