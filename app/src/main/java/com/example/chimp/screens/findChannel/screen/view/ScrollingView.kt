@@ -68,11 +68,6 @@ private const val LIST_ITEM_HEIGHT = 90
 private const val LIST_ITEM_PADDING = 8
 
 /**
- * The width of the action list.
- */
-private const val ACTION_LIST_WIDTH = 90
-
-/**
  * The width of the action icon.
  */
 private const val ACTION_ICON_WIDTH = 45

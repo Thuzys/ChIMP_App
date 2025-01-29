@@ -46,7 +46,6 @@ import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.message.Message
 import com.example.chimp.models.users.UserInfo
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.channel.model.accessControl.AccessControl.READ_WRITE
@@ -61,6 +60,18 @@ import kotlinx.coroutines.flow.flowOf
 import java.sql.Timestamp
 
 const val SCROLLING_VIEW = "ScrollingView"
+
+const val CHANNEL_SCROLLING_VIEW_INFO_DIALOG = "ChannelScrollingViewInfoDialog"
+
+const val CHANNEL_SCROLLING_VIEW_INFO_BUTTON = "ChannelScrollingViewInfoButton"
+
+const val CHANNEL_SCROLLING_VIEW_DELETE_OR_LEAVE_BUTTON = "ChannelScrollingViewDeleteOrLeaveButton"
+
+const val CHANNEL_SCROLLING_VIEW_EDIT_BUTTON = "ChannelScrollingViewEditButton"
+
+const val CHANNEL_SCROLLING_VIEW_CREATE_INVITE_BUTTON = "ChannelScrollingViewCreateInviteButton"
+
+const val CHANNEL_SCROLLING_VIEW_NO_INTERNET_CONNECTION = "NoInternetConnection"
 
 private const val LAZY_COLUMN_FILL_MAX_HEIGHT = 0.9f
 
@@ -94,7 +105,7 @@ internal fun ScrollingView(
     onBackClick: () -> Unit = {},
     onInfoClick: () -> Unit = {},
     onDeleteOrLeave: () -> Unit = {},
-    editChannel: () -> Unit = {},
+    onEditChannel: () -> Unit = {},
     onSendMessage: (String) -> Unit = {},
     loadMore: () -> Unit = {},
     onCreateInvite: () -> Unit = {},
@@ -149,52 +160,60 @@ internal fun ScrollingView(
             onDismissRequest = { isToShowOptions = false },
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(CHANNEL_SCROLLING_VIEW_INFO_DIALOG),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                    modifier = Modifier.testTag(CHANNEL_SCROLLING_VIEW_INFO_BUTTON),
+                    border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
                     onClick = onInfoClick
                 ) {
                     Text(
-                        text = "Channel Info",
+                        text = stringResource(R.string.channel_info),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
                 Button(
                     shape = RoundedCornerShape(ROUNDED_CORNER.dp),
                     border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.testTag(CHANNEL_SCROLLING_VIEW_DELETE_OR_LEAVE_BUTTON),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onErrorContainer),
                     onClick = onDeleteOrLeave
                 ) {
                     Text(
-                        text = if (state.user.id == state.channel.owner.id) "Delete Channel" else "Leave Channel",
+                        text =
+                        if (state.user.id == state.channel.owner.id) stringResource(R.string.delete_channel)
+                        else stringResource(R.string.leave_channel),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
                 if (state.user.id == state.channel.owner.id) {
                     Button(
                         shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                        modifier = Modifier.testTag(CHANNEL_SCROLLING_VIEW_EDIT_BUTTON),
                         border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
-                        onClick = editChannel
+                        onClick = onEditChannel
                     ) {
                         Text(
-                            text = "Edit Channel",
+                            text = stringResource(R.string.edit_channel),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
                     Button(
                         shape = RoundedCornerShape(ROUNDED_CORNER.dp),
+                        modifier = Modifier.testTag(CHANNEL_SCROLLING_VIEW_CREATE_INVITE_BUTTON),
                         border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
                         onClick = onCreateInvite
                     ) {
                         Text(
-                            text = "Create Invite",
+                            text = stringResource(R.string.create_invite),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -232,6 +251,7 @@ internal fun ScrollingView(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag(CHANNEL_SCROLLING_VIEW_NO_INTERNET_CONNECTION)
                     .height(TEXT_INPUT_HEIGHT.dp),
                 horizontalArrangement = Arrangement.Center,
             ) {

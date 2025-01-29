@@ -12,9 +12,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
-private val blue = Color(0xFF64B5F6)
-private val lightBlue = Color(0xFFBBDEFB)
-
 @Composable
 fun GradientBox(
     colors: List<Color> = listOf(

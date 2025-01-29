@@ -39,10 +39,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * ChIMPChannelAPI is the implementation of the ChannelService interface.
@@ -72,8 +71,9 @@ class ChIMPChannelAPI(
 
     init {
         scope.launch {
-            while (true) {
-                initSseOnMessages()
+            connectivity.collectLatest {
+                if (it == Status.CONNECTED)
+                    initSseOnMessages()
             }
         }
     }
@@ -206,9 +206,11 @@ class ChIMPChannelAPI(
                         HttpStatusCode.OK -> {
                             success(Unit)
                         }
+
                         HttpStatusCode.Unauthorized -> {
                             failure(ResponseError.Unauthorized)
                         }
+
                         else -> {
                             failure(response.body<ErrorInputModel>().toResponseError())
                         }
@@ -283,24 +285,20 @@ class ChIMPChannelAPI(
             client.sse(
                 urlString = "$messagesApi/sse",
                 request = { makeHeader(curr) },
-                reconnectionTime = 5.minutes
+                reconnectionTime = RECONNECTION_TIME.seconds
             ) {
-                while (true) {
-                    val currConnectivity = connectivity.first()
-                    if (currConnectivity == DISCONNECTED) continue
-                    incoming.collect { event ->
-                        Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
-                        if (event.event == MESSAGE_EVENT) {
-                            event.data?.let {
-                                Log.d(CHANNEL_SERVICE_TAG, "Received message: $it")
-                                val message =
-                                    Json.decodeFromString<MessageInputModel>(it).toMessage()
-                                val newList =
-                                    if (message !in _messages.value)
-                                        listOf(message) + _messages.value
-                                    else _messages.value
-                                _messages.emit(newList)
-                            }
+                incoming.collect { event ->
+                    Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
+                    if (event.event == MESSAGE_EVENT) {
+                        event.data?.let {
+                            Log.d(CHANNEL_SERVICE_TAG, "Received message: $it")
+                            val message =
+                                Json.decodeFromString<MessageInputModel>(it).toMessage()
+                            val newList =
+                                if (message !in _messages.value)
+                                    listOf(message) + _messages.value
+                                else _messages.value
+                            _messages.emit(newList)
                         }
                     }
                 }
@@ -337,7 +335,7 @@ class ChIMPChannelAPI(
                 try {
                     return when (response.status) {
                         HttpStatusCode.OK -> {
-                           success(response.body<ChannelInvitationInputModel>().invitationCode)
+                            success(response.body<ChannelInvitationInputModel>().invitationCode)
                         }
 
                         HttpStatusCode.Unauthorized -> {
@@ -360,5 +358,6 @@ class ChIMPChannelAPI(
     companion object {
         private const val CHANNEL_SERVICE_TAG = "ChannelService"
         private const val MESSAGE_EVENT = "message"
+        private const val RECONNECTION_TIME = 5
     }
 }

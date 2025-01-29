@@ -30,7 +30,7 @@ internal fun ChIMPChannelsScreen(
     onAboutNavigate: () -> Unit = {},
     onRegisterNavigate: () -> Unit = {},
     onChannelNavigate: () -> Unit = {},
-    onCreateChannelNavigate: () -> Unit,
+    onCreateChannelNavigate: () -> Unit = {},
 ) {
 
     val registerNavigate = {

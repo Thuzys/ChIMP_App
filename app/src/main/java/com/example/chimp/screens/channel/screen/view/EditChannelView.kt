@@ -24,8 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.chimp.R
 import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.users.UserInfo
@@ -35,8 +37,12 @@ import com.example.chimp.screens.ui.composable.ImageSelector
 import com.example.chimp.screens.ui.composable.MyHorizontalDivider
 
 const val EDIT_CHANNEL_VIEW_TAG = "EditChannelView"
+const val EDIT_CHANNEL_GO_BACK_BUTTON_TAG = "EditChannelGoBackButton"
+const val EDIT_CHANNEL_SAVE_BUTTON_TAG = "EditChannelSaveButton"
 
 const val VERTICAL_SPACING = 16
+
+const val ROW_PADDING = 8
 
 @Composable
 internal fun EditChannelView(
@@ -54,14 +60,14 @@ internal fun EditChannelView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(ROW_PADDING.dp)
             ,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Edit Channel",
+                text = stringResource(R.string.edit_channel),
                 style = MaterialTheme.typography.titleLarge,
             )
             Spacer(modifier = Modifier.weight(0.7f))
@@ -69,6 +75,7 @@ internal fun EditChannelView(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Back",
                 modifier = Modifier
+                    .testTag(EDIT_CHANNEL_GO_BACK_BUTTON_TAG)
                     .clickable(onClick = goBack)
                     .padding(8.dp),
                 tint = MaterialTheme.colorScheme.error
@@ -78,7 +85,7 @@ internal fun EditChannelView(
         OutlinedTextField(
             value = description ?: "",
             onValueChange = { description = it },
-            label = { Text("Channel Description") },
+            label = { Text(stringResource(R.string.channel_description)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -86,7 +93,7 @@ internal fun EditChannelView(
 
         Column {
             Text(
-                text = "Select an icon:",
+                text = "${stringResource(R.string.select_an_icon)}:",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(8.dp)
             )
@@ -102,10 +109,12 @@ internal fun EditChannelView(
 
         Button(
             onClick = { onSave(state.channel.copy(description = description, icon = icon)) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(EDIT_CHANNEL_SAVE_BUTTON_TAG),
             shape = MaterialTheme.shapes.medium,
         ) {
-            Text("Save")
+            Text(stringResource(R.string.save))
         }
     }
 }

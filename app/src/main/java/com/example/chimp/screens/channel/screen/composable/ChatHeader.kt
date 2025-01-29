@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +44,14 @@ private const val HEADER_PADDING = 16
  */
 private const val HEADER_CLIP_RADIUS = 8
 
+private const val SIZE = 40
+
+const val CHAT_HEADER_TEST_TAG = "ChatHeader"
+
+const val BUTTON_CHAT_HEADER_BACK_TEST_TAG = "ButtonChatHeaderBack"
+
+const val BUTTON_CHAT_HEADER_INFO_TEST_TAG = "ButtonChatHeaderInfo"
+
 
 /**
  * ChatHeader is a composable that displays the header of the scrolling view.
@@ -59,6 +68,7 @@ internal fun ChatHeader(
 ) {
     Row(
         modifier = Modifier
+            .testTag(CHAT_HEADER_TEST_TAG)
             .fillMaxWidth()
             .clip(
                 shape = RoundedCornerShape(
@@ -73,6 +83,7 @@ internal fun ChatHeader(
     ) {
         IconButton(
             onClick = onBackClick,
+            modifier = Modifier.testTag(BUTTON_CHAT_HEADER_BACK_TEST_TAG)
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -82,7 +93,7 @@ internal fun ChatHeader(
         }
         Image(
             modifier = Modifier
-                .size(40.dp)
+                .size(SIZE.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = channel.icon),
@@ -95,6 +106,7 @@ internal fun ChatHeader(
         )
         IconButton(
             onClick = { onInfoClick(channel) },
+            modifier = Modifier.testTag(BUTTON_CHAT_HEADER_INFO_TEST_TAG)
         ) {
             Icon(
                 imageVector = Icons.TwoTone.MoreVert,

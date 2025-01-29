@@ -23,12 +23,15 @@ class FakeUserInfoRepositoryRule : TestRule {
         private val store = MutableStateFlow<User?>(null)
 
         override val userInfo: Flow<User?> = store
+
         override val channelList: Flow<List<ChannelInfo>>
             get() = TODO("Not yet implemented")
 
         override suspend fun updateUserInfo(user: User) = store.emit(user)
+
         override suspend fun updateChannelList(channelList: List<ChannelInfo>) {
-            TODO("Not yet implemented")
+            // Simulate an u
+            return
         }
 
         override suspend fun clearUserInfo() = store.emit(null)

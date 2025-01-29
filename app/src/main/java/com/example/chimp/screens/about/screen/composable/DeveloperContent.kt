@@ -114,7 +114,7 @@ fun DeveloperContent(
                 .padding(PADDING.dp)
                 .testTag(DEVELOPER_CONTENT_BIO_TAG)
                 .clickable(onClick = onShowDialog),
-            text = dev.bio ?: "No biography available.",
+            text = dev.bio ?: R.string.no_description.toString(),
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             maxLines = MAX_LINES
@@ -148,7 +148,7 @@ fun DeveloperContent(
                 Modifier
                     .testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG)
                     .clickable(onClick = onShowDialog),
-                text = dev.bio ?: "No biography available.",
+                text = dev.bio ?: R.string.no_biography.toString(),
                 textAlign = TextAlign.Center,
                 color = Color.White
             )

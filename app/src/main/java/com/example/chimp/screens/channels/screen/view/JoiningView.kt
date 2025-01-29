@@ -17,11 +17,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.chimp.R
 import com.example.chimp.screens.ui.composable.MyTextField
+
+private const val PADDING = 16
+private const val FONT_SIZE = 20
 
 @Composable
 fun JoiningView(
@@ -33,7 +38,7 @@ fun JoiningView(
 
     Column(
         modifier = modifier
-            .padding(16.dp),
+            .padding(PADDING.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -42,8 +47,8 @@ fun JoiningView(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Join a Channel",
-                fontSize = 20.sp,
+                text = stringResource(R.string.join_channel_label),
+                fontSize = FONT_SIZE.sp,
                 fontWeight = FontWeight.Bold
             )
             Icon(
@@ -57,14 +62,14 @@ fun JoiningView(
             modifier = Modifier.fillMaxWidth(),
             value = invitationCode.value,
             onValueChange = { invitationCode.value = it },
-            label = "Insert the invitation code to join a channel",
+            label = stringResource(R.string.insert_invitation_code),
         )
 
         Button(
             onClick = { onJoinChannel(invitationCode.value) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Join Channel")
+            Text(stringResource(R.string.join_channel_button))
         }
     }
 }

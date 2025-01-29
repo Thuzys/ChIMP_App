@@ -26,6 +26,12 @@ import com.example.chimp.screens.channel.screen.composable.ChatType.RECEIVED
 import com.example.chimp.screens.channel.screen.composable.ChatType.SENT
 import java.sql.Timestamp
 
+private const val SIZE = 40
+private const val TEXT_END_PADDING = 8
+private const val COLUMN_PADDING = 8
+private const val COLUMN_END_PADDING = 48
+private const val COLUMN_TEXT_PADDING = 16
+
 @Composable
 internal fun MakeMessage(
     message: Message,
@@ -42,7 +48,7 @@ internal fun MakeMessage(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(40.dp),
+                        .size(SIZE.dp),
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = null
                 )
@@ -50,20 +56,20 @@ internal fun MakeMessage(
                     text = message.owner.name,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(end = 8.dp)
+                        .padding(end = TEXT_END_PADDING.dp)
                 )
             }
             Column {
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .padding(end = 48.dp)
+                        .padding(COLUMN_PADDING.dp)
+                        .padding(end = COLUMN_END_PADDING.dp)
                         .clip(BubbleShape(RECEIVED))
                         .background(MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     Text(
                         text = message.message,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(COLUMN_TEXT_PADDING.dp)
                     )
                 }
                 message.time?.let {
@@ -85,14 +91,14 @@ internal fun MakeMessage(
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .padding(start = 48.dp)
+                        .padding(COLUMN_PADDING.dp)
+                        .padding(start = COLUMN_END_PADDING.dp)
                         .clip(BubbleShape(chatType = SENT))
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
                     Text(
                         text = message.message,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(COLUMN_TEXT_PADDING.dp)
                     )
                 }
                 message.time?.let {

@@ -16,7 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+
+const val SELECT_OUTLINED_TEXT_FIELD_LABEL_TAG = "SelectOutlinedTextFieldLabel"
+
+const val SELECT_OUTLINED_TEXT_FIELD_ARROW_DOWN_TAG = "SelectOutlinedTextFieldArrowDown"
 
 @Composable
 fun SelectOutlinedTextField(
@@ -27,18 +32,26 @@ fun SelectOutlinedTextField(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var currentSelectedOption by remember { mutableStateOf(selectedOption) }
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = selectedOption,
+            value = currentSelectedOption,
             onValueChange = {},
-            label = { Text(label) },
+            label = {
+                Text(
+                    label,
+                    modifier = Modifier.testTag(SELECT_OUTLINED_TEXT_FIELD_LABEL_TAG)
+                )
+            },
             readOnly = true,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = null,
-                    modifier = Modifier.clickable { expanded = !expanded }
+                    modifier = Modifier
+                        .clickable { expanded = !expanded }
+                        .testTag(SELECT_OUTLINED_TEXT_FIELD_ARROW_DOWN_TAG)
                 )
             },
             modifier = Modifier
@@ -53,6 +66,7 @@ fun SelectOutlinedTextField(
             options.forEach { option ->
                 DropdownMenuItem(
                     onClick = {
+                        currentSelectedOption = option
                         onOptionSelected(option)
                         expanded = false
                     },

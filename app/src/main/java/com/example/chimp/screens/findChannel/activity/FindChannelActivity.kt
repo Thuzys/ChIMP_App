@@ -13,6 +13,7 @@ import com.example.chimp.screens.findChannel.viewModel.FindChannelVMFactory
 import com.example.chimp.screens.findChannel.viewModel.FindChannelViewModel
 import com.example.chimp.screens.about.activity.AboutActivity
 import com.example.chimp.screens.channel.activity.ChannelActivity
+import com.example.chimp.screens.createChannel.activity.CreateChannelActivity
 import com.example.chimp.screens.register.activity.RegisterActivity
 import com.example.chimp.screens.ui.theme.ChIMPTheme
 
@@ -47,7 +48,7 @@ class FindChannelActivity: ComponentActivity() {
     }
 
     private val navigateToCreateChannelIntent by lazy {
-        Intent(this, ChannelActivity::class.java)
+        Intent(this, CreateChannelActivity::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -28,19 +28,10 @@ import com.example.chimp.screens.ui.composable.MySpacer
 import com.example.chimp.screens.ui.composable.MyTextField
 import com.example.chimp.screens.ui.composable.SelectOutlinedTextField
 
-const val ERROR_PADDING = 26
+private const val ERROR_PADDING = 26
+private const val INPUT_FIELD_PADDING = 16
+private const val TOP = 60
 
-const val INPUT_FIELD_PADDING = 16
-
-val visibilityOptions = listOf(
-    "PUBLIC",
-    "PRIVATE"
-)
-
-val accessControlOptions = listOf(
-    "READ_ONLY",
-    "READ_WRITE"
-)
 
 @Composable
 internal fun EditingView(
@@ -49,6 +40,14 @@ internal fun EditingView(
     onSubmit: (ChannelInput) -> Unit = { _ -> },
     onChannelNameChange: (String) -> Unit = {},
 ) {
+    val visibilityOptions = listOf(
+        stringResource(R.string.PUBLIC),
+        stringResource(R.string.PRIVATE)
+    )
+    val accessControlOptions = listOf(
+        stringResource(R.string.READ_ONLY),
+        stringResource(R.string.READ_WRITE)
+    )
     val channelName = state.channelName
     val visibility = remember { mutableStateOf(Visibility.PUBLIC) }
     val accessControl = remember { mutableStateOf(AccessControl.READ_ONLY) }
@@ -61,7 +60,7 @@ internal fun EditingView(
         MySpacer()
         MyTextField(
             modifier = Modifier.padding(
-                top = 60.dp,
+                top = TOP.dp,
                 start = INPUT_FIELD_PADDING.dp,
                 bottom = INPUT_FIELD_PADDING.dp,
                 end = INPUT_FIELD_PADDING.dp,

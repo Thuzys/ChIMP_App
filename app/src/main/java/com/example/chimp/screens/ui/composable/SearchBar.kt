@@ -25,11 +25,14 @@ import com.example.chimp.R
 
 const val SEARCH_BAR_TAG = "SearchBar"
 
+private const val CORNER_RADIUS = 50
+private const val PADDING = 16
+
 private val default_modifier =
     Modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp)
-        .clip(RoundedCornerShape(50.dp))
+        .padding(horizontal = PADDING.dp)
+        .clip(RoundedCornerShape(CORNER_RADIUS.dp))
 
 @Composable
 fun SearchBar(
@@ -56,7 +59,7 @@ fun SearchBar(
             )
         },
         singleLine = true,
-        shape = RoundedCornerShape(50.dp),
+        shape = RoundedCornerShape(CORNER_RADIUS.dp),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search
         ),

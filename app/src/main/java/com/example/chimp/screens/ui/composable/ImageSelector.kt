@@ -18,10 +18,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chimp.R
+
+const val IMAGE_SELECTOR_SELECTED_IMAGE = "ImageSelectorSelectedImage"
+
+const val IMAGE_SELECTOR_LIST = "ImageSelectorList"
 
 private const val IMAGE_SIZE = 240
 
@@ -49,6 +54,8 @@ private val listOfImages = listOf(
     R.drawable.icon20,
 )
 
+private const val PADDING = 8
+
 @Composable
 fun ImageSelector(
     modifier: Modifier = Modifier,
@@ -64,11 +71,12 @@ fun ImageSelector(
                 painter = painterResource(id = image),
                 contentDescription = "selected image",
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(PADDING.dp)
                     .clip(shape = MaterialTheme.shapes.extraLarge)
                     .height(IMAGE_SIZE.dp)
                     .fillMaxWidth()
-                    .clickable { isSelecting = true },
+                    .clickable { isSelecting = true }
+                    .testTag(IMAGE_SELECTOR_SELECTED_IMAGE),
                 contentScale = ContentScale.Crop,
             )
         } else {
@@ -76,20 +84,22 @@ fun ImageSelector(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height((IMAGE_SIZE*2).dp)
+                    .testTag(IMAGE_SELECTOR_LIST)
             ) {
                 items(listOfImages) { image ->
                     Image(
                         painter = painterResource(id = image),
                         contentDescription = "image $image",
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(PADDING.dp)
                             .clip(shape = MaterialTheme.shapes.extraLarge)
                             .height(IMAGE_SIZE.dp)
                             .fillMaxWidth()
                             .clickable {
                                 onImageSelected(image)
                                 isSelecting = false
-                            },
+                            }
+                            .testTag("image_$image"),
                         contentScale = ContentScale.Crop,
                     )
                 }

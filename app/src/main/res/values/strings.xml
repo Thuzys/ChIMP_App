@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">ChIMP</string>
-
     <string name="activity_info_no_suitable_app">Could not find a suitable application</string>
     <string name="welcome_message">Welcome to ChIMP!</string>
     <string name="login">Login</string>
@@ -29,4 +28,28 @@
     <string name="duplicate_channel_error">You can´t have two channels with the same name</string>
     <string name="channel_access_control">Access Control: %1$s</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="no_biography">No biography available</string>
+    <string name="minutes_30">30 minutes</string>
+    <string name="hour_1">1 hour</string>
+    <string name="day_1">1 day</string>
+    <string name="week_1">1 week</string>
+    <string name="READ_ONLY">READ_ONLY</string>
+    <string name="READ_WRITE">READ_WRITE</string>
+    <string name="PUBLIC">PUBLIC</string>
+    <string name="PRIVATE">PRIVATE</string>
+    <string name="crate_channel_invitation_warning">Warning: Notice that previous invitations created will be deleted.</string>
+    <string name="create_channel_invitation_suggestion">Suggestion: If you want to invite multiple users, increment maxUses instead of creating multiple invitation codes</string>
+    <string name="generate_invitation_code">Generate a New Invitation Code</string>
+    <string name="edit_channel">Edit Channel</string>
+    <string name="select_an_icon">Select an Icon</string>
+    <string name="save">Save</string>
+    <string name="channel_invitation">Channel Invite Code Settings</string>
+    <string name="max_number_of_uses">Max Number of Uses</string>
+    <string name="permissions">Permissions</string>
+    <string name="expires_after">Expires After</string>
+    <string name="join_channel_label">Join a Channel</string>
+    <string name="insert_invitation_code">Insert the invitation code to join a channel</string>
+    <string name="join_channel_button">Join Channel</string>
+    <string name="create_user_invitation">Create User Invitation</string>
+    <string name="channel_invitation_code">Channel Invitation Code</string>
 </resources>

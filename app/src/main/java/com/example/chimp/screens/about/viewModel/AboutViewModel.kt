@@ -33,5 +33,4 @@ class AboutViewModel : ViewModel() {
         if (state !is AboutScreenState.Idle)
             state = AboutScreenState.Idle
     }
-
 }

@@ -15,7 +15,7 @@ import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
 import com.example.chimp.screens.register.model.RegisterService
 
-class ChIMPApplicationReplacer(override val connectivityObserver: ConnectivityObserver) : Application(), DependenciesContainer {
+class ChIMPApplicationReplacer : Application(), DependenciesContainer {
     override val createChannelService: CreateChannelService
         get() = TODO("Not yet implemented")
     override val loginService: RegisterService
@@ -30,6 +30,8 @@ class ChIMPApplicationReplacer(override val connectivityObserver: ConnectivityOb
         get() = TODO("Not yet implemented")
     override val preferencesDataStore: DataStore<Preferences> by
         preferencesDataStore(name = "test_prefs")
+    override val connectivityObserver: ConnectivityObserver
+        get() = TODO("Not yet implemented")
     override val userInfoRepository: UserInfoRepository by lazy {
         UserInfoPreferencesRepository(preferencesDataStore)
     }

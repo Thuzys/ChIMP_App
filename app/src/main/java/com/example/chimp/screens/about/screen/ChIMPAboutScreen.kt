@@ -18,22 +18,20 @@ fun ChIMPAboutScreen(
     modifier: Modifier = Modifier,
     viewModel: AboutViewModel
 ) {
+    val mod = modifier
+        .fillMaxSize()
+        .wrapContentSize(Alignment.Center)
+        .verticalScroll(rememberScrollState())
     when (val state = viewModel.state) {
         is AboutScreenState.Idle -> {
             IdleAboutDevView(
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-                    .verticalScroll(rememberScrollState()),
+                modifier = mod,
                 onIsExpandedChange = viewModel::showDev
             )
         }
         is AboutScreenState.Showing -> {
             ShowingAboutDevView(
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-                    .verticalScroll(rememberScrollState()),
+                modifier = mod,
                 state = state,
                 onIdleChange = viewModel::idle,
                 onShowDialogChange = viewModel::showDialog,
@@ -42,10 +40,7 @@ fun ChIMPAboutScreen(
         }
         is AboutScreenState.ShowDialog -> {
             ShowDialogAboutDevView(
-                modifier = modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-                    .verticalScroll(rememberScrollState()),
+                modifier = mod,
                 state = state,
                 onShowingChange = viewModel::showDev,
             )
