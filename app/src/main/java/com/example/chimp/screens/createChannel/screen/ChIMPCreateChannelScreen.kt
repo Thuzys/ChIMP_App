@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import com.example.chimp.screens.createChannel.screen.view.EditingView
 import com.example.chimp.screens.createChannel.viewModel.CreateChannelViewModel
 import com.example.chimp.screens.createChannel.viewModel.state.CreateChannelScreenState
-import com.example.chimp.screens.findChannel.activity.FindChannelActivity
 import com.example.chimp.screens.ui.composable.MenuBottomBar
 import com.example.chimp.screens.ui.views.ErrorView
 import com.example.chimp.screens.ui.views.LoadingView

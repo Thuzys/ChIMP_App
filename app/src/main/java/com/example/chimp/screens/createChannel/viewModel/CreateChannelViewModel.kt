@@ -25,14 +25,12 @@ private const val DEBOUNCE_TIME = 500L
 @OptIn(FlowPreview::class)
 class CreateChannelViewModel(
     private val service: CreateChannelService,
-    private val userInfoRepository: UserInfoRepository,
     private val channelRepository: ChannelRepository,
     initialState: CreateChannelScreenState = Editing()
 ) : ViewModel() {
     private val _state = MutableStateFlow(initialState)
     private val _channelName = MutableStateFlow("")
     val state: StateFlow<CreateChannelScreenState> = _state
-    val user = userInfoRepository.userInfo
 
     init {
         viewModelScope.launch {
@@ -42,7 +40,7 @@ class CreateChannelViewModel(
                 .collect { channelName ->
                     val curr = state.value
                     if (curr !is Editing || _channelName.value.isBlank()) return@collect
-                    when (val r = service.fetchChannelByNames(channelName)) {
+                    when (service.fetchChannelByNames(channelName)) {
                         is Success -> {
 
                             if(_channelName.value == curr.channelName.input){
