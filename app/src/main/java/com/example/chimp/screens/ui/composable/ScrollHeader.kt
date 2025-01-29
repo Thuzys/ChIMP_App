@@ -55,12 +55,14 @@ private const val HEADER_CLIP_RADIUS = 8
 /**
  * The size of the logout icon.
  */
-private const val LOGOUT_ICON_SIZE = 24
+private const val ICON_SIZE = 24
 
 /**
  * The padding for the logout icon.
  */
-private const val LOGOUT_ICON_PADDING = 8
+private const val ICON_PADDING = 8
+
+private const val TEXT_PADDING = 16
 
 /**
  * The header for the channels scroll.
@@ -97,9 +99,9 @@ fun ScrollHeader(
                 contentDescription = "No internet connection",
                 tint = MaterialTheme.colorScheme.onError,
                 modifier = Modifier
-                    .padding(8.dp)
-                    .width(24.dp)
-                    .height(24.dp)
+                    .padding(ICON_PADDING.dp)
+                    .width(ICON_SIZE.dp)
+                    .height(ICON_SIZE.dp)
                     .clickable { isToShow = true }
                     .testTag(SCROLL_HEADER_WARNING_ICON_TAG)
             )
@@ -112,7 +114,7 @@ fun ScrollHeader(
                 text = stringResource(R.string.no_internet_connection),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(TEXT_PADDING.dp)
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -132,9 +134,9 @@ fun ScrollHeader(
             tint = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .testTag(LOGOUT_ICON_TAG)
-                .padding(LOGOUT_ICON_PADDING.dp)
-                .width(LOGOUT_ICON_SIZE.dp)
-                .height(LOGOUT_ICON_SIZE.dp)
+                .padding(ICON_PADDING.dp)
+                .width(ICON_SIZE.dp)
+                .height(ICON_SIZE.dp)
                 .clickable(onClick = logout),
         )
     }

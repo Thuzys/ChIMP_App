@@ -54,6 +54,8 @@ private val listOfImages = listOf(
     R.drawable.icon20,
 )
 
+private const val PADDING = 8
+
 @Composable
 fun ImageSelector(
     modifier: Modifier = Modifier,
@@ -69,7 +71,7 @@ fun ImageSelector(
                 painter = painterResource(id = image),
                 contentDescription = "selected image",
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(PADDING.dp)
                     .clip(shape = MaterialTheme.shapes.extraLarge)
                     .height(IMAGE_SIZE.dp)
                     .fillMaxWidth()
@@ -89,7 +91,7 @@ fun ImageSelector(
                         painter = painterResource(id = image),
                         contentDescription = "image $image",
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(PADDING.dp)
                             .clip(shape = MaterialTheme.shapes.extraLarge)
                             .height(IMAGE_SIZE.dp)
                             .fillMaxWidth()

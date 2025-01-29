@@ -24,6 +24,8 @@ const val MENU_CREATE_CHANNEL_BUTTON_TAG = "CreateChannelButton"
 
 const val MENU_ABOUT_CHANNEL_BUTTON_TAG = "AboutButton"
 
+private const val PADDING = 16
+
 /**
  * MenuBottomBar is a composable that represents the bottom bar of the app.
  *
@@ -50,7 +52,7 @@ fun MenuBottomBar(
     createChannelClick: () -> Unit = {}
 ) {
     BottomAppBar(
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(PADDING.dp),
     ) {
         IconButton(
             modifier = Modifier.testTag(MENU_HOME_BUTTON_TAG),

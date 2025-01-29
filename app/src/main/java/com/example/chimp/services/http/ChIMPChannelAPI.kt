@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -207,9 +206,11 @@ class ChIMPChannelAPI(
                         HttpStatusCode.OK -> {
                             success(Unit)
                         }
+
                         HttpStatusCode.Unauthorized -> {
                             failure(ResponseError.Unauthorized)
                         }
+
                         else -> {
                             failure(response.body<ErrorInputModel>().toResponseError())
                         }
@@ -280,31 +281,31 @@ class ChIMPChannelAPI(
         connectivity.first().let {
             if (it == DISCONNECTED) return
         }
-            try {
-                client.sse(
-                    urlString = "$messagesApi/sse",
-                    request = { makeHeader(curr) },
-                    reconnectionTime = RECONNECTION_TIME.seconds
-                ) {
-                    incoming.collect { event ->
-                        Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
-                        if (event.event == MESSAGE_EVENT) {
-                            event.data?.let {
-                                Log.d(CHANNEL_SERVICE_TAG, "Received message: $it")
-                                val message =
-                                    Json.decodeFromString<MessageInputModel>(it).toMessage()
-                                val newList =
-                                    if (message !in _messages.value)
-                                        listOf(message) + _messages.value
-                                    else _messages.value
-                                _messages.emit(newList)
-                            }
+        try {
+            client.sse(
+                urlString = "$messagesApi/sse",
+                request = { makeHeader(curr) },
+                reconnectionTime = RECONNECTION_TIME.seconds
+            ) {
+                incoming.collect { event ->
+                    Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
+                    if (event.event == MESSAGE_EVENT) {
+                        event.data?.let {
+                            Log.d(CHANNEL_SERVICE_TAG, "Received message: $it")
+                            val message =
+                                Json.decodeFromString<MessageInputModel>(it).toMessage()
+                            val newList =
+                                if (message !in _messages.value)
+                                    listOf(message) + _messages.value
+                                else _messages.value
+                            _messages.emit(newList)
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
             }
+        } catch (e: Exception) {
+            Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
+        }
     }
 
     override suspend fun createChannelInvitation(
@@ -334,7 +335,7 @@ class ChIMPChannelAPI(
                 try {
                     return when (response.status) {
                         HttpStatusCode.OK -> {
-                           success(response.body<ChannelInvitationInputModel>().invitationCode)
+                            success(response.body<ChannelInvitationInputModel>().invitationCode)
                         }
 
                         HttpStatusCode.Unauthorized -> {

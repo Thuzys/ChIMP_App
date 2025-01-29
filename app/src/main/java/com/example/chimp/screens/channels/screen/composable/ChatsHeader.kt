@@ -23,8 +23,11 @@ import com.example.chimp.screens.ui.composable.MakeMark
 import com.example.chimp.screens.ui.composable.MyHorizontalDivider
 
 const val CHATS_HEADER_IMAGE_TAG = "ChatsHeaderImage"
-const val CHATS_HEADER_NAME_TAG = "ChatsHeaderName"
 const val CHATS_HEADER_TAG = "ChatsHeader"
+
+private const val MAX_WIDTH = 0.25f
+private const val PADDING = 30
+private const val MAX_LINES = 1
 
 @Composable
 internal fun ChatsHeader(
@@ -42,7 +45,7 @@ internal fun ChatsHeader(
         MakeMark(
             modifier = Modifier
                 .testTag(CHATS_HEADER_IMAGE_TAG)
-                .fillMaxWidth(0.25f),
+                .fillMaxWidth(MAX_WIDTH),
             lightMode = R.drawable.user_mark,
             contentDescription = "Channel image",
         )
@@ -53,7 +56,7 @@ internal fun ChatsHeader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(30.dp),
+                    .padding(PADDING.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -61,7 +64,7 @@ internal fun ChatsHeader(
                     text = chat.name.displayName,
                     style = MaterialTheme.typography.headlineMedium,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    maxLines = MAX_LINES
                 )
             }
             MyHorizontalDivider()

@@ -15,14 +15,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowForward
-import androidx.compose.material.icons.automirrored.twotone.Send
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -44,7 +39,6 @@ import com.example.chimp.models.channel.ChannelInfo
 import com.example.chimp.models.channel.ChannelName
 import com.example.chimp.models.time.formatTimestamp
 import com.example.chimp.models.time.getMillisFromTimeString
-import com.example.chimp.models.time.toOptionFormat
 import com.example.chimp.models.users.UserInfo
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.CONNECTED
 import com.example.chimp.screens.ui.composable.ScrollHeader
@@ -60,7 +54,6 @@ import com.example.chimp.screens.ui.composable.SwipeableRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.flow.flowOf
-import java.sql.Time
 import java.sql.Timestamp
 
 
@@ -139,6 +132,8 @@ private const val JOIN_CHANNEL_ICON_SIZE = 24
  */
 private const val JOIN_CHANNEL_ICON_PADDING = 8
 
+private const val ROTATION = 90f
+
 /**
  * ScrollView is the view that displays the list of channels.
  *
@@ -180,14 +175,14 @@ internal fun ScrollingView(
             Row {
                 Icon(
                     imageVector = Icons.AutoMirrored.TwoTone.ArrowForward,
-                    contentDescription = "Join a channel",
+                    contentDescription = stringResource(R.string.join_channel_label),
                     tint = MaterialTheme.colorScheme.surface,
                     modifier = Modifier
                         .testTag(JOIN_CHANNEL_ICON_TAG)
                         .width(JOIN_CHANNEL_ICON_SIZE.dp)
                         .height(JOIN_CHANNEL_ICON_SIZE.dp)
                         .clickable(onClick = onJoinClick)
-                        .rotate(90f),
+                        .rotate(ROTATION),
                 )
                 Spacer(modifier = Modifier.width(JOIN_CHANNEL_ICON_PADDING.dp))
                 Icon(
@@ -208,15 +203,20 @@ internal fun ScrollingView(
                     .fillMaxWidth()
             ) {
                 SelectOutlinedTextField(
-                    options = listOf("30 minutes", "1 hour", "1 day", "1 week"),
+                    options = listOf(
+                        stringResource(R.string.minutes_30),
+                        stringResource(R.string.hour_1),
+                        stringResource(R.string.day_1),
+                        stringResource(R.string.week_1),
+                    ),
                     selectedOption = expiration,
                     onOptionSelected =
                     { expiration = it },
-                    label = "Expire After",
+                    label = stringResource(R.string.expires_after),
                     modifier = Modifier.fillMaxWidth()
                 )
                 MakeButton(
-                    text = "Create User Invitation",
+                    text = stringResource(R.string.create_user_invitation),
                     onClick = {
                         onCreateUserInvitation(
                             formatTimestamp(

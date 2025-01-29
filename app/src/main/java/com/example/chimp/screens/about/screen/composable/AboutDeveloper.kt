@@ -30,6 +30,10 @@ const val ABOUT_DEVELOPER_TAG = "AboutDeveloper"
 const val ABOUT_DEVELOPER_IS_EXPANDED_ACTION_TAG = "AboutDeveloperIsExpanded"
 private const val IS_EXPANDED_PADDING = 16
 private const val NOT_EXPANDED_PADDING = 8
+
+private const val DELAY = 150
+private const val DURATION = 150
+
 /**
  * The composable function that displays the developer's information.
  * @param modifier [Modifier] The modifier to be applied to the layout.
@@ -64,8 +68,7 @@ fun AboutDeveloper(
     )
     Card(
         shape = MaterialTheme.shapes.extraLarge,
-        modifier = modifier
-            .padding(padding)
+        modifier = modifier.padding(padding)
     ) {
         Column(
             modifier = modifier.testTag(ABOUT_DEVELOPER_TAG),
@@ -81,8 +84,8 @@ fun AboutDeveloper(
             }
             AnimatedVisibility(
                 visible = isExpanded,
-                enter = slideInVertically(tween(150, 150)),
-                exit = slideOutVertically(tween(150, 150)),
+                enter = slideInVertically(tween(DURATION, DELAY)),
+                exit = slideOutVertically(tween(DURATION, DELAY)),
             ) {
                 DeveloperContent(
                     modifier = Modifier

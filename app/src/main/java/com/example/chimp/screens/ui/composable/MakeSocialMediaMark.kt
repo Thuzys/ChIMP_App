@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.example.chimp.R
 
 const val SOCIAL_MEDIA_MARK_TAG = "SocialMediaMark"
+private const val SIZE = 40
+private const val PADDING = 4
 
 /**
  * The composable function that displays the social media mark.
@@ -36,8 +38,8 @@ fun MakeSocialMediaMark(
     ) {
         MakeMark(
             modifier = Modifier
-                .size(40.dp)
-                .padding(4.dp),
+                .size(SIZE.dp)
+                .padding(PADDING.dp),
             lightMode = lightMode,
             darkMode = darkMode,
             contentDescription = contentDescription

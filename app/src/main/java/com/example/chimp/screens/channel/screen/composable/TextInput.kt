@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.dp
 const val TEXT_INPUT_TAG = "TextInputTestTag"
 const val SEND_BUTTON_TAG = "SendButtonTestTag"
 
+const val MIN_LINES = 1
+const val MAX_LINES = 5
+const val CORNER_RADIUS = 16
+const val PADDING = 8
+
 @Composable
 internal fun    TextInput(
     modifier: Modifier = Modifier,
@@ -40,8 +45,8 @@ internal fun    TextInput(
             value = msg,
             onValueChange = { msg = it },
             placeholder = { Text("Type a message...") },
-            minLines = 1,
-            maxLines = 5,
+            minLines = MIN_LINES,
+            maxLines = MAX_LINES,
             trailingIcon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.Send,
@@ -59,8 +64,8 @@ internal fun    TextInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(TEXT_INPUT_TAG)
-                .clip(RoundedCornerShape(16.dp))
-                .padding(8.dp)
+                .clip(RoundedCornerShape(CORNER_RADIUS.dp))
+                .padding(PADDING.dp)
         )
     }
 }

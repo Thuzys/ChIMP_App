@@ -18,8 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 
-const val EDITING_BASE_VIEW_TAG = "EditingBaseView"
-
 const val EDITING_BASE_VIEW_CONTENT_TAG = "EditingBaseViewContent"
 
 

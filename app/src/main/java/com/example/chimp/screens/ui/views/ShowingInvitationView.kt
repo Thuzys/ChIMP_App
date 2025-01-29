@@ -20,14 +20,19 @@ import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.chimp.R
 
 const val SHOWING_INVITATION_VIEW_TAG = "ShowingInvitationView"
+private const val FONT_SIZE = 14
+private const val PADDING = 16
+private const val BUTTON_PADDING = 8
 
 @Composable
 fun ShowingInvitationView(
@@ -47,19 +52,19 @@ fun ShowingInvitationView(
             onDismissRequest = onDismiss,
             title = {
                 Text(
-                    text = "Channel invitation code",
+                    text = stringResource(R.string.channel_invitation_code),
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
                     text = inviteCode,
-                    fontSize = 14.sp,
+                    fontSize = FONT_SIZE.sp,
                     color = Color.White,
                     modifier = Modifier
                         .background(Color.Black)
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(PADDING.dp),
                     textAlign = TextAlign.Center
                 )
             },
@@ -71,7 +76,7 @@ fun ShowingInvitationView(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(BUTTON_PADDING.dp)
                 ) {
                     Icon(
                         Icons.Filled.Share,

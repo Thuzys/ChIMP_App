@@ -44,6 +44,8 @@ private const val HEADER_PADDING = 16
  */
 private const val HEADER_CLIP_RADIUS = 8
 
+private const val SIZE = 40
+
 const val CHAT_HEADER_TEST_TAG = "ChatHeader"
 
 const val BUTTON_CHAT_HEADER_BACK_TEST_TAG = "ButtonChatHeaderBack"
@@ -91,7 +93,7 @@ internal fun ChatHeader(
         }
         Image(
             modifier = Modifier
-                .size(40.dp)
+                .size(SIZE.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop,
             painter = painterResource(id = channel.icon),

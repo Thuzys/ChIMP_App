@@ -30,6 +30,10 @@ import com.example.chimp.models.users.UserInfo
  * The threshold for the length of the text to determine if marquee effect should be applied.
  */
 private const val TEXT_LENGTH_THRESHOLD = 15
+private const val PADDING = 16
+private const val IMAGE_SIZE = 64
+private const val MAX_LINES = 1
+private const val DEFAULT_ELEVATION = 4
 
 /**
  * ChatItemRow is a composable that displays a row for a chat item.
@@ -45,33 +49,33 @@ fun ChatItemRow(
     onClick: () -> Unit,
 ) {
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = DEFAULT_ELEVATION.dp),
         modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(PADDING.dp)
         ) {
             Image(
                 painter = painterResource(id = chatItem.icon),
                 contentDescription = "Avatar",
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(IMAGE_SIZE.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = PADDING.dp)
                     .weight(1f)
             ) {
                 if (chatItem.name.displayName.length < TEXT_LENGTH_THRESHOLD) {
                     Text(
                         text = chatItem.name.displayName,
                         style = MaterialTheme.typography.headlineSmall,
-                        maxLines = 1,
+                        maxLines = MAX_LINES,
                         modifier = Modifier.wrapContentWidth()
                     )
                 } else {
@@ -79,7 +83,7 @@ fun ChatItemRow(
                         Text(
                             text = chatItem.name.displayName,
                             style = MaterialTheme.typography.headlineSmall,
-                            maxLines = 1,
+                            maxLines = MAX_LINES,
                             modifier = Modifier.wrapContentWidth()
                         )
                     }

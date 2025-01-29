@@ -167,14 +167,14 @@ internal fun ScrollingView(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Button(
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(ROUNDED_CORNER.dp),
                     modifier = Modifier.testTag(CHANNEL_SCROLLING_VIEW_INFO_BUTTON),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    border = BorderStroke(BORDER_STROKE.dp, MaterialTheme.colorScheme.primary),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onPrimaryContainer),
                     onClick = onInfoClick
                 ) {
                     Text(
-                        text = "Channel Info",
+                        text = stringResource(R.string.channel_info),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -186,7 +186,9 @@ internal fun ScrollingView(
                     onClick = onDeleteOrLeave
                 ) {
                     Text(
-                        text = if (state.user.id == state.channel.owner.id) "Delete Channel" else "Leave Channel",
+                        text =
+                        if (state.user.id == state.channel.owner.id) stringResource(R.string.delete_channel)
+                        else stringResource(R.string.leave_channel),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -199,7 +201,7 @@ internal fun ScrollingView(
                         onClick = onEditChannel
                     ) {
                         Text(
-                            text = "Edit Channel",
+                            text = stringResource(R.string.edit_channel),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -211,7 +213,7 @@ internal fun ScrollingView(
                         onClick = onCreateInvite
                     ) {
                         Text(
-                            text = "Create Invite",
+                            text = stringResource(R.string.create_invite),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
