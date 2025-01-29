@@ -8,8 +8,7 @@ import io.ktor.http.contentType
 
 internal fun HttpRequestBuilder.makeHeader(curr: User) {
     header("Authorization", "Bearer ${curr.token.token}")
-    contentType(ContentType.Application.Json)
-    contentType(ContentType.Application.ProblemJson)
+    makeHeader()
 }
 
 internal fun HttpRequestBuilder.makeHeader() {

@@ -8,7 +8,6 @@ import com.example.chimp.models.either.success
 import com.example.chimp.models.errors.ResponseError
 import com.example.chimp.models.toStrIcon
 import com.example.chimp.models.users.User
-import com.example.chimp.observeConnectivity.ConnectivityObserver
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status
 import com.example.chimp.observeConnectivity.ConnectivityObserver.Status.DISCONNECTED
 import com.example.chimp.screens.createChannel.model.ChannelInput

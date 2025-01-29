@@ -27,7 +27,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.put
-import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * ChIMPChannelsAPI is the implementation of the ChannelsServices interface.
@@ -67,11 +66,9 @@ class ChIMPChannelsAPI(
 
     init {
         scope.launch {
-            while (true) {
-                connection.collectLatest { conn ->
-                    if (conn == Status.CONNECTED)
-                        initSseOnChannels()
-                }
+            connection.collectLatest { conn ->
+                if (conn == Status.CONNECTED)
+                    initSseOnChannels()
             }
         }
     }
@@ -224,41 +221,33 @@ class ChIMPChannelsAPI(
             client.sse(
                 urlString = "$channelApi/sse",
                 request = { makeHeader(curr) },
-                reconnectionTime = RECONNECT_TIME.minutes
+                reconnectionTime = RECONNECT_TIME.seconds
             ) {
-                try {
-                    while (true) {
-                        val c = connectivity.first()
-                        if (c == DISCONNECTED) continue
-                        incoming.collect { event ->
-                            Log.i(CHANNELS_SERVICE_TAG, "Event: ${event.data}")
-                            when (event.event) {
-                                JOIN_OR_UPDATE -> {
-                                    event.data?.let { data ->
-                                        val channel = Json.decodeFromString<ChannelInputModel>(data)
-                                            .toChannelInfo()
-                                        if (_channels.value.find { it.cId == channel.cId } == null) {
-                                            _channels.emit(_channels.value + channel)
-                                        } else {
-                                            _channels.emit(_channels.value.map { c ->
-                                                if (c.cId == channel.cId) channel else c
-                                            })
-                                        }
-                                    }
-                                }
-
-                                DELETE_OR_LEAVE -> {
-                                    event.data?.let { data ->
-                                        val channel = Json.decodeFromString<UInt>(data)
-                                        if (_channels.value.find { it.cId == channel } != null)
-                                            _channels.emit(_channels.value.filter { it.cId != channel })
-                                    }
+                incoming.collect { event ->
+                    Log.i(CHANNELS_SERVICE_TAG, "Event: ${event.data}")
+                    when (event.event) {
+                        JOIN_OR_UPDATE -> {
+                            event.data?.let { data ->
+                                val channel = Json.decodeFromString<ChannelInputModel>(data)
+                                    .toChannelInfo()
+                                if (_channels.value.find { it.cId == channel.cId } == null) {
+                                    _channels.emit(_channels.value + channel)
+                                } else {
+                                    _channels.emit(_channels.value.map { c ->
+                                        if (c.cId == channel.cId) channel else c
+                                    })
                                 }
                             }
                         }
+
+                        DELETE_OR_LEAVE -> {
+                            event.data?.let { data ->
+                                val channel = Json.decodeFromString<UInt>(data)
+                                if (_channels.value.find { it.cId == channel } != null)
+                                    _channels.emit(_channels.value.filter { it.cId != channel })
+                            }
+                        }
                     }
-                } catch (e: Exception) {
-                    Log.e(CHANNELS_SERVICE_TAG, "Error: ${e.message}")
                 }
             }
         } catch (e: Exception) {

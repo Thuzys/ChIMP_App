@@ -17,7 +17,6 @@ import com.example.chimp.screens.createChannel.model.CreateChannelService
 import com.example.chimp.screens.register.model.RegisterService
 import com.example.chimp.screens.findChannel.model.FindChannelService
 import com.example.chimp.screens.register.model.FormValidation
-import com.example.chimp.services.dummy.DummyFindChannelService
 import com.example.chimp.services.http.CHIMPCreateChannelAPI
 import com.example.chimp.services.http.ChIMPChannelAPI
 import com.example.chimp.services.http.CHIMPFindChannelAPI

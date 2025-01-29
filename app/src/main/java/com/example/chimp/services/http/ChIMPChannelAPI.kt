@@ -39,10 +39,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * ChIMPChannelAPI is the implementation of the ChannelService interface.
@@ -72,11 +72,9 @@ class ChIMPChannelAPI(
 
     init {
         scope.launch {
-            while (true) {
-                connectivity.collectLatest {
-                    if (it == Status.CONNECTED)
-                        initSseOnMessages()
-                }
+            connectivity.collectLatest {
+                if (it == Status.CONNECTED)
+                    initSseOnMessages()
             }
         }
     }
@@ -282,15 +280,12 @@ class ChIMPChannelAPI(
         connectivity.first().let {
             if (it == DISCONNECTED) return
         }
-        try {
-            client.sse(
-                urlString = "$messagesApi/sse",
-                request = { makeHeader(curr) },
-                reconnectionTime = 5.minutes
-            ) {
-                while (true) {
-                    val currConnectivity = connectivity.first()
-                    if (currConnectivity == DISCONNECTED) continue
+            try {
+                client.sse(
+                    urlString = "$messagesApi/sse",
+                    request = { makeHeader(curr) },
+                    reconnectionTime = RECONNECTION_TIME.seconds
+                ) {
                     incoming.collect { event ->
                         Log.d(CHANNEL_SERVICE_TAG, "Received event: ${event.event}")
                         if (event.event == MESSAGE_EVENT) {
@@ -307,10 +302,9 @@ class ChIMPChannelAPI(
                         }
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.e(CHANNEL_SERVICE_TAG, "Error: ${e.message}")
-        }
     }
 
     override suspend fun createChannelInvitation(
@@ -363,5 +357,6 @@ class ChIMPChannelAPI(
     companion object {
         private const val CHANNEL_SERVICE_TAG = "ChannelService"
         private const val MESSAGE_EVENT = "message"
+        private const val RECONNECTION_TIME = 5
     }
 }
