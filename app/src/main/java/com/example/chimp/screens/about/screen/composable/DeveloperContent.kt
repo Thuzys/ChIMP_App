@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -114,7 +115,7 @@ fun DeveloperContent(
                 .padding(PADDING.dp)
                 .testTag(DEVELOPER_CONTENT_BIO_TAG)
                 .clickable(onClick = onShowDialog),
-            text = dev.bio ?: R.string.no_description.toString(),
+            text = dev.bio ?: stringResource(R.string.no_description),
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             maxLines = MAX_LINES
@@ -148,7 +149,7 @@ fun DeveloperContent(
                 Modifier
                     .testTag(DEVELOPER_CONTENT_COMPLETE_BIO_TAG)
                     .clickable(onClick = onShowDialog),
-                text = dev.bio ?: R.string.no_biography.toString(),
+                text = dev.bio ?: stringResource(R.string.no_biography),
                 textAlign = TextAlign.Center,
                 color = Color.White
             )
