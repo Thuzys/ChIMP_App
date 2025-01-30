@@ -25,7 +25,6 @@ class CreateChannelActivity: ComponentActivity() {
         factoryProducer = {
             CreateChannelVMFactory(
                 (application as DependenciesContainer).createChannelService,
-                (application as DependenciesContainer).userInfoRepository,
                 (application as DependenciesContainer).channelRepository
             )
         }
