@@ -18,8 +18,4 @@ The application should allow the user to:
 ---
 ## Demonstration
 
-<video width="600" controls loop autoplay>
-  <source src="https://drive.google.com/uc?export=download&id=1O7Lk1R09utogpp6mcVf4L276qu0HYtwJ" type="video/mp4">
-  Your browser does not support the video tag.  
-  <a href="https://drive.google.com/file/d/1O7Lk1R09utogpp6mcVf4L276qu0HYtwJ/view?usp=share_link">Click here to watch the video</a>.
-</video>
+[Click here](https://drive.google.com/file/d/1O7Lk1R09utogpp6mcVf4L276qu0HYtwJ/view?usp=share_link)
